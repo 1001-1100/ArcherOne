@@ -110,7 +110,7 @@ class GenerateSchedule extends Component {
 
     componentDidMount(){
         const id = localStorage.getItem('user_id');
-        axios.get('http://localhost:8000/api/courses/')
+        axios.get('/api/courses/')
         .then(res => {
             res.data.map(course => {
                 var courses = this.state.courseList;
@@ -118,7 +118,7 @@ class GenerateSchedule extends Component {
                 courses.push(addCourse)
                 this.setState({courseList: courses})
             })
-            axios.get('http://localhost:8000/api/courseprioritylist/'+id+'/')
+            axios.get('/api/courseprioritylist/'+id+'/')
             .then(res => {
                 console.log(res.data)
                 res.data.map(coursepriority => {
@@ -190,7 +190,7 @@ class GenerateSchedule extends Component {
     //     }
     // }
     handleCourseDelete = (addCourse) => {
-        axios.delete('http://localhost:8000/api/courseprioritylist/'+addCourse.id+'/')
+        axios.delete('/api/courseprioritylist/'+addCourse.id+'/')
         .then(res => {
             console.log("deleted "+addCourse.id)
             const newCourseList = [];
@@ -235,7 +235,7 @@ class GenerateSchedule extends Component {
                     priority: true,
                     user: id
                 }
-                axios.post('http://localhost:8000/api/coursepriority/', data,
+                axios.post('/api/coursepriority/', data,
                 {
                     headers: {
                         'Content-Type': 'application/json'
@@ -321,7 +321,7 @@ class GenerateSchedule extends Component {
             this.setState({loading: false});
           } 
 
-        axios.post('http://localhost:8000/api/generateschedule/',
+        axios.post('/api/generateschedule/',
         {
             highCourses: this.state.highCourses, 
             lowCourses: this.state.lowCourses,
@@ -448,16 +448,16 @@ class GenerateSchedule extends Component {
             this.state.currentContent.props.offerings.map(offering => {
                 courseOfferings.push(offering.id)
             })
-            axios.post('http://localhost:8000/api/schedules/',{
+            axios.post('/api/schedules/',{
                 title: this.state.currentContent.props.titleName,
                 courseOfferings: courseOfferings,
                 user: user_id
             }).then(res => {
-                // axios.get('http://localhost:8000/api/users/'+user_id+'/')
+                // axios.get('/api/users/'+user_id+'/')
                 // .then(res => {
                 //     const schedules = res.data.schedules;
                 //     schedules.push(sched_id);
-                //     axios.patch('http://localhost:8000/api/users/'+user_id+'/',{
+                //     axios.patch('/api/users/'+user_id+'/',{
                 //         schedules: schedules
                 //     }).then(res => {
                 //         console.log(res)

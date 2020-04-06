@@ -64,7 +64,7 @@ class Register extends Component {
 
     }
     componentWillMount(){
-        axios.get('http://localhost:8000/api/colleges/')
+        axios.get('/api/colleges/')
         .then(res => {
           var newArray = [];
           res.data.map(college=>{
@@ -72,7 +72,7 @@ class Register extends Component {
           })
           this.setState({colleges: newArray})
         })
-        axios.get('http://localhost:8000/api/degrees/')
+        axios.get('/api/degrees/')
         .then(res => {
           var newArray = [];
           res.data.map(degree=>{

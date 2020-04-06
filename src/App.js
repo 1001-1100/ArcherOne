@@ -39,7 +39,7 @@ class App extends Component {
 
   componentWillMount(){
     // if(this.state.logged_in){
-    //   axios.get('http://localhost:8000/api/auth/user/',
+    //   axios.get('/api/auth/user/',
     //   {
     //     headers: {
     //       Authorization: `JWT ${localStorage.getItem('token')}` 
@@ -61,7 +61,7 @@ class App extends Component {
   }
 
   handle_login = (data, _callback) => {
-    axios.post('http://localhost:8000/api/auth/login/', data,
+    axios.post('/api/auth/login/', data,
     {
         headers: {
             'Content-Type': 'application/json'
@@ -87,7 +87,7 @@ class App extends Component {
   }
 
   handle_register = (data, _callback) => {
-    axios.post('http://localhost:8000/api/auth/registration/', data,
+    axios.post('/api/auth/registration/', data,
     {
         headers: {
             'Content-Type': 'application/json'
@@ -114,7 +114,7 @@ class App extends Component {
   }
 
   handle_resetPassword = (data, _callback) => {
-    axios.post('http://localhost:8000/api/auth/password/reset/', data,
+    axios.post('/api/auth/password/reset/', data,
     {
         headers: {
             'Content-Type': 'application/json'
@@ -132,7 +132,7 @@ class App extends Component {
   }
 
   handle_resetPasswordConfirm = (data, _callback) => {
-    axios.post('http://localhost:8000/api/auth/password/reset/confirm/', data,
+    axios.post('/api/auth/password/reset/confirm/', data,
     {
         headers: {
             'Content-Type': 'application/json'

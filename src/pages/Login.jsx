@@ -109,7 +109,7 @@ class Login extends Component {
 
     // test = () =>{
     //     console.log(this.state.token)
-    //     axios.get('http://localhost:8000/api/auth/user/',
+    //     axios.get('/api/auth/user/',
     //     {
     //         headers: {
     //             'X-CSRF-TOKEN': this.state.token,
