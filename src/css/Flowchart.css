@@ -1,0 +1,32 @@
+body {
+    font-family: "Lato", sans-serif;
+}
+
+.main-head{
+    height: 150px;
+    background: #FFF;
+   
+}
+
+.sidemenu {
+    height: 100%;
+    overflow-y: hidden;
+    padding-top: 10%;
+
+    width: 20%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+
+    background-color: white;
+}
+
+.sidemenu-main {
+    margin-left: 23%;
+}
+
+.change-flowchart {
+    margin-top: 3%;
+    margin-bottom: 3%;
+}

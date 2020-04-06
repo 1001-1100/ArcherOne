@@ -1,0 +1,8 @@
+.boxinfoContainer{
+    height: 400px;
+    width: 250px;
+    background-color: #B8D4CD;
+    border-radius: 5px;
+    padding: 15px;
+    color: #555555;
+}

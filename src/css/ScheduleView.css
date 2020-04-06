@@ -1,0 +1,13 @@
+.dx-scheduler-date-table-cell, .dx-scheduler-header-panel-cell {  
+    width: 20px !important;  
+}  
+
+.dx-scheduler-cell-sizes-horizontal {
+    width: 10px !important;
+}
+
+.dx-scheduler-cell-sizes-vertical {
+    height: 10px !important;
+}
+
+

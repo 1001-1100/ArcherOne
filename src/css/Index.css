@@ -1,0 +1,135 @@
+.sidemenuHome {
+    height: 600px;
+    /* overflow-y: hidden; */
+    padding-top: 10%;
+
+    width: 13%;
+    position: fixed;
+    position: absolute;
+    z-index: 1;
+
+
+    /* margin: 7px; */
+
+    /* background-color: white; */
+}
+
+.sidemenu-mainHome {
+    margin-left: 23%;
+    display: block;
+}
+
+.change-term-sched {
+    margin-top: 3%;
+    margin-bottom: 3%;
+}
+
+.savedSchedContent{
+    width: 615px;
+    padding: 10px;
+    margin: 10px;
+    height: 770px;
+}
+
+
+.optionList{
+    height: 600px;
+    width: 20%;
+    /* width: 20%; */
+    position: fixed;
+    margin-top: 20px;
+    margin-right: 20px;
+    padding: 10px;
+    top:0;
+    right: 0;
+    padding-top: 9%;
+    
+}
+
+.option-choices {
+    margin-top: 3%;
+    margin-bottom: 3%;
+    width: 160px;
+    border-radius: 20px; 
+   
+}
+
+.viewCoursesHome{
+    width: 750px;
+    margin-top: 20px;
+    position: absolute;
+}
+
+.savedSchedContent{
+    width: 800px;
+    height: 100%;
+}
+
+.paginationContainer{
+    margin-top: 35px;
+}
+
+.page-link{
+    color:#5b8c85;
+}
+
+.page-item.active .page-link {
+    background-color: #5b8c85;
+    border-color: #5b8c85;
+}
+
+.gridLayoutContainer {
+    position: absolute;
+    /* width: 100%; */
+    height: 100%;
+    overflow-y: auto;
+    /* border: 1px solid #aaa; */
+    background-color: #B8D4CD;
+    top: 61%;
+    transform: translate(-50%, -50%);
+    left: 48%;
+}
+
+.savedContent{
+    height: 1200px;
+}
+
+.landingpage{
+    /* background-image: url(../assets/Gradient_BG.png); */
+    /* height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover; */
+    margin-right: 40px;
+    margin-left: 40px;
+    margin-top: 30px;
+    color: white;
+    margin-bottom: auto;
+}
+
+.iconStyle{
+    height: 70px;
+    width: 70px;
+}
+
+.whiteBlob{
+    background-image: url(../assets/whiteBlob.png);
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    height: 100vh;
+    background-size: cover;
+}
+
+.sectionStyle{
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.MuiGrid-root makeStyles-container-31 MuiGrid-container MuiGrid-direction-xs-column MuiGrid-wrap-xs-nowrap{
+    width: 500px;
+    height: 500px;
+}
