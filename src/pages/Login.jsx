@@ -109,7 +109,7 @@ class Login extends Component {
 
     // test = () =>{
     //     console.log(this.state.token)
-    //     axios.get('/api/auth/user/',
+    //     axios.get('https://archerone-backend.herokuapp.com/api/auth/user/',
     //     {
     //         headers: {
     //             'X-CSRF-TOKEN': this.state.token,

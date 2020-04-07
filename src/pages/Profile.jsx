@@ -67,7 +67,7 @@ class Profile extends Component {
     }
 
     componentWillMount(){
-        axios.get('/api/auth/user/',
+        axios.get('https://archerone-backend.herokuapp.com/api/auth/user/',
         {
             headers: {
             Authorization: `JWT ${localStorage.getItem('token')}` 
@@ -83,10 +83,10 @@ class Profile extends Component {
             })
             const college = res.data.college;
             const degree = res.data.degree;
-            axios.get('/api/colleges/'+college+'/')
+            axios.get('https://archerone-backend.herokuapp.com/api/colleges/'+college+'/')
             .then(res => {
               this.setState({college: res.data.college_name})
-              axios.get('/api/degrees/'+degree+'/')
+              axios.get('https://archerone-backend.herokuapp.com/api/degrees/'+degree+'/')
               .then(res => {
                 this.setState({degree: res.data.degree_name});
               })

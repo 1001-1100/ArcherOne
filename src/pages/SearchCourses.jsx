@@ -61,7 +61,7 @@ class SearchCourses extends Component {
     }
 
     componentWillMount(){
-        axios.get('/api/courses/')
+        axios.get('https://archerone-backend.herokuapp.com/api/courses/')
         .then(res => {
             res.data.map(course => {
                 var courses = this.state.courseList;
@@ -136,7 +136,7 @@ class SearchCourses extends Component {
      
       this.setState({siteData: []})
       this.state.selectedCourses.map(course =>{
-        axios.get('/api/courseofferingslist/'+course.id+'/')
+        axios.get('https://archerone-backend.herokuapp.com/api/courseofferingslist/'+course.id+'/')
         .then(res => {
             var arranged = groupArray(res.data, 'classnumber');
             console.log(arranged)
