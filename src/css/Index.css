@@ -1,3 +1,17 @@
+import './fonts/VarelaRound-Regular.ttf'
+
+@font-face {
+  font-family: 'Varela Round';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Varela Round'), url(/fonts/VarelaRound-Regular.ttf) format('truetype');
+    
+/*    font-family: 'Varela';*/
+/*  font-style: normal;*/
+/*  font-weight: 400;*/
+/*  src: url('./fonts/VarelaRound-Regular.ttf');*/
+}
+
 .sidemenuHome {
     height: 600px;
     /* overflow-y: hidden; */
@@ -25,23 +39,31 @@
 }
 
 .savedSchedContent{
-    width: 615px;
+    min-width: 615px;
     padding: 10px;
     margin: 10px;
-    height: 770px;
+    /* min-height: 770px; */
+    height: 100%;
+    overflow: hidden;
 }
+
+.savedSchedContent:after {
+    content: "";
+    clear: both;
+    display: table;
+  }
 
 
 .optionList{
-    height: 600px;
-    width: 20%;
-    /* width: 20%; */
+    /* height: 600px; */
+    width: 25%;
     position: fixed;
-    margin-top: 20px;
-    margin-right: 20px;
-    padding: 10px;
+    margin-top: 75px;
+    /* margin-right: 20px; */
+    /* padding-left: 5px; */
+    padding-bottom: 5px;
     top:0;
-    right: 0;
+    /* right: 0; */
     padding-top: 9%;
     
 }
@@ -61,8 +83,8 @@
 }
 
 .savedSchedContent{
-    width: 800px;
-    height: 100%;
+/*    width: 800px;*/
+    height: auto;
 }
 
 .paginationContainer{
@@ -90,9 +112,7 @@
     left: 48%;
 }
 
-.savedContent{
-    height: 1200px;
-}
+
 
 .landingpage{
     /* background-image: url(../assets/Gradient_BG.png); */
@@ -108,8 +128,11 @@
 }
 
 .iconStyle{
+    height: 13vh;
+/*
     height: 70px;
     width: 70px;
+*/
 }
 
 .whiteBlob{
@@ -117,7 +140,7 @@
     position: absolute;
     right: 0px;
     bottom: 0px;
-    height: 100vh;
+    height: 95%;
     background-size: cover;
 }
 
@@ -132,4 +155,29 @@
 .MuiGrid-root makeStyles-container-31 MuiGrid-container MuiGrid-direction-xs-column MuiGrid-wrap-xs-nowrap{
     width: 500px;
     height: 500px;
+}
+
+.savedContent{
+    height: 85em;
+    /* width: 100vh;
+    margin-right: 20px;
+    margin-left: 20px;
+    justify-content: center;
+    align-items: center; */
+}
+
+.gridSavedContent:after{
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.edit-current-classes-container{
+    border: 2px solid #16775D;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+*{
+    font-family: 'Varela Round', sans-serif !important;
 }

@@ -47,6 +47,7 @@ class GenSchedInfo extends Component {
             earliest: props.earliest,
             latest: props.latest,
             boolEdit: false,
+            defPalette: ['#9BCFB8', '#7FB174', '#689C97', '#072A24', '#D1DDDB', '#85B8CB', '#1D6A96', '#283B42','#FFB53C', '#EEB3A3', '#F3355C', '#FAA98B', '#E6AECF', '#AEE0DD', '#01ACBD','#FED770', ' #F29F8F', '#FB7552', '#076A67','#324856', '#4A746A', '#D18237', '#D66C44', '#FFA289', '#6A92CC', '#706FAB', '#50293C'],
         }
         this.editableLabel = React.createRef();
     }
@@ -120,13 +121,11 @@ class GenSchedInfo extends Component {
                             /> 
 
                             {this.state.boolEdit ? <DoneIcon fontSize="medium" className={classes.checkIcon} onClick={this.editButtonPress}/> : <EditIcon fontSize= "small" className={classes.pencilIcon} onClick={this.editButtonPress}/>}
-                            {/* <EditIcon fontSize="small" style={{marginLeft: "10px"}} onClick={this.editButtonPress}/> */}
-                            {/* <DoneIcon fontSize="medium" style={{color: "green"}} /> */}
                         </Row>
                    
-                        <ScheduleView content={this.state.scheduleContent} earliest={this.state.earliest} latest={this.state.latest}/>
+                        <ScheduleView id='scheduleView' content={this.state.scheduleContent} earliest={this.state.earliest} latest={this.state.latest} palette={this.state.defPalette} />
                     </Column>
-                    <Column flexGrow={1} horizontal = 'center'style={{marginLeft: "40px"}} >
+                    <Column flexGrow={1} horizontal = 'center'style={{marginLeft: "20px"}} >
                         <Row horizontal = 'center'>
                             <ClassesTable content={this.state.tableContent} />
                         </Row>
@@ -137,7 +136,7 @@ class GenSchedInfo extends Component {
                                 <BoxInfo content={this.state.prefContent } id={1+this.state.id}/>
     
                             </Column>
-                            <Column horizontal = 'center' style={{marginLeft: "40px"}}>
+                            <Column horizontal = 'center' style={{marginLeft: "20px"}}>
                                 Course Conflict
                                 <BoxInfo content={this.state.conflictsContent} id={2+this.state.id}/>
                             </Column>

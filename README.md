@@ -1,71 +1,44 @@
-# ArcherOne
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Prerequisites
+## Available Scripts
 
-https://www.python.org/downloads/
+In the project directory, you can run:
 
-https://nodejs.org/en/download/
+### `npm start`
 
-https://pypi.org/project/pipenv/
+Runs the app in the development mode.<br>
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-https://classic.yarnpkg.com/en/docs/install/
+The page will reload if you make edits.<br>
+You will also see any lint errors in the console.
 
-http://www.mingw.org/
+### `npm test`
 
-## Installation
+Launches the test runner in the interactive watch mode.<br>
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-`pip install django djangorestframework django-cors-headers django-cors-middleware django-rest-auth django-allauth django-extensions django-annoying djangorestframework-jwt z3-solver requests html5lib bs4`
+### `npm run build`
 
-Then go to the frontend directory to install react dependencies:
+Builds the app for production to the `build` folder.<br>
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-`cd frontend`
+The build is minified and the filenames include the hashes.<br>
+Your app is ready to be deployed!
 
-`yarn global add create-react-app`
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-`yarn add create-react-app bootstrap reactstrap axios`
+### `npm run eject`
 
-Additional packages that need to be installed:
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-`yarn add simple-flexbox react-smooth-dnd react-router @devexpress/dx-react-core @devexpress/dx-react-scheduler @material-ui/core @material-ui/icons @devexpress/dx-react-scheduler-material-ui group-array`
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-## Usage
+Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You need to run both the React Server and the Django Server.
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-Start React Server:
+## Learn More
 
-`cd frontend`
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-`yarn start`
-
-Start Django Server:
-
-`cd backend`
-
-Make migrations and migrate:
-
-`python manage.py makemigrations`
-
-`python manage.py migrate`
-
-Run the server:
-
-`python manage.py runserver`
-
-## REST API
-
-Login:
-
-`/api/auth/login`
-
-Register:
-
-`/api/auth/registration`
-
-Get user info of logged in user:
-
-`/api/auth/user`
-
-Get list of users:
-
-`/api/users`
+To learn React, check out the [React documentation](https://reactjs.org/).

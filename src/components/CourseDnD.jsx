@@ -5,6 +5,8 @@ import '../css/CourseDnD.css';
 import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import axios from "axios";
 
+import DragHandleIcon from '@material-ui/icons/DragHandle';
+
 const groupStyle = {
     marginLeft: '50px',
     flex: 1
@@ -92,12 +94,13 @@ triggerUpdate=(e)=>{
       <div>
 
         <div className="simple-page1" style={{ display: 'flex', justifyContent: 'center'}}>
-          <div className= "card-container" >
-            <Container groupName="1" getChildPayload={i => this.state.courses[i]} onDrop={this.triggerUpdate}>
+          <div className= "card-container" style={{height:"452px", overflow: "auto", width: "270px"}}>
+            <Container groupName="1" getChildPayload={i => this.state.courses[i]} onDrop={this.triggerUpdate} style={{height:"100%"}}>
                 {this.state.courses.map((p, index) => {
                 return (
                     <Draggable key={p.id}>
                     <div className="draggable-item">
+                        <DragHandleIcon style={{ marginBottom: "5px", float: "left", marginTop: "12px", marginLeft: "16px"}}/>
                         {p.data}
                         <Button close  style={{ marginTop: "11px", marginRight: "10px"}} onClick={() => this.removeCourse(index)}/>
                     </div>

@@ -18,7 +18,9 @@ import FlowchartPage from "./pages/Flowchart.jsx";
 import GenerateSchedulePage from "./pages/GenerateSchedule.jsx";
 import PreferencesPage from "./pages/Preferences.jsx";
 import SearchCoursesPage from "./pages/SearchCourses.jsx";
+import ViewFriendsPage from "./pages/FriendPage.jsx";
 import Menu from "./components/Menu.jsx";
+import CompareSchedulePage from "./pages/CompareSchedule.jsx";
 
 import axios from 'axios';
 
@@ -211,6 +213,19 @@ class App extends Component {
         handle_logout={this.handle_logout}
         logged_in={this.state.logged_in}
         first_name={this.state.first_name}
+        last_name={this.state.last_name}
+      />
+    )
+  }
+
+  menu = (currentPage) => {
+    return (
+      <Menu
+        handle_logout={this.handle_logout}
+        logged_in={this.state.logged_in}
+        first_name={this.state.first_name}
+        last_name={this.state.last_name}
+        currentPage={currentPage}
       />
     )
   }
@@ -256,10 +271,27 @@ class App extends Component {
     )
   }
 
+  viewFriendsPage = () => {
+    return (
+      <ViewFriendsPage
+        menu={this.menu}
+      />
+    )
+  }
+
   flowchartPage = () => {
     return (
       <FlowchartPage
         menu={this.menu}
+      />
+    )
+  }
+
+  compareSchedulePage = (props) => {
+    return (
+      <CompareSchedulePage
+        menu={this.menu}
+        params={props.match.params}
       />
     )
   }
@@ -270,7 +302,9 @@ class App extends Component {
       <Router>
         <Switch>
           <Route exact path="/" render={this.mainPage} />
+          {!this.state.logged_in &&
           <Route exact path="/login" component={this.loginPage}/>
+          }
           <Route exact path="/register" component={this.registerPage} />
           <Route exact path="/password_reset" component={this.resetPasswordPage} />
           <Route exact path="/password_reset_done" component={this.resetPasswordDonePage} />
@@ -291,8 +325,17 @@ class App extends Component {
           {this.state.logged_in && 
           <Route exact path="/search_courses" component={this.searchCoursesPage} />
           }
+          {this.state.logged_in && 
+          <Route exact path="/view_friends" component={this.viewFriendsPage} />
+          }
+          {this.state.logged_in && 
+          <Route exact path="/compare_schedule/:id/" component={this.compareSchedulePage} />
+          }
           {/* <Route exact path="/404" component={MainPage} /> change to 404 page */}
-          <Redirect to="/login" />
+          {this.state.logged_in
+          ? <Redirect to="/" />
+          : <Redirect to="/login" />
+          }
         </Switch>
       </Router>
     );

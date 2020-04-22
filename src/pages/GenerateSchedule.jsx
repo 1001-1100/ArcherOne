@@ -19,6 +19,16 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { green } from '@material-ui/core/colors';
 import PropTypes from 'prop-types';
 
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+import ReactLoading from 'react-loading';
+import ComboBox from '../components/ComboBox.jsx';
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
 const styles = theme => ({
     root: {
       display: 'flex',
@@ -37,11 +47,19 @@ const styles = theme => ({
     buttonProgress: {
     //   color: green[500],
       position: 'absolute',
-      top: '50%',
+      top: '65%',
       left: '50%',
       marginTop: -12,
       marginLeft: -12,
     },
+    buttonProgressSave: {
+        //   color: green[500],
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          marginTop: -12,
+          marginLeft: -12,
+        },
     schedButton:{
         textTransform: "none",
         borderRadius: "25px",
@@ -96,14 +114,11 @@ class GenerateSchedule extends Component {
             schedules: [],
             dataReceived: false,
 
+            snackBar: false,
             loading: false,
             success: false,
+            courseAdded: true,
      
-            //temp
-            id:0
-        
-
-            
         };
 
     }
@@ -206,6 +221,7 @@ class GenerateSchedule extends Component {
 
     handleAutoCompleteChange = (e, val) => {
         this.setState({currentCourse: val});
+        this.setState({AutoCompleteValue: val});
     }
 
     handleAutoCompletePress = (e) => {
@@ -216,43 +232,48 @@ class GenerateSchedule extends Component {
     }
 
     handleAddCoursePriority = () => {
-        this.setState({AutoCompleteValue: []})
+        console.log(this.state.currentCourse)
         const val = this.state.currentCourse;
-        this.setState({currentCourse: undefined})
+        this.setState({AutoCompleteValue: []})
+        this.setState({currentCourse: []})
+        this.setState({courseAdded: false})
         const newCourseList = [];
 
-        if(val != undefined){
-            this.state.courseList.map(course => {
-                if(course.id != val.id){
-                    newCourseList.push(course)
+        if(val != undefined && val != []){
+            // this.state.courseList.map(course => {
+            //     if(course.id != val.id){
+            //         newCourseList.push(course)
+            //     }
+            // })
+            // this.setState({courseList:newCourseList})
+            val.map(course => {
+                if(course.course_code != undefined && course.course_code.trim() != ''){
+                    const id = localStorage.getItem('user_id');
+                    const data = {
+                        courses: course.id,
+                        priority: true,
+                        user: id
+                    }
+                    axios.post('https://archerone-backend.herokuapp.com/api/coursepriority/', data,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(res => {
+                        console.log(res)
+                        const newCourse = {'id':res.data.id,'course_id':res.data.courses,'data':course.course_code}; 
+                        this.setState(state =>{
+                            const highCourses = state.highCourses.concat(newCourse);
+                            return{highCourses};
+                        });
+                    })
+                    .catch(error => {
+                        console.log(error.response)
+                    });
                 }
             })
-            this.setState({courseList:newCourseList})
-            if(val.course_code != undefined && val.course_code.trim() != ''){
-                const id = localStorage.getItem('user_id');
-                const data = {
-                    courses: val.id,
-                    priority: true,
-                    user: id
-                }
-                axios.post('https://archerone-backend.herokuapp.com/api/coursepriority/', data,
-                {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(res => {
-                    console.log(res)
-                    const newCourse = {'id':res.data.id,'course_id':res.data.courses,'data':val.course_code}; 
-                    this.setState(state =>{
-                        const highCourses = state.highCourses.concat(newCourse);
-                        return{highCourses};
-                    });
-                })
-                .catch(error => {
-                    console.log(error.response)
-                });
-            }
+            this.setState({courseAdded: true})
         }       
     }
 
@@ -301,7 +322,7 @@ class GenerateSchedule extends Component {
     setSchedInfo = () => {
         console.log(this.state.schedules)
         var generatedContents = this.state.schedules.map((item, index) =>
-            <GenSchedInfo key={item.id} id={item.id} offerings={item.offerings} scheduleContent={item.scheduleContent} tableContent={ item.tableContent} prefContent={item.prefContent} conflictsContent={item.conflictsContent} titleName={item.title} earliest={item.earliest} latest={item.latest} updateSchedTitle={this.updateSchedTitle}/>
+            <GenSchedInfo key={item.id} id={item.id} offerings={item.offerings} scheduleContent={item.scheduleContent} tableContent={item.tableContent} prefContent={item.prefContent} conflictsContent={item.conflictsContent} titleName={item.title} earliest={item.earliest} latest={item.latest} updateSchedTitle={this.updateSchedTitle}/>
         );
         this.setState({currentPage: 0})
         this.setState({generatedContents});
@@ -310,6 +331,10 @@ class GenerateSchedule extends Component {
         this.setState({currentContent: generatedContents[0]})
 
         this.handleScrollToGen();
+    }
+
+    createData(classNmbr, course, section, faculty, day, startTime, endTime, room, capacity, enrolled) {
+        return { classNmbr, course, section, faculty, day, startTime, endTime, room, capacity, enrolled };
     }
 
     createSchedInfo = () =>{
@@ -334,8 +359,11 @@ class GenerateSchedule extends Component {
             res.data.map(newSchedule =>{
                 var count = 0;
                 const scheduleContent = []
+                const tableContent = []
                 var earliest = 9
                 var latest = 17
+
+
                 newSchedule.offerings.map(offering=>{
                     var startTime = offering.timeslot_begin.split(':');
                     var endTime = offering.timeslot_end.split(':');
@@ -346,6 +374,7 @@ class GenerateSchedule extends Component {
                         section: offering.section,
                         startDate: this.createTimeslot(offering.day,startTime[0],startTime[1]),
                         endDate: this.createTimeslot(offering.day,endTime[0],endTime[1]),
+                        priorityId: 3,
                         location: offering.room,
                         professor: offering.faculty,
                         startTime: offering.timeslot_begin,
@@ -360,6 +389,29 @@ class GenerateSchedule extends Component {
                         latest = Number(endTime[0]) + 1
                     }
                     scheduleContent.push(newContent);
+                    var day = ''
+                    var classnumber = ''
+                    var course = ''
+                    var section = ''
+                    var faculty = ''
+                    var timeslot_begin = ''
+                    var timeslot_end = ''
+                    var room = ''
+                    var max_enrolled = ''
+                    var current_enrolled = ''
+
+                    day = offering.day
+                    classnumber = offering.classnumber
+                    course = offering.course
+                    section = offering.section
+                    faculty = offering.faculty
+                    timeslot_begin = offering.timeslot_begin
+                    timeslot_end = offering.timeslot_end
+                    room = offering.room
+                    max_enrolled = offering.max_enrolled
+                    current_enrolled = offering.current_enrolled
+                    const newTableContent = this.createData(classnumber, course, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled);
+                    // tableContent.push(newTableContent)
                     count += 1;
                 })
                 schedCount += 1;
@@ -367,8 +419,9 @@ class GenerateSchedule extends Component {
                     id: schedCount,
                     title: "Schedule "+schedCount.toString(),
                     scheduleContent: scheduleContent,
-                    tableContent: [],
+                    tableContent: tableContent,
                     prefContent: [],
+                    prefContent: newSchedule.preferences,
                     conflictsContent: newSchedule.information,
                     earliest: earliest,
                     latest: latest,
@@ -418,8 +471,9 @@ class GenerateSchedule extends Component {
         })
 
         this.setState({generatedContents: newArray});
-        this.setState({currentContent: newContent})
+        this.setState({currentContent: newContent});
     }
+    
     handleScrollToGen=()=>{
         window.scrollTo({
             top: this.generatedRef.current.offsetTop,
@@ -428,7 +482,7 @@ class GenerateSchedule extends Component {
     }
 
     handleSaveChange=()=>{
-
+        this.setState({loading: true});
         if(this.state.savedScheds.includes(this.state.currentContent.key)){
             var newArray = [...this.state.savedScheds];
             const index = newArray.indexOf(this.state.currentContent.key);
@@ -441,6 +495,7 @@ class GenerateSchedule extends Component {
             this.setState({saveButtonLabel: "Save Schedule"});
             const styleChange = {margin: "30px", backgroundColor: "#16775D", color: "white"};
             this.setState({saveButtonStyle: styleChange})
+            this.setState({loading: false});
         }else{
             const courseOfferings = []
             const user_id = localStorage.getItem('user_id')
@@ -474,16 +529,23 @@ class GenerateSchedule extends Component {
                 const savedScheds = state.savedScheds.concat(state.currentContent.key);
                 return {savedScheds};
             })
-
+            this.setState({loading: false});
             this.setState({saveButtonLabel: "Saved"});
             const styleChange = {margin: "30px", backgroundColor: "white", color: "#16775D", borderStyle: "solid", borderColor: "#16775D"};
             this.setState({saveButtonStyle: styleChange});
+            this.setState({snackBar: true});
         }
         
 
     }
 
-
+    handleCloseSnackBar = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        this.setState({snackBar: false});
+      }
 
     render() { 
         let search_field = this.props.search_field;
@@ -492,7 +554,7 @@ class GenerateSchedule extends Component {
 
         return (
             <div>
-                {this.props.menu()}
+                {this.props.menu('generateSchedule')}
                 {this.state.dataReceived ?
                 <div>
                     <Column flexGrow={1} style={{margin: "40px"}}>
@@ -510,12 +572,8 @@ class GenerateSchedule extends Component {
                                     value = {this.state.Input}
                                     onKeyPress={this.handleKeyPress}
                                     /> */}
-                                    <Autocomplete
-                                    options={this.state.courseList}
-                                    getOptionLabel={option => option.course_code}
-                                    style={{ width: 200 }}
-                                    filterSelectedOptions
-                                    renderInput={params => <TextField {...params} label="Course" variant="outlined" />}
+                                    <ComboBox
+                                    page={"add"}
                                     onChange={this.handleAutoCompleteChange}
                                     onKeyPress={this.handleAutoCompletePress}
                                     value={this.state.AutoCompleteValue}
@@ -526,6 +584,7 @@ class GenerateSchedule extends Component {
                                     <Button
                                         variant="contained"
                                         color = "Primary"
+                                        disabled={!this.state.courseAdded}
                                         style={{backgroundColor: "green", color:"white", height:"56px"}}
                                         onClick={this.handleAddCoursePriority}>
                                         <AddIcon fontSize="medium"/>  
@@ -552,8 +611,9 @@ class GenerateSchedule extends Component {
                                         <Button
                                         variant="contained"
                                         className={classes.schedButton}
-                                        disabled={this.state.loading}
+                                        disabled={!this.state.courseAdded}
                                         onClick={()=>this.createSchedInfo()}
+                                        
                                         // style={{backgroundColor: "green"}}
                                         >
                                         Generate Schedule
@@ -565,40 +625,60 @@ class GenerateSchedule extends Component {
                             </Row>
                         </div>
 
-                        <div className = "genSchedInfoContainer" style={this.state.hideGenContent ? {display: "none"} :  {margin: "40px"}} ref={this.generatedRef} >
+                        <div  ref={this.generatedRef}  className = "genSchedInfoContainer" style={this.state.hideGenContent ? {display: "none"} :  {margin: "40px"}}>
                             <span>{this.state.currentContent}</span>
                         
                             <div className = "paginationContainer">
-                                <Row horizontal='center'>
-                                    <Pagination aria-label="Page navigation example">
-                                        <PaginationItem disabled={this.state.currentPage <= 0}>
-                                            <PaginationLink onClick={e => this.handlePageChange(e, this.state.currentPage - 1)}
-                                                previous/>
+                                <Pagination aria-label="Page navigation example" style={{justifyContent: "center"}}>
+                                    <PaginationItem disabled={this.state.currentPage <= 0}>
+                                        <PaginationLink onClick={e => this.handlePageChange(e, this.state.currentPage - 1)}
+                                            previous/>
+                                    </PaginationItem>
+                                    {[...Array(this.state.pagesCount)].map((page, i) => 
+                                        <PaginationItem active={i === this.state.currentPage} key={i} className={'paginationItemStyle'}>
+                                            <PaginationLink onClick={e => this.handlePageChange(e, i)} className={'paginationLinkStyle'}>
+                                            {i + 1}
+                                            </PaginationLink>
                                         </PaginationItem>
-                                        {[...Array(this.state.pagesCount)].map((page, i) => 
-                                            <PaginationItem active={i === this.state.currentPage} key={i} className={'paginationItemStyle'}>
-                                                <PaginationLink onClick={e => this.handlePageChange(e, i)} className={'paginationLinkStyle'}>
-                                                {i + 1}
-                                                </PaginationLink>
-                                            </PaginationItem>
-                                            )}
-                                        <PaginationItem disabled={this.state.currentPage >= this.state.generatedContents.length - 1}>
-                                            <PaginationLink
-                                                onClick={e => this.handlePageChange(e, this.state.currentPage + 1)}
-                                                next
-                                            />
-                                            
-                                            </PaginationItem>
-                                    </Pagination>
-                                </Row>
+                                        )}
+                                    <PaginationItem disabled={this.state.currentPage >= this.state.generatedContents.length - 1}>
+                                        <PaginationLink
+                                            onClick={e => this.handlePageChange(e, this.state.currentPage + 1)}
+                                            next
+                                        />
+                                        
+                                        </PaginationItem>
+                                </Pagination>
                             </div>
                             <Row horizontal='center'>
-                                <button className={"schedButton"} style={this.state.saveButtonStyle} onClick={this.handleSaveChange}>{this.state.saveButtonLabel}</button>
+                                <div className={classes.root}>
+                                        <div className={classes.wrapper}> 
+                                            <Button
+                                            variant="contained"
+                                            className={classes.schedButton}
+                                            disabled={this.state.loading}
+                                            onClick={this.handleSaveChange}
+                                            style={this.state.saveButtonStyle}
+                                            >
+                                            {this.state.saveButtonLabel}
+                                            </Button>
+                                            {this.state.loading && <CircularProgress size={24} className={classes.buttonProgressSave}/>}
+                                        </div>
+                                        <Snackbar open={this.state.snackBar} autoHideDuration={4000} onClose={this.handleCloseSnackBar}>
+                                            <Alert onClose={this.handleCloseSnackBar} severity="success">
+                                            Your schedule have been successfully saved! View in <a href="/" style={{color:"#D3D3D3"}}>homepage</a>
+                                            </Alert>
+                                        </Snackbar>
+                                    </div>
+                                {/* <button className={"schedButton"} style={this.state.saveButtonStyle} onClick={this.handleSaveChange}>{this.state.saveButtonLabel}</button> */}
                             </Row>  
                         </div>
                     </Column>
                 </div>
-                : null }
+                : 
+                <div style={{display: "flex", justifyContent: "center", alignItems: "center", minHeight: "80vh"}}>
+                    <ReactLoading type={'spin'} color={'#9BCFB8'} height={'5%'} width={'5%'}/>
+                </div> }
             </div>  
         );
     }

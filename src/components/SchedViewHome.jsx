@@ -22,12 +22,113 @@ import Typography from '@material-ui/core/Typography';
 
 import Button from '@material-ui/core/Button';
 
+import EditableLabel from 'react-inline-editing';
+
+import EditIcon from '@material-ui/icons/Edit';
+import DoneIcon from '@material-ui/icons/Done';
+
+import PropTypes from 'prop-types';
+
+const styles = theme => ({
+  pencilIcon:{ 
+      marginLeft: "10px",
+      '&:hover': {
+          backgroundColor: "white",
+          color: "gray"
+        },
+  },
+  checkIcon:{
+      color: "green", 
+      marginLeft: "10px",
+      '&:hover': {
+          backgroundColor: "white",
+          color: "#79c879"
+        },
+  }
+});
+
 class SchedViewHome extends Component {
-    state = {  }
-    render() { const StyledTableCell = withStyles(theme => ({
+    constructor(props){
+      super(props);
+      this._handleFocus = this._handleFocus.bind(this);
+      this._handleFocusOut = this._handleFocusOut.bind(this);
+      this.handleKeyPress = this.handleKeyPress.bind(this);
+
+      this.state = {  
+        scheduleContent: props.scheduleContent,
+        tableContent: props.tableContent,
+        id: props.id,
+        schedTitle: props.titleName,
+        boolEdit: false,
+        palette: props.palette,
+        earliest: props.earliest,
+        latest: props.latest,
+        allowEdit: props.allowEdit,
+      }
+      this.editableLabel = React.createRef();
+      console.log("reach schedviewhome")
+      console.log(props)
+    }
+    
+
+    _handleFocus=(text)=> {
+      this.setState({boolEdit: true});
+      console.log('Focused with text: ' + text);
+      
+  }
+
+  _handleFocusOut=(text)=> {
+      console.log('Left editor with text: ' + text);
+      this.setState({schedTitle: text});
+      console.log("this is props");
+      console.log(this.props);
+      this.props.updateSchedTitle(text);
+      this.setState({boolEdit: false});
+
+  }
+
+  handleKeyPress = (event) => {
+      console.log("event: " + event);
+      if(event.key === 'Enter'){
+          this.setState({boolEdit: false});
+          console.log("isEditing: " + this.state.boolEdit);
+
+      }
+  }
+
+  editButtonPress = () =>{
+      if(this.state.boolEdit === false){
+          this.setState({boolEdit: true});
+          this.editableLabel.current.setState({isEditing: true});
+      }else if(this.state.boolEdit === true){
+          this.setState({boolEdit: false});
+      }
+  }
+
+  componentWillReceiveProps(props){
+    this.setState({
+      scheduleContent: props.scheduleContent,
+      tableContent: props.tableContent,
+      id: props.id,
+      schedTitle: props.titleName,
+      palette: props.palette,
+      earliest: props.earliest,
+      latest: props.latest,
+      allowEdit: props.allowEdit,
+    });
+    console.log(props.palette);
+  }
+
+    render() { 
+      
+      const { classes } = this.props;
+      
+      const StyledTableCell = withStyles(theme => ({
         head: {
           backgroundColor: '#006A4E',
           color: theme.palette.common.white,
+          position: "sticky",
+          top: 0,
         },
         body: {
           fontSize: 12,
@@ -53,64 +154,41 @@ class SchedViewHome extends Component {
         createData(2044, 'TREDTRI', 'S18', 'TORRES, MARIA', 'TH', '12:45', '14:15', 'GK301', 30, 28)
       ];
         return (
-          // <div class='savedSchedContent' style={{block: "display"}}>
-          //   <Grid container spacing={3}>
-          //   </Grid>
-          //     <Grid item xs={1}>
-          //     <Grid item xs={10}>
-          //       <center><SavedSchedule/></center>
-          //     </Grid>
-          //     <Grid item xs={1}>
-                
-
-          //     </Grid>
-          //     <Grid item xs={12}>
-          //     <div className="viewCoursesHome">
-          //               <TableContainer component={Paper}>
-          //                 <Table aria-label="customized table">
-          //                   <TableHead>
-          //                     <TableRow>
-          //                       <StyledTableCell> Class Number </StyledTableCell>
-          //                       <StyledTableCell> Course </StyledTableCell>
-          //                       <StyledTableCell> Section </StyledTableCell>
-          //                       <StyledTableCell> Faculty </StyledTableCell>
-          //                       <StyledTableCell> Day </StyledTableCell>
-          //                       <StyledTableCell> Time </StyledTableCell>
-          //                       <StyledTableCell> Room </StyledTableCell>
-          //                       <StyledTableCell> Capacity </StyledTableCell>
-          //                       <StyledTableCell> Enrolled </StyledTableCell>
-          //                     </TableRow>
-          //                   </TableHead>
-          //                   <TableBody>
-          //                     {rows.map(row => (
-          //                       <StyledTableRow key={row.classNmbr}>
-          //                         <StyledTableCell> {row.classNmbr} </StyledTableCell>
-          //                         <StyledTableCell> {row.course} </StyledTableCell>
-          //                         <StyledTableCell> {row.section} </StyledTableCell>
-          //                         <StyledTableCell> {row.faculty} </StyledTableCell>
-          //                         <StyledTableCell> {row.day} </StyledTableCell>
-          //                         <StyledTableCell> {row.startTime} - {row.endTime} </StyledTableCell>
-          //                         <StyledTableCell> {row.room} </StyledTableCell>
-          //                         <StyledTableCell align="right"> {row.capacity} </StyledTableCell>
-          //                         <StyledTableCell align="right"> {row.enrolled} </StyledTableCell>
-          //                       </StyledTableRow>
-          //                     ))}
-          //                   </TableBody>
-          //                 </Table>
-          //               </TableContainer>
-          //             </div>
-          //     </Grid>
-          //   </Grid>
-          // </div>
+          <div style={{marginRight:"20px"}}>
             <Row horizontal="center">
                 <Column flexShrink={1}>
-                  <div class='savedSchedContent' style={{block: "display"}}>
-                    <center><SavedSchedule/></center>
+                  <div id='savedSchedContent' class='savedSchedContent' style={{block: "display"}}>
+                
+                {this.state.allowEdit ? 
+                  <Row horizontal= 'center'>
+                      <EditableLabel ref={this.editableLabel} text={this.state.schedTitle}
+                      labelClassName='myLabelClass'
+                      inputClassName='myInputClass'
+                      inputWidth='200px'
+                      inputHeight='25px'
+                      inputMaxLength='50'
+                      labelFontWeight='bold'
+                      inputFontWeight='bold'
+                      onFocus={this._handleFocus}
+                      onFocusOut={this._handleFocusOut}
+                      onChange={this.handleKeyPress}
+                      /> 
+
+                      {this.state.boolEdit ? <DoneIcon fontSize="medium" className={classes.checkIcon} onClick={this.editButtonPress}/> : <EditIcon fontSize= "small" className={classes.pencilIcon} onClick={this.editButtonPress}/>}
+                    </Row>
+                : 
+                  <Row horizontal= 'center'>
+                    <h5>{this.state.schedTitle}</h5>  
+                  </Row>
+                }
+                    <center>
+                      <ScheduleView height='300px' content={this.state.scheduleContent} earliest={this.state.earliest} latest={this.state.latest} palette={this.state.palette}/>
+                    </center>
                   
                   <Row horizontal='center' flexShrink={1}>
                     <div className="viewCoursesHome">
-                      <TableContainer component={Paper}>
-                        <Table aria-label="customized table">
+                      <TableContainer component={Paper} style={{maxHeight: "428px", overflowY: "auto", overflowX: "hidden"}}>
+                        <Table aria-label="customized table" fixedHeader={false} style={{ tableLayout: 'auto' }} >
                           <TableHead>
                             <TableRow>
                               <StyledTableCell> Class Number </StyledTableCell>
@@ -125,7 +203,7 @@ class SchedViewHome extends Component {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {rows.map(row => (
+                            {this.state.tableContent.map(row => (
                               <StyledTableRow key={row.classNmbr}>
                                 <StyledTableCell> {row.classNmbr} </StyledTableCell>
                                 <StyledTableCell> {row.course} </StyledTableCell>
@@ -146,10 +224,13 @@ class SchedViewHome extends Component {
                 </div>
                 </Column>
             </Row>
-           
+          </div>
   
         );
     }
 }
  
-export default SchedViewHome;
+SchedViewHome.propTypes={
+  classes: PropTypes.object.isRequired,
+};
+export default withStyles(styles)(SchedViewHome);

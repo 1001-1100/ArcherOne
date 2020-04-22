@@ -21,6 +21,12 @@
 
 .DnDContainer{
     margin-top: 40px;
+/*
+    margin-left: 10em;
+    margin-right: 10em;
+*/
+    margin-left: 30vh;
+    margin-right: 30vh;   
 }
 
 .paginationContainer{
@@ -49,4 +55,9 @@
     border-style: solid;
     border-color: #16775D;
     margin-top: 20px;
+}
+
+.schedButton:hover{
+    background-color: white;
+    color: #16775D;
 }

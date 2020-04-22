@@ -1,4 +1,8 @@
 import React, {Component} from 'react';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import { FixedSizeList } from 'react-window';
 import '../css/BoxInfo.css';
 
 class BoxInfo extends Component {
@@ -16,9 +20,14 @@ class BoxInfo extends Component {
         
         return ( 
             <div className="boxinfoContainer" key={this.state.id}>
+                <List>
                 {this.state.boxContent.map((pref, index)=>(
-                <p key={index + this.state.id}>{pref}</p>
+                    <ListItem>
+                        <ListItemText primary={pref}/>
+                    </ListItem>
+                    // <p key={index + this.state.id}>{pref}</p>
                 ))}
+                </List>
             </div>
          );
     }

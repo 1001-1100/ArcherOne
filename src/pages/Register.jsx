@@ -52,6 +52,8 @@ class Register extends Component {
     constructor(props){
         super(props);
 
+        this.degreeRef = React.createRef();
+
         this.state = {
             fields: {},
             errors: {},
@@ -90,14 +92,28 @@ class Register extends Component {
 
         let fields = this.state.fields;
         fields[field] = e.target.value;        
+        if(field == 'college'){
+          fields['degree'] = undefined
+          console.log(this.degreeRef)
+          this.degreeRef.current.setState({value: undefined})
+          // this.degreeRef.current.setState({searchText: undefined})
+          // console.log(this.degreeRef.current.state.value)
+        }
         this.setState({fields});
+
     }
 
     handleAutoCompleteChange = (e, val) => {
-        let fields = this.state.fields;
-        fields['degree'] = val.id;
-        console.log(val.id);
-        this.setState({fields});
+        if(val != undefined){
+          let fields = this.state.fields;
+          fields['degree'] = val.id;
+          console.log(val.id);
+          this.setState({fields});
+        }else{
+          let fields = this.state.fields;
+          fields['degree'] = undefined;
+          this.setState({fields});
+        }
     }
 
     handleValidation = () => {
@@ -150,6 +166,16 @@ class Register extends Component {
             formIsValid = false;
             errors["passCon"] = "Required Confirm Password"
         }
+
+        if(!fields["college"]){
+            formIsValid = false;
+            errors["college"] = "Required College"
+        }
+
+        if(!fields["degree"]){
+            formIsValid = false;
+            errors["degree"] = "Required Degree"
+        }
   
         this.setState({errors: errors});
         return formIsValid;
@@ -188,6 +214,7 @@ class Register extends Component {
 
                 email: this.state.fields['email'],
                 // username: this.state.idNo,
+                id_num: this.state.fields['idNo'],
                 first_name: this.state.fields['firstName'],
                 last_name: this.state.fields['lastName'],
                 password1: this.state.fields['pass'],
@@ -292,6 +319,7 @@ class Register extends Component {
                                     
                                 ))}
                             </TextField>
+                          <span className="error">{this.state.errors["college"]}</span>
                         </div>
                         {/* <select id="college" name="college" value={this.state.fields["college"]} onChange={this.handleChange.bind(this, "college")} >
                             <>
@@ -304,8 +332,8 @@ class Register extends Component {
                         <br/><br/>
 
                         {/* <br/> */}
-
-                        <ComboBox page="register" name="degree" value={this.state.fields["degree"]} onChange={this.handleAutoCompleteChange} college={this.state.fields["college"]} degrees={this.state.degrees}/><br/>
+                        {/* <span className="error">{this.state.errors["degree"]}</span> */}
+                        <ComboBox ref={this.degreeRef} page="register" name="degree" value={this.state.fields["degree"]} onChange={this.handleAutoCompleteChange} college={this.state.fields["college"]} degrees={this.state.degrees}/><br/>
 
                         {/* Password */}
                         <br/>

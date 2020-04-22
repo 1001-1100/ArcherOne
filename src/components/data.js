@@ -1,6 +1,5 @@
 export const appointments = [
     {
-      
       id: 0,
       title: "HUMAART",
       section: "S17",

@@ -16,3 +16,7 @@
 .color-nav { 
     background-color: #006A4E; 
 } 
+
+.active{
+    color:white;
+}

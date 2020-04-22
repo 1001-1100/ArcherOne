@@ -118,7 +118,7 @@ class ClassesTable extends Component {
             <div>
                 <h3>Non-credited Course Details</h3>
                 <div className="viewCourses">
-                  <TableContainer component={Paper}>
+                  <TableContainer component={Paper} style={{maxHeight: "428px", overflowY: "auto", overflowX: "hidden"}}>
                     <Table aria-label="customized table">
                       <TableHead>
                         <TableRow>
