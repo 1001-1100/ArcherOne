@@ -23,3 +23,9 @@ a.backBtn:hover{
 .scheduleContent{
     height: 83em;
 }
+
+.viewCoursesHome{
+    width: 47%;
+    margin-top: 20px;
+    position: absolute;
+}

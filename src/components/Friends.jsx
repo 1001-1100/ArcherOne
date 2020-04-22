@@ -80,6 +80,7 @@ class Friends extends React.Component{
     }
 
     getInfo(){
+        this.refreshFriends();
         axios.get('https://archerone-backend.herokuapp.com/api/friendrequestlist/'+localStorage.getItem('user_id')+'/')
         .then(res => {
             this.setState({requests: []})
@@ -105,6 +106,7 @@ class Friends extends React.Component{
     }
 
     refreshFriends(){
+        console.log('friends refreshing')
         axios.get('https://archerone-backend.herokuapp.com/api/sentrequestlist/'+localStorage.getItem('user_id')+'/')
         .then(res => {
             const sentRequests = [];
@@ -276,7 +278,7 @@ class Friends extends React.Component{
                         {friendRequests.map((request, index) => (
                             <DropdownItem header className="panelItem">
                                 <Row>
-                                    <Col xs={12} md={8}>
+                                    <Col sm={7}>
                                         {/* <svg class="bi bi-circle-fill" id='profileLink' width="32" height="32" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                             <circle cx="10" cy="10" r="8"></circle>
                                         </svg> */}
@@ -285,14 +287,14 @@ class Friends extends React.Component{
                                     </Col>
 
                                     {!request.acceptStatus &&
-                                        <Col xs={6} md={4}>
+                                        <Col sm={5}>
                                             <Button onClick={(e) => this.handleAcceptClick(e, index, request.id, request.from_user)} variant="success" size="sm" className="marginRightSeparator">Accept</Button>
                                             <Button onClick={(e) => this.handleDeleteClick(e, index, request.id)} variant="secondary" size="sm">Delete</Button>
                                         </Col>
                                     }
 
                                     {request.acceptStatus &&
-                                        <Col xs={6} md={4}>
+                                        <Col sm={5}>
                                             <span className="marginRightSeparator"> Accepted </span>
                                             <svg class="bi bi-check-circle" width="24" height="24" viewBox="0 0 16 16" fill="#006A4E" xmlns="http://www.w3.org/2000/svg">
                                                 <path fill-rule="evenodd" d="M15.354 2.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3-3a.5.5 0 11.708-.708L8 9.293l6.646-6.647a.5.5 0 01.708 0z" clip-rule="evenodd"></path>

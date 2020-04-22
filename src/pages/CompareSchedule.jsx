@@ -353,7 +353,7 @@ setSchedInfo = () => {
                     <ArrowBackIosIcon fontSize="large"className={classes.backBtn} viewBox="0 0 1 24"/> <span className="backBtn">Back</span>
                     </a>
                     <div style={{color:"white"}}>
-                        <center><h5 >FIRST TRIMESTER, AY 2019 - 2020</h5></center>
+                        <center><h5 >SECOND TRIMESTER, AY 2019 - 2020</h5></center>
                     </div>
                     {/* <img class='img-responsive' id='lower' src={SidebarIMG}/> */}
                 </div>

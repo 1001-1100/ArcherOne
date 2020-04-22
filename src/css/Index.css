@@ -77,7 +77,13 @@ import './fonts/VarelaRound-Regular.ttf'
 }
 
 .viewCoursesHome{
-    width: 750px;
+    width: 60%;
+    margin-top: 20px;
+    position: absolute;
+}
+
+.viewCoursesHomepage{
+    width: 65%;
     margin-top: 20px;
     position: absolute;
 }

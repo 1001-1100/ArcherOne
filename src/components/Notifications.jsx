@@ -103,7 +103,7 @@ class Notifications extends React.Component{
                 if(!notif.seen){
                     newNotifs += 1;
                 }
-                if(notif.category == 'Friend'){
+                if(notif.category != 'Schedule'){
                     this.setState({notifRefresh: true})
                 }
                 this.setState({database})

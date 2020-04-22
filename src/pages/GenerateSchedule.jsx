@@ -560,7 +560,7 @@ class GenerateSchedule extends Component {
                     <Column flexGrow={1} style={{margin: "40px"}}>
                         <div className="courseInputContainer">
                             <Row horizontal = 'center'>
-                                <h1>Term 2, AY2019-2020</h1>
+                                <h1>SECOND TRIMESTER, AY 2019 - 2020</h1>
                             </Row>
                             <Row horizontal = 'center' style={{margin: "20px"}}>
                                 <div id="search_container">

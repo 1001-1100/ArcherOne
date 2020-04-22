@@ -700,7 +700,7 @@ class Index extends Component {
               <Grid item xs={12}>
                 <br></br>
                     <Typography gutterBottom variant="h3" align="center">
-                      FIRST TRIMESTER, AY 2019 - 2020
+                      SECOND TRIMESTER, AY 2019 - 2020
                     </Typography>
               </Grid>
 
