@@ -97,16 +97,16 @@ class App extends Component {
     })
     .then(res => {
         console.log(res.data);
-        localStorage.setItem('token', res.data.token);
-        localStorage.setItem('first_name', res.data.user.first_name);
-        localStorage.setItem('last_name', res.data.user.last_name);
-        localStorage.setItem('user_id', res.data.user.id);
-        this.setState({
-          logged_in: true,
-          first_name: res.data.user.first_name,
-          last_name: res.data.user.last_name,
-          user_id: res.data.user.id,
-        })
+        // localStorage.setItem('token', res.data.token);
+        // localStorage.setItem('first_name', res.data.user.first_name);
+        // localStorage.setItem('last_name', res.data.user.last_name);
+        // localStorage.setItem('user_id', res.data.user.id);
+        // this.setState({
+        //   logged_in: true,
+        //   first_name: res.data.user.first_name,
+        //   last_name: res.data.user.last_name,
+        //   user_id: res.data.user.id,
+        // })
         _callback(true);
     })
     .catch(error => {
@@ -161,6 +161,9 @@ class App extends Component {
       last_name: '',
       id_num: '',
     });
+    return (
+      <Redirect to="/login" />
+    );
   }
 
   loginPage = () => {
@@ -331,6 +334,7 @@ class App extends Component {
           {this.state.logged_in && 
           <Route exact path="/compare_schedule/:id/" component={this.compareSchedulePage} />
           }
+          <Route exact path="/logout" component={this.handle_logout} />
           {/* <Route exact path="/404" component={MainPage} /> change to 404 page */}
           {this.state.logged_in
           ? <Redirect to="/" />

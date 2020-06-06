@@ -60,6 +60,7 @@ class Register extends Component {
             colleges: [],
             degrees: [],
             snackBar: false,
+            snackBarSucess: false,
             loading: false,
             success: false,
         }
@@ -227,7 +228,7 @@ class Register extends Component {
                 if(res){
                     this.setState({success: true});
                     this.setState({loading: false});
-                    this.setRedirect();
+                    this.setState({snackBarSuccess: true})
                 }else{
                   this.setState({success: false});
                   this.setState({loading: false});
@@ -247,6 +248,7 @@ class Register extends Component {
       }
   
       this.setState({snackBar: false});
+      this.setState({snackBarSuccess: false});
     }
 
     render() {
@@ -370,6 +372,11 @@ class Register extends Component {
                     <Snackbar open={this.state.snackBar} autoHideDuration={4000} onClose={this.handleCloseSnackBar}>
                       <Alert onClose={this.handleCloseSnackBar} severity="error">
                       Failed to register 
+                      </Alert>
+                    </Snackbar>
+                    <Snackbar open={this.state.snackBarSuccess} autoHideDuration={4000} onClose={this.handleCloseSnackBar}>
+                      <Alert onClose={this.handleCloseSnackBar} severity="success">
+                      Email verification sent
                       </Alert>
                     </Snackbar>
                     <br/>
