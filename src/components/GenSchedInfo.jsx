@@ -126,9 +126,9 @@ class GenSchedInfo extends Component {
                         <ScheduleView id='scheduleView' content={this.state.scheduleContent} earliest={this.state.earliest} latest={this.state.latest} palette={this.state.defPalette} />
                     </Column>
                     <Column flexGrow={1} horizontal = 'center'style={{marginLeft: "20px"}} >
-                        <Row horizontal = 'center'>
+                        {/* <Row horizontal = 'center'>
                             <ClassesTable content={this.state.tableContent} />
-                        </Row>
+                        </Row> */}
                         <Row horizontal = 'center'>
                             <Column horizontal = 'center' style={{marginLeft: "10px"}}>
                                 Preferences
