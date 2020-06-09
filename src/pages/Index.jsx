@@ -679,7 +679,14 @@ class Index extends Component {
     this.setState({currentClasses})
 
   }
+
+  goToCreateSchedule = () => {
+    return <Redirect to='/login' />
+  }
   
+  goToSearchCourse = () => {
+    return <Redirect to='/search_course' />
+  }
 
     render() {
         this.state.pagesCount = this.state.generatedContents.length;
@@ -979,10 +986,10 @@ class Index extends Component {
                 <Button
                   variant="contained"
                   className={classes.buttonStyle}
-     
+                  onClick={this.goToSearchCourse}
                   // style={{backgroundColor: "green"}}
                   >
-                  Create Schedule
+                  Search Course Offerings
                 </Button>
               </center>
             </Grid>
@@ -1032,10 +1039,10 @@ class Index extends Component {
                 <Button
                   variant="contained"
                   className={classes.buttonStyle}
-     
+                  onClick={this.goToCreateSchedule}
                   // style={{backgroundColor: "green"}}
                   >
-                  Check Flowchart
+                  Create Schedule
                 </Button>
               </center>
             </Grid>
