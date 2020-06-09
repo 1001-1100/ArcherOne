@@ -668,7 +668,7 @@ class Index extends Component {
       // snackBarVariables[1].snackBarFailed = true;
       this.setState({snackBarVariables});
       console.log(snackBarVariables);
-      this.retrieveSchedInfo()
+      window.location.reload();
     }).catch(err => {
       console.log(err.response)
     })
