@@ -219,6 +219,8 @@ class Index extends Component {
         snackbarMsg: "",
         allowEdit: true,
         scheduleChanged: true,
+        goToSearch: false,
+        goToCreate: false
 //        this.scheduleRef = React.createRef();
         
       }
@@ -683,11 +685,20 @@ class Index extends Component {
   }
 
   goToCreateSchedule = () => {
-    return <Redirect to='/login' />
+    this.setState({goToCreate: true});
   }
   
   goToSearchCourse = () => {
-    return <Redirect to='/search_course' />
+    this.setState({goToSearch: true});
+  }
+
+  renderRedirect = () => {
+    if(this.state.goToSearch){
+      return <Redirect to='/search_courses/'/>
+    }else if(this.state.goToCreate){
+      return <Redirect to='/login/'/>
+    }
+
   }
 
     render() {
@@ -1051,6 +1062,7 @@ class Index extends Component {
             <Grid item xs={1}>
             </Grid>
           </Grid>
+          {this.renderRedirect()}
           </div>
         </div>        
       );
