@@ -260,17 +260,15 @@ class FriendPage extends Component {
     }
 
     handlePageChange = (e,index) => {
-  
         this.setState(state =>{
             var currentContent = state.generatedContents[index];
             return {currentContent};
-            });
-        
+        });
         this.setState({currentPage: index});
         this.setState(state =>{
             var currentPage = index;
             return {currentPage};
-            });
+        });
         console.log("pressed page " + index);
         console.log(this.state.generatedContents[index]);
         window.scrollTo({top: 0, behavior: 'smooth'});
@@ -285,20 +283,23 @@ class FriendPage extends Component {
         // this.setState({hideGenContent: false});
         this.setState({generatedContents}, ()=>{
             this.setState({currentContent: generatedContents[0]}, () => {
-                this.setState({hasSelectedFriend: true})
+                this.setState({pagesCount: generatedContents.length}, () => {
+                    this.setState({currentPage: 0}, () => {
+                        this.setState({hasSelectedFriend: true})
+                    })
+                });
                 
             })
-            this.setState({pagesCount: generatedContents.length});
-            this.setState({currentPage: 0})
         });
-    
-      }
-    
+    }
+
+    tempTest = () => {
+        this.setState({hasSelectedFriend: true})
+    }
 
     handleClickOpenAlert = (friend) => {
         this.setState({openAlert: true});
         this.setState({selectedFriend: friend});
-        
     }
      
     handleCloseAlert = () => {
@@ -446,7 +447,7 @@ class FriendPage extends Component {
                     this.setSchedInfo();
                 })
                 
-                this.setState({hasSelectedFriend: true});
+                // this.setState({hasSelectedFriend: true});
             });
             // this.setState({success: true});
             // this.setState({loading: false});
@@ -629,7 +630,7 @@ class FriendPage extends Component {
                         <div>
                         {this.state.hasSelectedFriend ?
                         <div class="sidemenu-main" >
-                            <Tabs defaultActiveKey="details" id="uncontrolled-tab-example">
+                            <Tabs defaultActiveKey="schedule" id="uncontrolled-tab-example">
                                 <Tab eventKey="details" title="Details">
                                     <div className="friendName">
                                         <Typography gutterBottom variant="h4" align="center" style={{color:"black"}}>
