@@ -356,7 +356,12 @@ class GenerateSchedule extends Component {
           }else{
             this.setState({success: true});
             this.setState({loading: false});
-          } 
+        } 
+        this.setState({savedScheds: [], hideGenContent: true, generatedContents: [], currentContent: ""});
+
+        this.setState({saveButtonLabel: "Save Schedule"});
+        const styleChange = {margin: "30px", backgroundColor: "#16775D", color: "white"};
+        this.setState({saveButtonStyle: styleChange});
 
         axios.post('https://archerone-backend.herokuapp.com/api/generateschedule/',
         {
