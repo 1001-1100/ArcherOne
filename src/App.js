@@ -308,6 +308,7 @@ class App extends Component {
           {!this.state.logged_in &&
           <Route exact path="/login" component={this.loginPage}/>
           }
+          <Route exact path="/search_courses" component={this.searchCoursesPage} />
           <Route exact path="/register" component={this.registerPage} />
           <Route exact path="/password_reset" component={this.resetPasswordPage} />
           <Route exact path="/password_reset_done" component={this.resetPasswordDonePage} />
@@ -324,9 +325,6 @@ class App extends Component {
           }
           {this.state.logged_in && 
           <Route exact path="/preferences" component={this.preferencesPage} />
-          }
-          {this.state.logged_in && 
-          <Route exact path="/search_courses" component={this.searchCoursesPage} />
           }
           {this.state.logged_in && 
           <Route exact path="/view_friends" component={this.viewFriendsPage} />
