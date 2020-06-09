@@ -24,6 +24,8 @@ import MuiAlert from '@material-ui/lab/Alert';
 
 import ReactLoading from 'react-loading';
 import ComboBox from '../components/ComboBox.jsx';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -80,6 +82,15 @@ const styles = theme => ({
     }
   });
 
+  const GreenCheckbox = withStyles({
+    root: {
+      '&$checked': {
+        color: green[600],
+      },
+    },
+    checked: {},
+  })((props) => <Checkbox color="default" {...props} />);
+
 class GenerateSchedule extends Component {
 
     constructor(props) {
@@ -118,6 +129,7 @@ class GenerateSchedule extends Component {
             loading: false,
             success: false,
             courseAdded: true,
+            filterFull: true
      
         };
 
@@ -350,7 +362,8 @@ class GenerateSchedule extends Component {
         {
             highCourses: this.state.highCourses, 
             lowCourses: this.state.lowCourses,
-            user_id: localStorage.getItem('user_id')
+            user_id: localStorage.getItem('user_id'),
+            filterFull: this.state.filterFull
         })
         .then(res => {
             console.log(res)
@@ -546,6 +559,10 @@ class GenerateSchedule extends Component {
     
         this.setState({snackBar: false});
       }
+    
+    handleFilterFull = () => {
+        this.setState({filterFull: !this.state.filterFull});
+    }
 
     render() { 
         let search_field = this.props.search_field;
@@ -622,6 +639,10 @@ class GenerateSchedule extends Component {
                                     </div>
                                 </div>
                                 {/* <button className="schedButton" onClick={()=>this.createSchedInfo()} style={{marginTop: "20px"}}>Generate Schedule</button> */}
+                            </Row>
+                            <Row horizontal='center' style={{margin: "20px"}}>
+                                <FormControlLabel
+                                control = {<GreenCheckbox checked={this.state.filterFull} onChange={this.handleFilterFull} color="primary"/>}label="Filter out closed classes" />
                             </Row>
                         </div>
 
