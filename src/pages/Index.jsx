@@ -182,7 +182,8 @@ var sectionStyle = {
   backgroundRepeat: "no-repeat",
   backgroundSize: "cover",
   overflow: "hidden",
-  backgroundImage:  "url(" + Background + ")"
+  backgroundImage: "linear-gradient(#086e53, #579d8b)"
+
 };
 
 class Index extends Component {
