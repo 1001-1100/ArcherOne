@@ -441,6 +441,7 @@ class Index extends Component {
 
     this.setState({generatedContents: newArray});
     this.setState({currentContent: newContent});
+    window.location.reload();
   }
 
  deleteSchedule=()=>{
