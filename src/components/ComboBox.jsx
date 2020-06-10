@@ -115,6 +115,7 @@ class ComboBox extends React.Component{
                             day += day_code;
                         })
                         const offering = this.createData(classnumber, course, course_id, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled);
+                        console.log(offering)
                         offeringList.push(offering);
                         }
                     })
@@ -211,7 +212,7 @@ class ComboBox extends React.Component{
             <Autocomplete
             multiple
             options={this.state.offeringList}
-            getOptionLabel={option => option.course + ' ' + option.section}
+            getOptionLabel={option => option.course + ' ' + option.section + ' (' + option.classNmbr + ')'}
             filterSelectedOptions
             noOptionsText={"Start typing to add a course offering!"}
             style={{ width: 500 }}
@@ -220,6 +221,38 @@ class ComboBox extends React.Component{
                 <TextField
                     {...params}
                     label="Course Offering"
+                    variant="outlined"
+                    InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                        <React.Fragment>
+                        {this.state.loading ? <CircularProgress color="inherit" size={20} /> : null}
+                        {params.InputProps.endAdornment}
+                        </React.Fragment>
+                    ),
+                    }}
+                />
+            )}
+            onChange={this.props.onChange}
+            // onKeyPress={this.props.onKeyPress}
+            onInputChange={this.handleOfferingThrottled}
+            value={this.props.value}
+            />
+            )
+        } else if(this.props.page == "generate"){
+            return(
+            <Autocomplete
+            multiple
+            options={this.state.offeringList}
+            getOptionLabel={option => option.course + ' ' + option.section + ' (' + option.classNmbr + ')'}
+            filterSelectedOptions
+            noOptionsText={"Start typing to add specific course offering!"}
+            style={{ width: 500 }}
+            loading={this.state.loading}
+            renderInput={(params) => (
+                <TextField
+                    {...params}
+                    label="Add specific course offerings"
                     variant="outlined"
                     InputProps={{
                     ...params.InputProps,

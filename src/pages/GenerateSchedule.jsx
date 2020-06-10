@@ -129,7 +129,9 @@ class GenerateSchedule extends Component {
             loading: false,
             success: false,
             courseAdded: true,
-            filterFull: true
+            filterFull: true,
+
+            courseOfferings: []
      
         };
 
@@ -368,7 +370,8 @@ class GenerateSchedule extends Component {
             highCourses: this.state.highCourses, 
             lowCourses: this.state.lowCourses,
             user_id: localStorage.getItem('user_id'),
-            filterFull: this.state.filterFull
+            filterFull: this.state.filterFull,
+            courseOfferings: this.state.courseOfferings
         })
         .then(res => {
             console.log(res)
@@ -568,6 +571,10 @@ class GenerateSchedule extends Component {
     handleFilterFull = () => {
         this.setState({filterFull: !this.state.filterFull});
     }
+    
+    handleCourseOfferingChange =(e, val)=>{
+        this.setState({courseOfferings: val});
+    }
 
     render() { 
         let search_field = this.props.search_field;
@@ -627,6 +634,13 @@ class GenerateSchedule extends Component {
                                     </Column>
                                 </Row>
                             </div>
+                            <Row horizontal='center' style={{margin: "20px"}}>
+                                <ComboBox page={"edit"} value={this.state.courseOfferings} onChange={this.handleCourseOfferingChange}></ComboBox>
+                            </Row>
+                            <Row horizontal='center' style={{margin: "20px"}}>
+                                <FormControlLabel
+                                control = {<GreenCheckbox checked={this.state.filterFull} onChange={this.handleFilterFull} color="primary"/>}label="Filter out closed classes" />
+                            </Row>
                             <Row horizontal = 'center' style={{margin: "20px"}}>
                                 <div className={classes.root}>
                                     <div className={classes.wrapper}> 
@@ -644,10 +658,6 @@ class GenerateSchedule extends Component {
                                     </div>
                                 </div>
                                 {/* <button className="schedButton" onClick={()=>this.createSchedInfo()} style={{marginTop: "20px"}}>Generate Schedule</button> */}
-                            </Row>
-                            <Row horizontal='center' style={{margin: "20px"}}>
-                                <FormControlLabel
-                                control = {<GreenCheckbox checked={this.state.filterFull} onChange={this.handleFilterFull} color="primary"/>}label="Filter out closed classes" />
                             </Row>
                         </div>
 
