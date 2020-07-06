@@ -22,20 +22,29 @@ body {
     background-color: white;
 }
 
+/*
 .sidemenu-main-flow {
     margin-left: 15%;
     margin-right: 13%;
     /* overflow-y: scroll; */
-}
+/*}*/
+
 
 .sidemenu-main {
     margin-left: 23%;
     /* overflow-y: scroll; */
 }
 
+.sideRight{
+
+}
+
 .flowchart-area {
-    margin-top: 2%;
+    margin-top: 3%;
     overflow: auto;
+    display: inline-block;
+    margin-left: 12%;
+    margin-right: auto;
 }
 
 .flowchart-header-parent {

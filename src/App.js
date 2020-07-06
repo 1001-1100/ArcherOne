@@ -80,11 +80,11 @@ class App extends Component {
           last_name: res.data.user.last_name,
           user_id: res.data.user.id,
         })
-        _callback(true);
+        _callback(null);
     })
     .catch(error => {
         console.log(error.response)
-        _callback(false);
+        _callback(error.response);
     });
   }
 
@@ -107,11 +107,11 @@ class App extends Component {
         //   last_name: res.data.user.last_name,
         //   user_id: res.data.user.id,
         // })
-        _callback(true);
+        _callback(null);
     })
     .catch(error => {
         console.log(error.response)
-        _callback(false);
+        _callback(error.response);
     });
   }
 

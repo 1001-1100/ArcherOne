@@ -27,6 +27,19 @@ import ComboBox from '../components/ComboBox.jsx';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
+import {Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import Skeleton from '@material-ui/lab/Skeleton';
+
+import groupArray from 'group-array'
+
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
@@ -90,6 +103,16 @@ const styles = theme => ({
     },
     checked: {},
   })((props) => <Checkbox color="default" {...props} />);
+     
+     const WhiteCheckbox = withStyles({
+    root: {
+        color: "white",
+      '&$checked': {
+        color: "white",
+      },
+    },
+    checked: {},
+  })((props) => <Checkbox color="default" {...props} />);
 
 class GenerateSchedule extends Component {
 
@@ -101,6 +124,7 @@ class GenerateSchedule extends Component {
         this.generatedRef = React.createRef();
         this.handleScrollToGen = this.handleScrollToGen.bind(this);
         this.handleSaveChange = this.handleSaveChange.bind(this);
+      
         // this.updateSchedTitle = this.updateSchedTitle.bind(this);
         this.state = {
             highPriorityId: "1",
@@ -131,10 +155,144 @@ class GenerateSchedule extends Component {
             courseAdded: true,
             filterFull: true,
 
-            courseOfferings: []
+            courseOfferings: [],
+            
+            openModalCourseOfferings: false,
+            modalCourseName: "",
+            siteData: [],
+            siteDataArray: [],
      
+            skeletons: [...Array(8).keys()]
         };
 
+    }
+
+    getLowCourseOfferings(id, val, newCourses, _callback){
+        if(val.course_code.trim() != ''){
+            const offeringList = [];
+            const courses = [];
+            axios.get('https://archerone-backend.herokuapp.com/api/searchcourse/'+val.course_code.trim()+'/')
+            .then(res => {
+                res.data.map(course => {
+                    courses.push(course.id)
+                })
+                console.log(courses)
+                axios.post('https://archerone-backend.herokuapp.com/api/courseofferingslist/',{
+                    courses,
+                    applyPreference: false,
+                    user_id: localStorage.getItem('user_id')
+                }).then(res => {
+                    res.data.map(bundle => {
+                        var arranged = groupArray(bundle, 'classnumber');
+                        for (let key in arranged) {
+                        var days = []
+                        var day = ''
+                        var classnumber = ''
+                        var course = ''
+                        var course_id = ''
+                        var section = ''
+                        var faculty = ''
+                        var timeslot_begin = ''
+                        var timeslot_end = ''
+                        var room = ''
+                        var max_enrolled = ''
+                        var current_enrolled = ''
+                        arranged[key].map(offering => {
+                            days.push(offering.day)
+                            classnumber = offering.classnumber
+                            course = offering.course
+                            course_id = offering.course_id
+                            section = offering.section
+                            faculty = offering.faculty
+                            timeslot_begin = offering.timeslot_begin
+                            timeslot_end = offering.timeslot_end
+                            room = offering.room
+                            max_enrolled = offering.max_enrolled
+                            current_enrolled = offering.current_enrolled
+                        })
+                        days.map(day_code => {
+                            day += day_code;
+                        })
+                        const offering = this.createData(classnumber, course, course_id, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled);
+                        offeringList.push(offering);
+                        }
+                    })
+                    newCourses.push({'id':id, 'course_id':val.id, 'data':val.course_code, 'siteData': offeringList})
+                    this.setState({lowCourses: newCourses}, () => {
+                        _callback()
+                    })
+                })
+            })
+        }else{
+            newCourses.push({'id':id, 'course_id':val.id, 'data':val.course_code, 'siteData': []})
+            this.setState({lowCourses: newCourses}, () => {
+                _callback()
+            })
+        }
+    }
+
+    getCourseOfferings(id, val, newCourses, _callback){
+        if(val.course_code.trim() != ''){
+            const offeringList = [];
+            const courses = [];
+            axios.get('https://archerone-backend.herokuapp.com/api/searchcourse/'+val.course_code.trim()+'/')
+            .then(res => {
+                res.data.map(course => {
+                    courses.push(course.id)
+                })
+                console.log(courses)
+                axios.post('https://archerone-backend.herokuapp.com/api/courseofferingslist/',{
+                    courses,
+                    applyPreference: false,
+                    user_id: localStorage.getItem('user_id')
+                }).then(res => {
+                    res.data.map(bundle => {
+                        var arranged = groupArray(bundle, 'classnumber');
+                        for (let key in arranged) {
+                        var days = []
+                        var day = ''
+                        var classnumber = ''
+                        var course = ''
+                        var course_id = ''
+                        var section = ''
+                        var faculty = ''
+                        var timeslot_begin = ''
+                        var timeslot_end = ''
+                        var room = ''
+                        var max_enrolled = ''
+                        var current_enrolled = ''
+                        arranged[key].map(offering => {
+                            days.push(offering.day)
+                            classnumber = offering.classnumber
+                            course = offering.course
+                            course_id = offering.course_id
+                            section = offering.section
+                            faculty = offering.faculty
+                            timeslot_begin = offering.timeslot_begin
+                            timeslot_end = offering.timeslot_end
+                            room = offering.room
+                            max_enrolled = offering.max_enrolled
+                            current_enrolled = offering.current_enrolled
+                        })
+                        days.map(day_code => {
+                            day += day_code;
+                        })
+                        const offering = this.createData(classnumber, course, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled, true);
+                        offeringList.push(offering);
+                        }
+                    })
+                    newCourses.push({'id':id, 'course_id':val.id, 'data':val.course_code, 'siteData': offeringList})
+                    this.setState({highCourses: newCourses}, () => {
+                        _callback()
+                    })
+                })
+            })
+        }else{
+            newCourses.push({'id':id, 'course_id':val.id, 'data':val.course_code, 'siteData': []})
+            this.setState({highCourses: newCourses}, () => {
+                _callback()
+            })
+        }
     }
 
     componentDidMount(){
@@ -150,6 +308,8 @@ class GenerateSchedule extends Component {
             axios.get('https://archerone-backend.herokuapp.com/api/courseprioritylist/'+id+'/')
             .then(res => {
                 console.log(res.data)
+                var total = res.data.length;
+                var done = 0;
                 res.data.map(coursepriority => {
                     const id = coursepriority.id
                     const priority = coursepriority.priority
@@ -157,24 +317,28 @@ class GenerateSchedule extends Component {
                     this.state.courseList.map(course =>{
                         if(course.id == coursepriority.courses){
                             if(priority){
-                                var courses = this.state.highCourses;
-                                courses.push({'id':id, 'course_id':course.id, 'data':course.course_code})
-                                this.setState({highCourses: courses})
+                                this.getCourseOfferings(id, course, this.state.highCourses, () => {
+                                    done += 1;
+                                    if(total == done){
+                                        this.setState({dataReceived: true})
+                                    }
+                                })
                             }else{
-                                var courses = this.state.lowCourses;
-                                courses.push({'id':id, 'course_id':course.id, 'data':course.course_code})
-                                this.setState({lowCourses: courses})
+                                this.getCourseOfferings(id, course, this.state.lowCourses, () => {
+                                    done += 1;
+                                    if(total == done){
+                                        this.setState({dataReceived: true})
+                                    }
+                                })
                             }
                         }else{
                             newCourseList.push(course)
                         }
-
                     })
                     this.setState({courseList:newCourseList})
                 })
                 console.log(this.state.highCourses)
                 console.log(this.state.lowCourses)
-                this.setState({dataReceived: true})
             });
         })
     }
@@ -276,7 +440,7 @@ class GenerateSchedule extends Component {
                     })
                     .then(res => {
                         console.log(res)
-                        const newCourse = {'id':res.data.id,'course_id':res.data.courses,'data':course.course_code}; 
+                        const newCourse = {'id':res.data.id,'course_id':res.data.courses,'data':course.course_code,'siteData':"hello"}; 
                         this.setState(state =>{
                             const highCourses = state.highCourses.concat(newCourse);
                             return{highCourses};
@@ -347,8 +511,8 @@ class GenerateSchedule extends Component {
         this.handleScrollToGen();
     }
 
-    createData(classNmbr, course, section, faculty, day, startTime, endTime, room, capacity, enrolled) {
-        return { classNmbr, course, section, faculty, day, startTime, endTime, room, capacity, enrolled };
+    createData(classNmbr, course, section, faculty, day, startTime, endTime, room, capacity, enrolled, checked) {
+        return { classNmbr, course, section, faculty, day, startTime, endTime, room, capacity, enrolled, checked };
     }
 
     createSchedInfo = () =>{
@@ -371,7 +535,7 @@ class GenerateSchedule extends Component {
             lowCourses: this.state.lowCourses,
             user_id: localStorage.getItem('user_id'),
             filterFull: this.state.filterFull,
-            courseOfferings: this.state.courseOfferings
+            courseOfferings: [] 
         })
         .then(res => {
             console.log(res)
@@ -575,11 +739,56 @@ class GenerateSchedule extends Component {
     handleCourseOfferingChange =(e, val)=>{
         this.setState({courseOfferings: val});
     }
+    
+    triggerModal=(courseName, siteData)=>{
+        this.setState({siteData})
+        this.setState({openModalCourseOfferings: true});
+        this.setState({modalCourseName: courseName});
+    }
+
+    handleCloseModalCourseOfferings = ()=>{
+      this.setState({openModalCourseOfferings: false})
+    }
+  
+    handleOpenModalCourseOfferings = ()=>{
+      console.log("Hello opening modal");
+      this.setState({openModalCourseOfferings: true})
+      console.log(this.state.openModalCourseOfferings);
+    }
+  
+    toggleModal = () => {
+      var openModalVar = this.state.openModalCourseOfferings;
+      this.setState({openModalCourseOfferings: !openModalVar});
+    }
+    
+    handleSaveCourseOfferings = () =>{
+        console.log("Course Offerings changes saved");
+        this.setState({openModalCourseOfferings: false});
+      } 
 
     render() { 
         let search_field = this.props.search_field;
         // const { currentPage } = this.state;
         const { classes } = this.props;
+        
+        const StyledTableCell = withStyles(theme => ({
+            head: {
+              backgroundColor: '#006A4E',
+              color: theme.palette.common.white,
+            },
+            body: {
+              fontSize: 14,
+              borderBottom: "1px solid white",
+            },
+          }))(TableCell);
+
+          const StyledTableRow = withStyles(theme => ({
+            root: {
+              '&:nth-of-type(odd)': {
+                backgroundColor: theme.palette.background.default,
+              },
+            },
+          }))(TableRow);
 
         return (
             <div>
@@ -621,26 +830,99 @@ class GenerateSchedule extends Component {
 
                                 </div>
                             </Row>
-                            <div className={"DnDContainer"}>
-                                <Row vertical = 'center'>
-                                    <Column flexGrow={1} horizontal = 'center'>
-                                        <h3 className='priortyTitle'>Highest Priority</h3>
-                                        <CourseDnD idTag={this.state.highPriorityId} courses={this.state.highCourses} updateFunction={this.updateHighPriority} handleCourseDelete={this.handleCourseDelete}/>
-
-                                    </Column>
-                                    <Column flexGrow={1} horizontal = 'center'>
-                                        <h3 className='priortyTitle'>Lowest Priority</h3>
-                                        <CourseDnD idTag={this.state.lowPriorityId} courses={this.state.lowCourses} updateFunction={this.updateLowPriority} handleCourseDelete={this.handleCourseDelete}/>
-                                    </Column>
-                                </Row>
-                            </div>
-                            <Row horizontal='center' style={{margin: "20px"}}>
-                                <ComboBox page={"edit"} value={this.state.courseOfferings} onChange={this.handleCourseOfferingChange}></ComboBox>
-                            </Row>
                             <Row horizontal='center' style={{margin: "20px"}}>
                                 <FormControlLabel
                                 control = {<GreenCheckbox checked={this.state.filterFull} onChange={this.handleFilterFull} color="primary"/>}label="Filter out closed classes" />
                             </Row>
+                            <div className={"DnDContainer"}>
+                                <Row vertical = 'center'>
+                                    <Column flexGrow={1} horizontal = 'center'>
+                                        <h3 className='priortyTitle'>Highest Priority</h3>
+                                        <CourseDnD idTag={this.state.highPriorityId} courses={this.state.highCourses} updateFunction={this.updateHighPriority} handleCourseDelete={this.handleCourseDelete} triggerModal={this.triggerModal}/>
+
+                                    </Column>
+                                    <Column flexGrow={1} horizontal = 'center'>
+                                        <h3 className='priortyTitle'>Lowest Priority</h3>
+                                        <CourseDnD idTag={this.state.lowPriorityId} courses={this.state.lowCourses} updateFunction={this.updateLowPriority} handleCourseDelete={this.handleCourseDelete} triggerModal={this.triggerModal}/>
+                                    </Column>
+                                </Row>
+                            </div>
+                            {/*============MODAL EXERPIMENT HERE======================*/}
+                            <Modal dialogClassName="modal-90w" size="lg" style={{maxWidth: '1600px', width: '80%'}} isOpen={this.state.openModalCourseOfferings} toggle={this.toggleModal} returnFocusAfterClose={false} backdrop="static" data-keyboard="false">
+                              <ModalHeader toggle={this.toggleModal}>Course Information</ModalHeader>
+
+                              <ModalBody>
+                                <h4>{this.state.modalCourseName}</h4>
+                                <br/>
+
+                                <TableContainer component={Paper}>
+                                    <Table aria-label="customized table">
+                                      <TableHead>
+                                        <TableRow>
+                                            <StyledTableCell> <WhiteCheckbox checked={true}/> </StyledTableCell>
+                                          <StyledTableCell> Class Number </StyledTableCell>
+                                          <StyledTableCell> Course </StyledTableCell>
+                                          <StyledTableCell> Section </StyledTableCell>
+                                          <StyledTableCell> Faculty </StyledTableCell>
+                                          <StyledTableCell> Day </StyledTableCell>
+                                          <StyledTableCell> Time </StyledTableCell>
+                                          <StyledTableCell> Room </StyledTableCell>
+                                          <StyledTableCell> Capacity </StyledTableCell>
+                                          <StyledTableCell> Enrolled </StyledTableCell>
+                                        </TableRow>
+                                      </TableHead>
+                                      {this.state.loading ? 
+                                      <TableBody>
+                                          {this.state.skeletons.map(skeleton =>(
+                                            <StyledTableRow>
+                                              <StyledTableCell> <Skeleton width={'100%'} height={'100%'}></Skeleton> </StyledTableCell>
+                                              <StyledTableCell> <Skeleton width={'100%'} height={'100%'}></Skeleton> </StyledTableCell>
+                                              <StyledTableCell> <Skeleton width={'100%'} height={'100%'}></Skeleton> </StyledTableCell>
+                                              <StyledTableCell> <Skeleton width={'100%'} height={'100%'}></Skeleton> </StyledTableCell>
+                                              <StyledTableCell> <Skeleton width={'100%'} height={'100%'}></Skeleton> </StyledTableCell>
+                                              <StyledTableCell> <Skeleton width={'100%'} height={'100%'}></Skeleton> </StyledTableCell>
+                                              <StyledTableCell> <Skeleton width={'100%'} height={'100%'}></Skeleton> </StyledTableCell>
+                                              <StyledTableCell> <Skeleton width={'100%'} height={'100%'}></Skeleton> </StyledTableCell>
+                                              <StyledTableCell> <Skeleton width={'100%'} height={'100%'}></Skeleton> </StyledTableCell>
+                                              <StyledTableCell> <Skeleton width={'100%'} height={'100%'}></Skeleton> </StyledTableCell>
+                                            </StyledTableRow>
+                                          ))}
+                                      </TableBody>
+                                      : 
+                                      <TableBody>
+                                        {this.state.siteData.map(row => (
+                                                
+                                          <StyledTableRow key={row.classNmbr} style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}>
+                                            <StyledTableCell> <GreenCheckbox checked={row.checked}/></StyledTableCell>
+                                                    
+                                            <StyledTableCell style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.classNmbr} </StyledTableCell>
+                                            <StyledTableCell onClick={this.handleOpenModalCourseInfo} style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}} > {row.course} </StyledTableCell>
+                                            <StyledTableCell style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.section} </StyledTableCell>
+                                            <StyledTableCell style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.faculty} </StyledTableCell>
+                                            <StyledTableCell style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.day} </StyledTableCell>
+                                            <StyledTableCell style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.startTime} - {row.endTime} </StyledTableCell>
+                                            <StyledTableCell style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.room} </StyledTableCell>
+                                            <StyledTableCell align="right" style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.capacity} </StyledTableCell>
+                                            <StyledTableCell align="right" style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.enrolled} </StyledTableCell>
+                                          </StyledTableRow>
+                                        ))}
+                                      </TableBody>
+                                      }
+                                    </Table>
+                                  </TableContainer>
+
+                              </ModalBody>
+                                
+                                <ModalFooter>
+                                  <Button color="primary" onClick={this.handleSaveCourseOfferings}>Save Changes</Button>{' '}
+                                  <Button style={{color: "gray"}}onClick={this.toggleModal}>Cancel</Button>
+                                </ModalFooter>
+
+                          </Modal> 
+                            
+                            {/* <Row horizontal='center' style={{margin: "20px"}}>
+                                <ComboBox page={"edit"} value={this.state.courseOfferings} onChange={this.handleCourseOfferingChange}></ComboBox>
+                            </Row> */}
                             <Row horizontal = 'center' style={{margin: "20px"}}>
                                 <div className={classes.root}>
                                     <div className={classes.wrapper}> 

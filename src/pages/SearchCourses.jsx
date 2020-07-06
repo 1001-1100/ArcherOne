@@ -34,6 +34,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import searchIMG from '../assets/search_engine.png';
 
 import {Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import Switch from '@material-ui/core/Switch';
 
 const styles = theme => ({
   root: {
@@ -68,6 +69,20 @@ const GreenRadio = withStyles({
   checked: {},
 })((props) => <Radio color="default" {...props} />);
 
+const GreenSwitch = withStyles({
+  switchBase: {
+    // color: green[600],
+    '&$checked': {
+      color: green[600],
+    },
+    '&$checked + $track': {
+      backgroundColor: green[600],
+    },
+  },
+  checked: {},
+  track: {},
+})(Switch);
+
 class SearchCourses extends Component {
     constructor(props){
       super(props);
@@ -84,6 +99,7 @@ class SearchCourses extends Component {
         rowStyle: "",
         openModalCourseInfo: false,
         showPlaceholder: true,
+        applyPreference: false
       }
       this.radioRef = React.createRef()
     }
@@ -176,7 +192,9 @@ class SearchCourses extends Component {
       })
      
       axios.post('https://archerone-backend.herokuapp.com/api/courseofferingslist/',{
-        courses: selectedCourses
+        courses: selectedCourses,
+        applyPreference: this.state.applyPreference,
+        user_id: localStorage.getItem('user_id')
       })
       .then(res => {
           const newSiteData = [];
@@ -240,10 +258,19 @@ class SearchCourses extends Component {
       this.setState({openModalCourseInfo: false})
     }
   
-    handleOpenModalCourseInfo = ()=>{
-      console.log("Hello opening modal");
+    handleOpenModalCourseInfo = (courseCode, courseName, courseUnits)=>{
+      courseName = "Lorem ipsum"
+      var courseDesc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+      var coursePre = "N/A"
+      var courseCo = "N/A"
+      var courseEq = "N/A"
+      this.setState({courseCode, courseName, courseUnits})
+      this.setState({courseDesc, coursePre, courseCo, courseEq})
       this.setState({openModalCourseInfo: true})
-      console.log(this.state.openModalCourseInfo);
+    }
+
+    handleApplyPreference = () => {
+      this.setState({applyPreference: !this.state.applyPreference})
     }
   
     toggleModal = () => {
@@ -315,7 +342,22 @@ class SearchCourses extends Component {
                   </FormControl>
                     </center>
                 </div>
-                
+                <div>
+                    <center>
+                      {/* <span className="filterLabel">Filters:</span> */}
+                  <FormControl component="fieldset">
+                    <FormControlLabel value="closed" control={
+                      <GreenSwitch
+                      checked={this.state.applyPreference}
+                      onChange={this.handleApplyPreference}
+                      color="primary"
+                      name="checkedB"
+                      inputProps={{ 'aria-label': 'primary checkbox' }}
+                      />
+                    } label="Apply Preferences" />
+                  </FormControl>
+                    </center>
+                </div>
                 <div className="legend">
                     <div className="legendItems">
                         <center>
@@ -367,7 +409,7 @@ class SearchCourses extends Component {
                         {this.state.siteData.map(row => (
                           <StyledTableRow key={row.classNmbr} style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}>
                             <StyledTableCell style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.classNmbr} </StyledTableCell>
-                            <Tooltip title="More Details" placement="left"><StyledTableCell onClick={this.handleOpenModalCourseInfo} style={(row.capacity == row.enrolled) ? {color: "#0099CC", cursor: "pointer"} : {color: "#006600", cursor: "pointer"}} > {row.course} </StyledTableCell></Tooltip>
+                            <Tooltip title="More Details" placement="left"><StyledTableCell onClick={() => this.handleOpenModalCourseInfo(row.course, "", "3")} style={(row.capacity == row.enrolled) ? {color: "#0099CC", cursor: "pointer", textDecorationLine: 'underline'} : {color: "#006600", cursor: "pointer", textDecorationLine: 'underline'}} > {row.course} </StyledTableCell></Tooltip>
                             <StyledTableCell style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.section} </StyledTableCell>
                             <StyledTableCell style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.faculty} </StyledTableCell>
                             <StyledTableCell style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.day} </StyledTableCell>
@@ -386,28 +428,28 @@ class SearchCourses extends Component {
                       <ModalHeader toggle={this.toggleModal}>Course Information</ModalHeader>
                       
                       <ModalBody>
-                        <h4>INOVATE</h4>
-                        <h5>Technology and Innovation Management</h5>
+                        <h4>{this.state.courseCode}</h4>
+                        <h5>{this.state.courseName}</h5>
                         <br/>
 
                         <u><h5>Description</h5></u>
-                        <p>This course covers entrepreneurship in technology ventures, and takes the student through the commercializaiton of technology ideas into viable enterprises. The course examines how technology ideas may be developed into opportunities and eventually into viable businesses; it takes the students through the process of crafting the business model canvas, which will be the final (team) output in this course.</p>
+                        <p>{this.state.courseDesc}</p>
                         <br/>
 
                         <u><h5>Pre-requisite/s</h5></u>
-                        <p>N/A</p>
+                        <p>{this.state.coursePre}</p>
                         <br/>
 
                         <u><h5>Co-requisite/s</h5></u>
-                        <p>N/A</p>
+                        <p>{this.state.courseCo}</p>
                         <br/>
 
                         <u><h5>Course Equivalent</h5></u>
-                        <p>CCINOV8</p>
+                        <p>{this.state.courseEq}</p>
                         <br/>
 
                         <u><h5>Number of Units</h5></u>
-                        <p>3</p>
+                        <p>{this.state.courseUnits}</p>
                       </ModalBody>
                       
                   </Modal> 

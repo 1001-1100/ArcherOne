@@ -4,6 +4,7 @@ import { applyDrag, generateItems } from '../components/ultils.jsx';
 import '../css/CourseDnD.css';
 import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import axios from "axios";
+import Tooltip from '@material-ui/core/Tooltip';
 
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 
@@ -41,7 +42,7 @@ refreshList = (props) => {
 
     for(let i = 0; i < newItems.length; i++) {
         this.setState(state =>{
-            const courses = state.courses.concat({id: newItems[i].id, course_id: newItems[i].course_id, data:newItems[i].data});
+            const courses = state.courses.concat({id: newItems[i].id, course_id: newItems[i].course_id, data:newItems[i].data, siteData:newItems[i].siteData});
             return{courses};
         });
     }   
@@ -54,6 +55,10 @@ removeCourse = (index) =>{
     newCourses.splice(index, 1);
   }
   this.props.updateFunction(newCourses);
+}
+
+triggerModal =(courseName, siteData)=>{
+    this.props.triggerModal(courseName, siteData);
 }
 
 triggerUpdate=(e)=>{
@@ -97,11 +102,14 @@ triggerUpdate=(e)=>{
           <div className= "card-container" style={{height:"452px", overflow: "auto", width: "270px"}}>
             <Container groupName="1" getChildPayload={i => this.state.courses[i]} onDrop={this.triggerUpdate} style={{height:"100%"}}>
                 {this.state.courses.map((p, index) => {
+                console.log(p)
                 return (
                     <Draggable key={p.id}>
                     <div className="draggable-item">
                         <DragHandleIcon style={{ marginBottom: "5px", float: "left", marginTop: "12px", marginLeft: "16px"}}/>
-                        {p.data}
+                        <Tooltip title="Select sections" placement="left">
+                            <a className = "card-courseName" onClick={() => this.triggerModal(p.data, p.siteData)} style={{cursor: "pointer", textDecorationLine: 'underline'}}>{p.data}</a>
+                        </Tooltip>
                         <Button close  style={{ marginTop: "11px", marginRight: "10px"}} onClick={() => this.removeCourse(index)}/>
                     </div>
                     </Draggable>

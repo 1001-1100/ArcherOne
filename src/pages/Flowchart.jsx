@@ -35,11 +35,11 @@ const styles = theme => ({
     buttonStyle:{
         fontSize: "95%",
       textTransform: "none",
-      width: "80%",
+      width: "10%",
       borderRadius: "25px",
 //      padding: "10px",
       paddingLeft: "5%",
-      paddingRight: "3%",
+      paddingRight: "5%",
       backgroundColor: "#16775D",
       border: "none",
       color: "white",
@@ -205,8 +205,8 @@ class Flowchart extends Component {
 
             {this.state.dataReceived ? 
             <div>
-              <div class="sidemenu" >
-                  <center>
+               {/*<div class="sidemenu" >
+                  <center>*/}
                       {/*<Button
                       variant="contained"
                       className={classes.buttonStyleOption}
@@ -214,15 +214,29 @@ class Flowchart extends Component {
                       >
                       CSS 116 CS
                     </Button>*/}
-                      <input type="submit" class="btn btn-success change-flowchart" value="CCS 116 CS" />
-                  </center>
+                      {/* <input type="submit" class="btn btn-success change-flowchart" value="CCS 116 CS" />
+                  </center>*/}
                   {/* <center><input type="submit" class="btn btn-success change-flowchart" value="ID Number, Course" /></center> */}
                   {/* <center><input type="submit" class="btn btn-success change-flowchart" value="ID Number, Course" /></center> */}
-              </div>
+               {/*</div>*/}
 
               <div class="sidemenu-main-flow">
                 <br/>
                   <center><h2 style={{width: "80%"}}>YOUR FLOWCHART</h2></center>
+                  <center><h3>CCS 116 CS</h3></center>
+                  <center><Button
+                      variant="contained"
+                      className={classes.buttonStyle}
+                      onClick={this.exportSched}
+                      endIcon={ <GetAppIcon/>}
+                      >
+                      Export
+                    </Button></center>
+                    <Snackbar open={this.state.snackbar} autoHideDuration={4000} onClose={this.handleCloseBar}>
+                    <Alert onClose={this.handleCloseBar} severity="success">
+                    Your flowchart image is downloading!
+                    </Alert>
+                </Snackbar>
                   <div class="flowchart-area" id="flowchart-area">
                     <div class="flowchart-header-parent">
                       <div class="header-year-parent">
@@ -258,7 +272,7 @@ class Flowchart extends Component {
                         </div>
                       </div>
                     </div>
-                      <Flowspace theme="green" variant="paper" background="white" connectionSize="2" style={{ overflow: 'hidden', height:"100%", width:"100" }}>
+                      <Flowspace theme="green" variant="paper" background="white" connectionSize="2" style={{ overflow: 'hidden', height:"100%", width:"100",}}>
                         {
                           Object.keys(this.state.flowpoints).map(key => {
                             const point = this.state.flowpoints[key]
@@ -298,7 +312,9 @@ class Flowchart extends Component {
                     </Flowspace>
                   </div>
               </div>
-                
+                <div class="sideRight" >
+                </div>
+                  {/*
                 <div class="exportmenu" >
                   <center><Button
                       variant="contained"
@@ -313,7 +329,7 @@ class Flowchart extends Component {
                     Your flowchart image is downloading!
                     </Alert>
                 </Snackbar>
-                </div>
+                </div>*/}
             </div>
             : 
             <div style={{display: "flex", justifyContent: "center", alignItems: "center", minHeight: "80vh"}}>

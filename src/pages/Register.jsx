@@ -61,8 +61,25 @@ class Register extends Component {
             degrees: [],
             snackBar: false,
             snackBarSucess: false,
+            snackBarText: "",
             loading: false,
             success: false,
+            errorFirstName: false,
+            helperFirstName: "",
+            errorLastName: false,
+            helperLastName: "",
+            errorEmail: false,
+            helperEmail: "",
+            errorID: false,
+            helperID: "",
+            errorCollege: false,
+            helperCollege: "",
+            errorDegree: false,
+            helperDegree: "",
+            errorPassword: false,
+            helperPassword: "Must be a minimum of 8 characters",
+            errorConPassword: false,
+            helperConPassword: "Re-type your password here",
         }
 
     }
@@ -126,18 +143,33 @@ class Register extends Component {
         if(!fields["firstName"]){
             formIsValid = false;
             errors["firstName"] = "Required First Name"
+            this.setState({errorFirstName: true})
+            this.setState({helperFirstName: "This field is required"})
+        }else{
+            this.setState({errorFirstName: false})
+            this.setState({helperFirstName: ""})
         }
 
         // LASTNAME
         if(!fields["lastName"]){
             formIsValid = false;
             errors["lastName"] = "Required Last Name"
+            this.setState({errorLastName: true})
+            this.setState({helperLastName: "This field is required"})
+        }else{
+            this.setState({errorLastName: false})
+            this.setState({helperLastName: ""})
         }
 
         // EMAIL
         if(!fields["email"]){
           formIsValid = false;
           errors["email"] = "Required Email"
+            this.setState({errorEmail: true})
+            this.setState({helperEmail: "This field is required"})
+        }else{
+            this.setState({errorEmail: false})
+            this.setState({helperEmail: "This field is required"})
         }
   
         if(typeof fields["email"] !== "undefined"){
@@ -147,35 +179,65 @@ class Register extends Component {
           if (!(lastAtPos < lastDotPos && lastAtPos > 0 && fields["email"].indexOf('@@') == -1 && lastDotPos > 2 && (fields["email"].length - lastDotPos) > 2)) {
             formIsValid = false;
             errors["email"] = "Invalid Email";
-          }
+            this.setState({errorEmail: true})
+            this.setState({helperEmail: "Enter a valid DLSU email"})
+          }else{
+                this.setState({errorEmail: false})
+                this.setState({helperEmail: "Enter a valid DLSU email"})
+            }
         }
 
         // ID NUMBER
         if(!fields["idNo"]){
             formIsValid = false;
             errors["idNo"] = "Required ID Number"
+            this.setState({errorID: true})
+            this.setState({helperID: "This field is required"})
+        }else{
+            this.setState({errorID: false})
+            this.setState({helperID: ""})
         }
   
         // PASSWORD
         if(!fields["pass"]){
           formIsValid = false;
           errors["pass"] = "Required Password"
+            this.setState({errorPassword: true})
+            this.setState({helperPassword: "This field is required"})
+        }else{
+            this.setState({errorPassword: false})
+            this.setState({helperPassword: "Must be a minimum of 8 characters"})
         }
 
         // CONFIRM PASSWORD
         if(!fields["passCon"]){
             formIsValid = false;
             errors["passCon"] = "Required Confirm Password"
+            this.setState({errorConPassword: true})
+            this.setState({helperConPassword: "This field is required"})
+        }else{
+            this.setState({errorConPassword: false})
+            this.setState({helperConPassword: "Re-enter your password here"})
         }
 
         if(!fields["college"]){
             formIsValid = false;
             errors["college"] = "Required College"
+            this.setState({errorCollege: true})
+            this.setState({helperCollege: "This field is required"})
+        }else{
+            this.setState({errorCollege: false})
+            this.setState({helperCollege: ""})
         }
 
         if(!fields["degree"]){
             formIsValid = false;
             errors["degree"] = "Required Degree"
+            this.setState({errorDegree: true})
+            this.setState({helperDegree: "Required Degree"})
+        }else{
+            this.setState({errorDegree: false})
+            this.setState({helperDegree: ""})
         }
   
         this.setState({errors: errors});
@@ -225,13 +287,20 @@ class Register extends Component {
             };
             console.log(data);
             this.props.handle_register(data, (res) => {
-                if(res){
+                if(res == null){
                     this.setState({success: true});
                     this.setState({loading: false});
                     this.setState({snackBarSuccess: true})
                 }else{
                   this.setState({success: false});
                   this.setState({loading: false});
+                  if(res.status == 400){
+                    for (var key in res.data) {
+                      this.setState({snackBarText: key + ': ' + res.data[key][0]})
+                    }
+                  }else{
+                      this.setState({snackBarText: "Account already exists."})
+                  }
                   this.setState({snackBar: true})
                 }
             });
@@ -278,35 +347,33 @@ class Register extends Component {
                         {/* First Name */}
                         <br/>
                         {/* <input name="firstName" placeholder="John" value={this.state.fields["firstName"]} onChange={this.handleChange.bind(this, "firstName")}/> */}
-                        <TextField id="outlined-basic" label="First Name" variant="outlined" name="firstName" placeholder="John" value={this.state.fields["firstName"]} onChange={this.handleChange.bind(this, "firstName")}></TextField>
-                        <span className="error">{this.state.errors["firstName"]}</span>
-                        <br/><br/>
-
-                        {/* Last Name */}
-                        <br/>
-                        <TextField id="outlined-basic" label="Last Name" variant="outlined" name="lastName" placeholder="Dela Cruz" value={this.state.fields["lastName"]} onChange={this.handleChange.bind(this, "lastName")}></TextField>
+                        <TextField error={this.state.errorFirstName} helperText={this.state.helperFirstName} id="outlined-basic" label="First Name" variant="outlined" name="firstName" placeholder="John" value={this.state.fields["firstName"]} onChange={this.handleChange.bind(this, "firstName")} style={{marginRight: "15%"}}></TextField>
+                        {/* <span className="error" style={{marginRight: "15%"}}>{this.state.errors["firstName"]}</span>*/}
+ 
+                        <TextField error={this.state.errorLastName} helperText={this.state.helperLastName} id="outlined-basic" label="Last Name" variant="outlined" name="lastName" placeholder="Dela Cruz" value={this.state.fields["lastName"]} onChange={this.handleChange.bind(this, "lastName")} style={{marginRight: "15%"}}></TextField>
                         {/* <input name="lastName" placeholder="Dela Cruz" value={this.state.fields["lastName"]} onChange={this.handleChange.bind(this, "lastName")}/> */}
-                        <span className="error">{this.state.errors["lastName"]}</span>
+                        {/* <span className="error">{this.state.errors["lastName"]}</span>*/}
                         <br/><br/>
 
                         {/* Email Address */}
                         <br/>
-                        <TextField id="outlined-basic" helperText="Please use your DLSU email address" label="Email Address" variant="outlined" name="email" placeholder="john_delacruz@dlsu.edu.ph" value={this.state.fields["email"]} onChange={this.handleChange.bind(this, "email")}/>
+                        <TextField error={this.state.errorEmail} helperText={this.state.helperEmail} id="outlined-basic" label="DLSU Email" variant="outlined" name="email" placeholder="john_delacruz@dlsu.edu.ph" value={this.state.fields["email"]} onChange={this.handleChange.bind(this, "email")} style={{marginRight: "15%"}}/>
                         {/* <input name="email" placeholder="john_delacruz@dlsu.edu.ph" onChange={this.handleChange.bind(this, "email")} value={this.state.fields["email"]}/> */}
-                        <span className="error">{this.state.errors["email"]}</span>
-                        <br/><br/>
+                        {/* <span className="error" style={{marginRight: "15%"}}>{this.state.errors["email"]}</span>*/}
+                       
 
                         {/* ID Number */}
-                        <br/>
-                        <TextField id="outlined-basic" label="ID Number" variant="outlined" name="idNo" placeholder="11612345" value={this.state.fields["idNo"]} onChange={this.handleChange.bind(this, "idNo")}/>
+                      
+                        <TextField error={this.state.errorID} helperText={this.state.helperID} id="outlined-basic" label="ID Number" variant="outlined" name="idNo" placeholder="11612345" value={this.state.fields["idNo"]} onChange={this.handleChange.bind(this, "idNo")} style={{marginRight: "15%"}}/>
                         {/* <input name="idNo" placeholder="11612345" onChange={this.handleChange.bind(this, "idNo")} value={this.state.fields["idNo"]}/> */}
-                        <span className="error">{this.state.errors["idNo"]}</span>
+                        {/* <span className="error">{this.state.errors["idNo"]}</span>*/}
                         <br/><br/>
 
                         {/* College */}
                         <br/>
                         <div className="collegeField">
                             <TextField
+                                error={this.state.errorCollege} helperText={this.state.helperCollege}
                                 id="outlined-select-college"
                                 select
                                 label="College"
@@ -321,7 +388,7 @@ class Register extends Component {
                                     
                                 ))}
                             </TextField>
-                          <span className="error">{this.state.errors["college"]}</span>
+                          {/* <span className="error" style={{marginRight: "15%"}}>{this.state.errors["college"]}</span>*/}
                         </div>
                         {/* <select id="college" name="college" value={this.state.fields["college"]} onChange={this.handleChange.bind(this, "college")} >
                             <>
@@ -331,24 +398,24 @@ class Register extends Component {
                             ))}
                             </>
                         </select> */}
+                       
                         <br/><br/>
-
-                        {/* <br/> */}
+                        {/* Degree */}
                         {/* <span className="error">{this.state.errors["degree"]}</span> */}
-                        <ComboBox ref={this.degreeRef} page="register" name="degree" value={this.state.fields["degree"]} onChange={this.handleAutoCompleteChange} college={this.state.fields["college"]} degrees={this.state.degrees}/><br/>
+                        <ComboBox error={this.state.errorDegree} helperText={this.state.helperDegree} ref={this.degreeRef} page="register" name="degree" value={this.state.fields["degree"]} onChange={this.handleAutoCompleteChange} college={this.state.fields["college"]} degrees={this.state.degrees}/><br/>
 
                         {/* Password */}
                         <br/>
-                        <TextField type="password" helperText="Must be a minimum of 8 characters" id="outlined-basic" label="Password" variant="outlined" name="pass" placeholder="●●●●●●●●" value={this.state.fields["pass"]} onChange={this.handleChange.bind(this, "pass")}/>
+                        <TextField error={this.state.errorPassword} helperText={this.state.helperPassword} type="password"  id="outlined-basic" label="Password" variant="outlined" name="pass" placeholder="●●●●●●●●" value={this.state.fields["pass"]} onChange={this.handleChange.bind(this, "pass")} style={{marginRight: "15%"}}/>
                         {/* <input type="password" name="pass" placeholder="●●●●●●●●" onChange={this.handleChange.bind(this, "pass")} value={this.state.fields["pass"]}/> */}
-                        <span className="error">{this.state.errors["pass"]}</span>
-                        <br/><br/>
+                        {/* <span className="error" style={{marginRight: "15%"}}>{this.state.errors["pass"]}</span>*}
+                     
 
                         {/* Confirm Password */}
-                        <br/>
-                        <TextField type="password" helperText="Re-type your password here" id="outlined-basic" label="Confirm Password" variant="outlined" name="passCon" placeholder="●●●●●●●●" value={this.state.fields["pasCon"]} onChange={this.handleChange.bind(this, "passCon")}/>
+                       
+                        <TextField error={this.state.errorConPassword} helperText={this.state.helperConPassword} type="password"  id="outlined-basic" label="Confirm Password" variant="outlined" name="passCon" placeholder="●●●●●●●●" value={this.state.fields["pasCon"]} onChange={this.handleChange.bind(this, "passCon")} style={{marginRight: "15%"}}/>
                         {/* <input type="password" name="passCon" placeholder="●●●●●●●●" onChange={this.handleChange.bind(this, "passCon")} value={this.state.fields["passCon"]}/> */}
-                        <span className="error">{this.state.errors["passCon"]}</span>
+                        {/* <span className="error">{this.state.errors["passCon"]}</span>*/}
                         <br/><br/>
 
                         {this.renderRedirect()}
@@ -371,7 +438,7 @@ class Register extends Component {
                     </form>
                     <Snackbar open={this.state.snackBar} autoHideDuration={4000} onClose={this.handleCloseSnackBar}>
                       <Alert onClose={this.handleCloseSnackBar} severity="error">
-                      Failed to register 
+                      {this.state.snackBarText}
                       </Alert>
                     </Snackbar>
                     <Snackbar open={this.state.snackBarSuccess} autoHideDuration={4000} onClose={this.handleCloseSnackBar}>

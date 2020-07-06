@@ -61,9 +61,12 @@ class Login extends Component {
         this.state = {
             fields: {},
             errors: {},
+            helperEmail: "",
+            helperPassword: "",
             snackBar: false,
             loading: false,
             success: false,
+            snackBarText: "",
      
         }
 
@@ -84,6 +87,9 @@ class Login extends Component {
       if(!fields["email"]){
         formIsValid = false;
         errors["email"] = "Required Email"
+        this.setState({helperEmail: "This field is required"})
+      } else{
+        this.setState({helperEmail: ""})
       }
 
       if(typeof fields["email"] !== "undefined"){
@@ -93,13 +99,17 @@ class Login extends Component {
         if (!(lastAtPos < lastDotPos && lastAtPos > 0 && fields["email"].indexOf('@@') == -1 && lastDotPos > 2 && (fields["email"].length - lastDotPos) > 2)) {
           formIsValid = false;
           errors["email"] = "Invalid Email";
+          this.setState({helperEmail: "Enter a valid DLSU email"});
         }
       }
 
       // PASSWORD
       if(!fields["pass"]){
         formIsValid = false;
-        errors["pass"] = "Required Password"
+        errors["pass"] = "This field is required"
+        this.setState({helperPassword: "This field is required"})
+      } else{
+        this.setState({helperPassword: ""})
       }
 
       this.setState({errors: errors});
@@ -161,9 +171,16 @@ class Login extends Component {
               password: this.state.fields["pass"]
           }
           this.props.handle_login(data, (res) => {
-            if(res){
+            if(res == null){
               this.setRedirect();
             }else{
+              if(res.status == 400){
+                for (var key in res.data) {
+                  this.setState({snackBarText: res.data[key][0]})
+                }
+              }else{
+                  this.setState({snackBarText: "Account does not exist."})
+              }
               this.setState({snackBar: true})
               this.setState({loading: false})
             }
@@ -212,18 +229,18 @@ class Login extends Component {
                     <form onSubmit={this.handleSubmit.bind(this)}>
                         {/* Email */}
                         <br/>
-                        <TextField id="outlined-basic"label="Email Address" variant="outlined" name="email" placeholder="john_delacruz@dlsu.edu.ph" value={this.state.fields["email"]} onChange={this.handleChange.bind(this, "email")}/>
+                        <TextField error={this.state.errors["email"]} helperText={this.state.helperEmail} id="outlined-basic" label="DLSU Email" variant="outlined" name="email" placeholder="john_delacruz@dlsu.edu.ph" value={this.state.fields["email"]} onChange={this.handleChange.bind(this, "email")}/>
                         {/* <input name="email" placeholder="john_delacruz@dlsu.edu.ph" onChange={this.handleChange.bind(this, "email")} value={this.state.fields["email"]}></input> */}
-                        <span className="error">{this.state.errors["email"]}</span>
+                        {/* <span className="error">{this.state.errors["email"]}</span> */}
 
                         <br/>
                         <br/>
 
                         {/* Password */}
                         <br/>
-                        <TextField type="password" id="outlined-basic" label="Password" variant="outlined" name="pass" placeholder="●●●●●●●●" value={this.state.fields["pass"]} onChange={this.handleChange.bind(this, "pass")}/>
+                        <TextField error={this.state.errors["pass"]} helperText={this.state.helperPassword} type="password" id="outlined-basic" label="Password" variant="outlined" name="pass" placeholder="●●●●●●●●" value={this.state.fields["pass"]} onChange={this.handleChange.bind(this, "pass")}/>
                         {/* <input type="password" name="pass" placeholder="●●●●●●●●" onChange={this.handleChange.bind(this, "pass")} value={this.state.fields["pass"]}></input> */}
-                        <span className="error">{this.state.errors["pass"]}</span>
+                        {/* <span className="error">{this.state.errors["pass"]}</span> */}
 
                         <br/>
                         <br/>
@@ -250,7 +267,7 @@ class Login extends Component {
                     </form>
                     <Snackbar open={this.state.snackBar} autoHideDuration={4000} onClose={this.handleCloseSnackBar}>
                       <Alert onClose={this.handleCloseSnackBar} severity="error">
-                      Failed to login
+                        {this.state.snackBarText}
                       </Alert>
                     </Snackbar>
                     <br/>

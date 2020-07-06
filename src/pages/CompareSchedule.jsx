@@ -69,6 +69,7 @@ class CompareSchedule extends Component {
             schedulesUser: [],
             schedulesFriend: [],
             dataReceived: false,
+            friendName: ""
         }
     }
 
@@ -263,6 +264,12 @@ class CompareSchedule extends Component {
             }).catch(error => {
                 console.log(error)
             })
+            axios.get('https://archerone-backend.herokuapp.com/api/users/'+this.props.params.id+'/')
+            .then(res => {
+                this.setState({friendName: res.data.first_name})
+            }).catch(error => {
+                console.log(error)
+            })
         }).catch(error => {
             console.log(error)
         })
@@ -307,7 +314,6 @@ componentWillMount(){
     this.setState({pagesCountFriend: this.state.generatedContentsFriend.length});
     this.setState({currentContentUser: this.state.generatedContentsUser[this.state.currentPageUser]});
     this.setState({currentContentFriend: this.state.generatedContentsFriend[this.state.currentPageFriend]});
-    
 }
 
 setSchedInfo = () => {
@@ -393,7 +399,7 @@ setSchedInfo = () => {
                           </Grid>
                           <Grid item xs={6}>
   
-                            <center><h6>Friend's Schedule</h6></center>
+                            <center><h6>{this.state.friendName}'s Schedule</h6></center>
                             <div className={"scheduleContent"}>
                                 <center><span>{this.state.currentContentFriend}</span></center>
                             </div>

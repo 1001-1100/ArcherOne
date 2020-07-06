@@ -616,7 +616,7 @@ class Index extends Component {
     this.setState({openModalCustomize: false});
     
     let snackBarVariables = [...this.state.snackBarVariables];
-    this.setState({snackbarMsg: "Your schedule customization changes has been successfully saved!"});
+    this.setState({snackbarMsg: "Your schedule customization changes have been successfully saved!"});
     snackBarVariables[0].snackBarSuccess = true;
     // snackBarVariables[1].snackBarFailed = true;
     this.setState({snackBarVariables});
@@ -665,7 +665,7 @@ class Index extends Component {
       user_id
     }).then(res => {
       console.log(res.data)
-      this.setState({snackbarMsg: "Your schedule changes has been successfully saved!"});
+      this.setState({snackbarMsg: "Your schedule changes have been successfully saved!"});
       snackBarVariables[0].snackBarSuccess = true;
       // snackBarVariables[1].snackBarFailed = true;
       this.setState({snackBarVariables});
@@ -986,11 +986,8 @@ class Index extends Component {
               <img src={calendarIcon} className={"iconStyle"}/>
             </Grid>
             <Grid item xs={3}>
-                            <Typography variant="body1" gutterBottom>
-                              Enter your courses, 
-                              set your schedule, 
-                              and choose your schedule, 
-                              generated automatically
+                          <Typography variant="body1" gutterBottom>
+                            Enter your courses and select an automatically-generated schedule
                           </Typography>
             </Grid>
             <Grid item xs={4}>
@@ -1002,7 +999,7 @@ class Index extends Component {
                   variant="contained"
                   className={classes.buttonStyle}
                   onClick={this.goToSearchCourse}
-                  // style={{backgroundColor: "green"}}
+                    style={{width: "210px"}}
                   >
                   Search Course Offerings
                 </Button>
@@ -1024,10 +1021,17 @@ class Index extends Component {
             <Grid item xs={4}>
             </Grid>
             <Grid item xs={2} style={{zIndex:"100"}}>
-              <br></br>
-              <Typography variant="body1" gutterBottom align="center" style={{color:"gray"}}>
-                OR
-              </Typography>
+               <center>
+                <Button
+                  variant="contained"
+                  className={classes.buttonStyle}
+                  onClick={this.goToCreateSchedule}
+                  style={{width: "210px"}}
+                  // style={{backgroundColor: "green"}}
+                  >
+                  Create Schedule
+                </Button>
+              </center>
             </Grid>
             <Grid item xs={1}>
             </Grid>
@@ -1039,8 +1043,7 @@ class Index extends Component {
         
             <Grid item xs={3}>
                             <Typography variant="body1" gutterBottom>
-                            Share your schedules and view your friends' schedules,
-                            making schedule coordination easier
+                            Share and compare schedules with your friends
                             {/* collaborate with friends
                             and create schedules
                             as a group. */}
@@ -1050,16 +1053,7 @@ class Index extends Component {
             </Grid>
             <Grid item xs={2} style={{zIndex:"100"}}>
               {/* <center><button type="button" class="btn btn-success">Check Flowchart</button></center> */}
-              <center>
-                <Button
-                  variant="contained"
-                  className={classes.buttonStyle}
-                  onClick={this.goToCreateSchedule}
-                  // style={{backgroundColor: "green"}}
-                  >
-                  Create Schedule
-                </Button>
-              </center>
+             
             </Grid>
             <Grid item xs={1}>
             </Grid>

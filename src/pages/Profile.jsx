@@ -344,12 +344,12 @@ class Profile extends Component {
                 <h2>Notification Settings</h2>
                     
                 <div className="profile-category-content" >
-                    Receive notifications when
+                    Receive notifications when:
                     <FormGroup>
                         <FormControlLabel
-                        control = {<GreenCheckbox color="primary"/>} label={"The status of your chosen sections in your schedule has changed."} />
+                        control = {<GreenCheckbox color="primary"/>} label={"The status of a chosen section in your schedule has changed."} />
                         <FormControlLabel
-                        control = {<GreenCheckbox color="primary"/>} label={"Course conflicts in your schedule."} />
+                        control = {<GreenCheckbox color="primary"/>} label={"A course conflict in your schedule has been detected."} />
                         <FormControlLabel
                         control = {<GreenCheckbox color="primary"/>} label={"Your friends make changes to their schedules and preferences."}/>
                     </FormGroup>
