@@ -92,7 +92,9 @@ const styles = theme => ({
 
     buttonStyle:{
         textTransform: "none",
-        width: "200px",
+        textDecoration: "none",
+        width: "25%",
+        fontSize: "95%",
         borderRadius: "25px",
         padding: "10px",
         paddingLeft: "10px",
@@ -108,7 +110,7 @@ const styles = theme => ({
         alignItems: 'center',
         justifyContent: 'center',
         justify: 'center',
-        marginBottom: "5em",
+        marginBottom: "1em",
         '&:hover': {
             backgroundColor: "white",
             color: "#16775D"
@@ -528,7 +530,7 @@ class FriendPage extends Component {
             if(this.state.requests[i].status == "accept")
                 friendList.push(this.state.requests[i]);
         }
-        
+    
         return (
             <div>
                 {this.props.menu()}
@@ -800,6 +802,19 @@ class FriendPage extends Component {
                                                 SECOND TRIMESTER, AY 2019 - 2020
                                                 </Typography>
                                         </Grid>
+                                        
+                                        <Grid item xs={12} justify="center" alignItems="center" justifyContent="center" alignContent="center">
+                                            <center>
+                                            <Link to={'/compare_schedule/'+this.state.selectedFriendId}>
+                                                    <Button
+                                                    variant="contained"
+                                                    className={classes.buttonStyle}
+                                                    >
+                                                        Compare Schedules
+                                                    </Button>
+                                                </Link>
+                                            </center>
+                                        </Grid>
 
                                         <Grid item xs={12} className={'gridSavedContent'}>
                                             <div id='savedContent' className='savedContent' style={{height: "80em", color:"black"}}>
@@ -831,18 +846,7 @@ class FriendPage extends Component {
                                                     </Pagination>
                                             </div>
                                         </Grid>
-                                        <Grid item xs={12} justify="center" alignItems="center" justifyContent="center" alignContent="center">
-                                            <center>
-                                            <Link to={'/compare_schedule/'+this.state.selectedFriendId}>
-                                                    <Button
-                                                    variant="contained"
-                                                    className={classes.buttonStyle}
-                                                    >
-                                                        Compare Schedules
-                                                    </Button>
-                                                </Link>
-                                            </center>
-                                        </Grid>
+                                        
                                     </Grid>
                                 </div>
                                 <div className={"noSchedules"} style={((this.state.generatedContents.length <= 0) && this.state.hasSelectedFriend) ? {justifyContent: "center"} : {display: "none"}}>
