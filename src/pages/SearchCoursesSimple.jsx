@@ -308,9 +308,9 @@ class SearchCourses extends Component {
             <div className="search-container">
 
                 <div className="searchBar">
-                  <h2>Search all your courses in one go!</h2>
+                  <h2>Search Course Offerings</h2>
                     <div style={{display: "flex", justifyContent: "center"}}>
-                      <ComboBox style={{width: "-webkit-fill-available"}} page="search" onChange={this.handleSearch}/>
+                      <ComboBox style={{width: "-webkit-fill-available"}} page="search_simple" onChange={this.handleSearch}/>
                       <div className={classes.root}>
                           <div className={classes.wrapper} >
                             <Button
@@ -330,32 +330,6 @@ class SearchCourses extends Component {
                   
                 </div>
 
-                <div className="filters">
-                    <center>
-                      {/* <span className="filterLabel">Filters:</span> */}
-                  <FormControl component="fieldset">
-                    <RadioGroup ref={this.radioRef} row aria-label="filter" name="filter" onChange={this.handleFilter.bind(this, "filter")} value={this.state.radioVal}>
-                      <FormControlLabel value="all" control={<GreenRadio />} label="All Sections" />
-                      <FormControlLabel value="open" control={<GreenRadio />} label="Open Sections" />
-                      <FormControlLabel value="closed" control={<GreenRadio />} label="Closed Sections" />
-                    </RadioGroup>
-                  </FormControl>
-                    </center>
-                </div>
-                <div className="legend">
-                    <div className="legendItems">
-                        <center>
-                            <div>Open Sections - <Paper style={{backgroundColor:"#006600", height: "15px", width: "15px", display: "inline-flex"}}> </Paper> Green</div> 
-                       </center>
-                    </div>
-                  
-                    <div  className="legendItems">
-                        <center>
-                            <div>Closed Sections - <Paper style={{backgroundColor:  "#0099CC", height: "15px", width: "15px", display: "inline-flex"}}> </Paper> Blue</div>
-                        </center>
-                    </div>
-                </div>
-                
                 <div className="viewCourses" style={!this.state.showPlaceholder ? {} : {display: "none"}}>
                   <TableContainer component={Paper}>
                     <Table aria-label="customized table">

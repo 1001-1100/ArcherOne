@@ -18,6 +18,8 @@ import FlowchartPage from "./pages/Flowchart.jsx";
 import GenerateSchedulePage from "./pages/GenerateSchedule.jsx";
 import PreferencesPage from "./pages/Preferences.jsx";
 import SearchCoursesPage from "./pages/SearchCourses.jsx";
+import SearchCoursesSimplePage from "./pages/SearchCoursesSimple.jsx";
+import SearchCoursesGuestPage from "./pages/SearchCoursesGuest.jsx";
 import ViewFriendsPage from "./pages/FriendPage.jsx";
 import Menu from "./components/Menu.jsx";
 import CompareSchedulePage from "./pages/CompareSchedule.jsx";
@@ -274,6 +276,22 @@ class App extends Component {
     )
   }
 
+  searchCoursesGuestPage = () => {
+    return (
+      <SearchCoursesGuestPage
+        menu={this.menu}
+      />
+    )
+  }
+
+  searchCoursesSimplePage= () => {
+    return (
+      <SearchCoursesSimplePage
+        menu={this.menu}
+      />
+    )
+  }
+
   viewFriendsPage = () => {
     return (
       <ViewFriendsPage
@@ -307,6 +325,12 @@ class App extends Component {
           <Route exact path="/" render={this.mainPage} />
           {!this.state.logged_in &&
           <Route exact path="/login" component={this.loginPage}/>
+          }
+          {!this.state.logged_in &&
+          <Route exact path="/search_courses" component={this.searchCoursesGuestPage}/>
+          }
+          {!this.state.logged_in &&
+          <Route exact path="/search_courses_simple" component={this.searchCoursesSimplePage}/>
           }
           <Route exact path="/search_courses" component={this.searchCoursesPage} />
           <Route exact path="/register" component={this.registerPage} />

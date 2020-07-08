@@ -175,7 +175,41 @@ class ComboBox extends React.Component{
                   onInputChange={this.handleSearchInputThrottled}
                 />
             );
+        } else if(this.props.page == "search_simple"){
+            return (
+                <Autocomplete
+                  multiple
+                  id="tags-outlined"
+                  options={this.state.courseList}
+                  getOptionLabel={option => option.course_code}
+                //   style={{ width: 500 }}
+                  filterSelectedOptions
+                  loading={this.state.loading}
+                  noOptionsText={"Start typing to search a course!"}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        label="Search Course"
+                        variant="outlined"
+                        InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                            <React.Fragment>
+                            {this.state.loading ? <CircularProgress color="inherit" size={20} /> : null}
+                            {params.InputProps.endAdornment}
+                            </React.Fragment>
+                        ),
+                        }}
+                    />
+                )}
+                //   renderInput={params => <TextField {...params} label="Search Courses" variant="outlined" />}
+                  onChange={this.props.onChange}
+                  onInputChange={this.handleSearchInputThrottled}
+                  autoComplete="off"
+                />
+            );
         } else if(this.props.page == "add"){
+
             return(
             <Autocomplete
             multiple
