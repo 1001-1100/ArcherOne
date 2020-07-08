@@ -79,7 +79,9 @@ class ComboBox extends React.Component{
                     courses.push(course.id)
                 })
                 axios.post('https://archerone-backend.herokuapp.com/api/courseofferingslist/',{
-                    courses
+                    courses,
+                    applyPreference: false,
+                    user_id: localStorage.getItem('user_id')
                 }).then(res => {
                     res.data.map(bundle => {
                         var arranged = groupArray(bundle, 'classnumber');
@@ -205,9 +207,8 @@ class ComboBox extends React.Component{
                 //   renderInput={params => <TextField {...params} label="Search Courses" variant="outlined" />}
                   onChange={this.props.onChange}
                   onInputChange={this.handleSearchInputThrottled}
-                  autoComplete="off"
                 />
-            );
+            )
         } else if(this.props.page == "add"){
 
             return(
