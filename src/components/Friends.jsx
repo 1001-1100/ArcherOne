@@ -24,6 +24,8 @@ import Avatar from 'react-avatar';
 import Paper from '@material-ui/core/Paper';
 import Skeleton from '@material-ui/lab/Skeleton';
 
+import _ from 'underscore';
+
 class Friends extends React.Component{
 
     constructor(props){
@@ -54,7 +56,9 @@ class Friends extends React.Component{
             skeletons: [...Array(2).keys()],
             notifRefresh: props.notifRefresh,
             dataReceived: false,
+            searchQuery: ''
         }
+        this.filterSearchFriendsThrottled = _.debounce(this.filterSearchFriends, 500)
     }
 
     componentWillReceiveProps(props){
@@ -252,6 +256,14 @@ class Friends extends React.Component{
         this.setState({polling: true})
     }
 
+    handleSearchChange = (e) => {
+        this.filterSearchFriendsThrottled(e.target.value)
+    }
+
+    filterSearchFriends = (val) => {
+        this.setState({searchQuery: val})
+    }
+
     render (){
         const friendRequests = [];
         const friendList = [];
@@ -267,7 +279,10 @@ class Friends extends React.Component{
         }
 
         for(var i=0; i < this.state.database.length; i++){
-            searchFriends.push(this.state.database[i]);
+            const f = this.state.database[i]
+            if(f.firstName.toLowerCase().includes(this.state.searchQuery.toLowerCase()) || f.lastName.toLowerCase().includes(this.state.searchQuery.toLowerCase())){
+                searchFriends.push(this.state.database[i]);
+            }
         }
 
         if(currentPanel == "requests"){
@@ -425,7 +440,7 @@ class Friends extends React.Component{
                     <div className="cardPanel">
 
                         <DropdownItem header className="dropdownHeader"> 
-                            <TextField id="outlined-basic" label="Search Friends" variant="outlined" />
+                            <TextField id="outlined-basic" label="Search Friends" variant="outlined" onChange={this.handleSearchChange} />
                         </DropdownItem>
 
                         {searchFriends.map((search, index) => (
