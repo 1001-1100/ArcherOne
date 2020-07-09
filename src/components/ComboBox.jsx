@@ -64,8 +64,9 @@ class ComboBox extends React.Component{
         this.setState({courseList: []})
       }
     }
+
     createData(classNmbr, course, course_id, section, faculty, day, startTime, endTime, room, capacity, enrolled) {
-    return { classNmbr, course, course_id, section, faculty, day, startTime, endTime, room, capacity, enrolled };
+        return { classNmbr, course, course_id, section, faculty, day, startTime, endTime, room, capacity, enrolled };
     }
 
     handleOfferingSearchInput = (e, val) =>{
@@ -180,7 +181,6 @@ class ComboBox extends React.Component{
         } else if(this.props.page == "search_simple"){
             return (
                 <Autocomplete
-                  multiple
                   id="tags-outlined"
                   options={this.state.courseList}
                   getOptionLabel={option => option.course_code}

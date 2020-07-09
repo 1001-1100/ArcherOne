@@ -161,6 +161,7 @@ class GenerateSchedule extends Component {
             modalCourseName: "",
             siteData: [],
             siteDataArray: [],
+            allCheckBox: true,
      
             skeletons: [...Array(8).keys()]
         };
@@ -213,7 +214,16 @@ class GenerateSchedule extends Component {
                         days.map(day_code => {
                             day += day_code;
                         })
-                        const offering = this.createData(classnumber, course, course_id, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled);
+                        var checked = localStorage.getItem(classnumber)
+                        if(checked == null){
+                            checked = true;
+                            localStorage.setItem(classnumber, true);
+                        }else if(checked == 'true'){
+                            checked = true;
+                        }else if(checked == 'false'){
+                            checked = false;
+                        }
+                        const offering = this.createData(classnumber, course, course_id, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled, checked);
                         offeringList.push(offering);
                         }
                     })
@@ -277,11 +287,22 @@ class GenerateSchedule extends Component {
                         days.map(day_code => {
                             day += day_code;
                         })
-                        const offering = this.createData(classnumber, course, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled, true);
+                        var checked = localStorage.getItem(classnumber)
+                        if(checked == null){
+                            checked = true;
+                            localStorage.setItem(classnumber, true);
+                        }else if(checked == 'true'){
+                            checked = true;
+                        }else if(checked == 'false'){
+                            checked = false;
+                        }
+                        console.log(checked)
+                        const offering = this.createData(classnumber, course, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled, checked);
                         offeringList.push(offering);
                         }
                     })
                     newCourses.push({'id':id, 'course_id':val.id, 'data':val.course_code, 'siteData': offeringList})
+                    console.log(newCourses)
                     this.setState({highCourses: newCourses}, () => {
                         _callback()
                     })
@@ -341,7 +362,16 @@ class GenerateSchedule extends Component {
                         days.map(day_code => {
                             day += day_code;
                         })
-                        const offering = this.createData(classnumber, course, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled, true);
+                        var checked = localStorage.getItem(classnumber)
+                        if(checked == null){
+                            checked = true;
+                            localStorage.setItem(classnumber, true);
+                        }else if(checked == 'true'){
+                            checked = true;
+                        }else if(checked == 'false'){
+                            checked = false;
+                        }
+                        const offering = this.createData(classnumber, course, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled, checked);
                         offeringList.push(offering);
                         }
                     })
@@ -832,17 +862,42 @@ class GenerateSchedule extends Component {
         this.setState(state =>{
             const siteData  = state.siteData
             siteData[index].checked = !siteData[index].checked
+            localStorage.setItem(siteData[index].classNmbr, siteData[index].checked)
             return{siteData};
         });
         console.log(this.state.siteData[index]) 
     }
     
+    handleAllCheckbox = () => {
+        this.setState(state =>{
+            const siteData = state.siteData
+            siteData.map(c => {
+                if(this.state.allCheckBox){
+                    c.checked = false 
+                }else{
+                    c.checked = true 
+                }
+                localStorage.setItem(c.classNmbr, c.checked)
+            })
+            return{siteData};
+        }, () => {
+            this.setState({allCheckBox: !this.state.allCheckBox})
+        });
+    }
+
     handleCourseOfferingChange =(e, val)=>{
         this.setState({courseOfferings: val});
     }
     
     triggerModal=(courseName, siteData)=>{
         this.setState({siteData})
+        this.setState({allCheckBox: false}, () => {
+            this.state.siteData.map(c => {
+                if(c.checked){
+                    this.setState({allCheckBox: true})
+                }
+            })
+        })
         this.setState({openModalCourseOfferings: true});
         this.setState({modalCourseName: courseName});
     }
@@ -851,15 +906,13 @@ class GenerateSchedule extends Component {
       this.setState({openModalCourseOfferings: false})
     }
   
-    handleOpenModalCourseOfferings = ()=>{
-      console.log("Hello opening modal");
-      this.setState({openModalCourseOfferings: true})
-      console.log(this.state.openModalCourseOfferings);
+    handleOpenModalCourseOfferings = () =>{
+        this.setState({openModalCourseOfferings: true})
     }
   
     toggleModal = () => {
-      var openModalVar = this.state.openModalCourseOfferings;
-      this.setState({openModalCourseOfferings: !openModalVar});
+        var openModalVar = this.state.openModalCourseOfferings;
+        this.setState({openModalCourseOfferings: !openModalVar});
     }
     
     handleSaveCourseOfferings = () =>{
@@ -960,7 +1013,7 @@ class GenerateSchedule extends Component {
                                     <Table aria-label="customized table">
                                       <TableHead>
                                         <TableRow>
-                                            <StyledTableCell> <WhiteCheckbox checked={true}/> </StyledTableCell>
+                                            <StyledTableCell> <WhiteCheckbox onClick={() => this.handleAllCheckbox()} checked={this.state.allCheckBox}/> </StyledTableCell>
                                           <StyledTableCell> Class Number </StyledTableCell>
                                           <StyledTableCell> Course </StyledTableCell>
                                           <StyledTableCell> Section </StyledTableCell>
