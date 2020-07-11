@@ -223,11 +223,13 @@ class GenerateSchedule extends Component {
                         }else if(checked == 'false'){
                             checked = false;
                         }
-                        const offering = this.createData(classnumber, course, course_id, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled, checked);
+                        console.log(checked)
+                        const offering = this.createData(classnumber, course, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled, checked);
                         offeringList.push(offering);
                         }
                     })
                     newCourses.push({'id':id, 'course_id':val.id, 'data':val.course_code, 'siteData': offeringList})
+                    console.log(newCourses)
                     this.setState({lowCourses: newCourses}, () => {
                         _callback()
                     })
@@ -422,7 +424,7 @@ class GenerateSchedule extends Component {
                                     }
                                 })
                             }else{
-                                this.getCourseOfferings(id, course, this.state.lowCourses, () => {
+                                this.getLowCourseOfferings(id, course, this.state.lowCourses, () => {
                                     done += 1;
                                     if(total <= done){
                                         this.setState({dataReceived: true})
