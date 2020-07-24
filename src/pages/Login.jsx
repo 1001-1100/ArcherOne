@@ -18,6 +18,8 @@ import PropTypes from 'prop-types';
 
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
+import { Container, Row, Col, Jumbotron, Card, CardBody } from "reactstrap";
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -205,76 +207,88 @@ class Login extends Component {
     render() {
       const { classes } = this.props;
       return (
-        <div>
-            <div class="sidenav">
-                <a className="backBtn" href="/">
+        <div style={{backgroundColor: "#006A4E"}}>
+                
                   <div className={"backBtn"}>
+                  <a className="backBtn" href="/">
                     <ArrowBackIosIcon fontSize="large"className={classes.backBtn} viewBox="0 0 1 24"/> <span className="backBtn">Back</span>
                       {/* <svg class="bi bi-backspace" width="3em" height="3em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                           <path fill-rule="evenodd" d="M8.603 4h7.08a1 1 0 011 1v10a1 1 0 01-1 1h-7.08a1 1 0 01-.76-.35L3 10l4.844-5.65A1 1 0 018.603 4zm7.08-1a2 2 0 012 2v10a2 2 0 01-2 2h-7.08a2 2 0 01-1.519-.698L2.241 10.65a1 1 0 010-1.302L7.084 3.7A2 2 0 018.603 3h7.08z" clip-rule="evenodd"></path>
                           <path fill-rule="evenodd" d="M7.83 7.146a.5.5 0 000 .708l5 5a.5.5 0 00.707-.708l-5-5a.5.5 0 00-.708 0z" clip-rule="evenodd"></path>
                           <path fill-rule="evenodd" d="M13.537 7.146a.5.5 0 010 .708l-5 5a.5.5 0 01-.708-.708l5-5a.5.5 0 01.707 0z" clip-rule="evenodd"></path>
                       </svg> */}
+                      </a>
                     </div>
-                </a>
-                <img class='img-responsive' id='lower' src={SidebarIMG}/>
-            </div>
-
-            <div class="sidenav-main">
-                <div id="signup-message">
-                    <h5>Not a member? <a href="/register">Sign up!</a></h5>
-                </div>
                 
-                <div id="signup-form">
-                    <form onSubmit={this.handleSubmit.bind(this)}>
-                        {/* Email */}
-                        <br/>
-                        <TextField error={this.state.errors["email"]} helperText={this.state.helperEmail} id="outlined-basic" label="DLSU Email" variant="outlined" name="email" placeholder="john_delacruz@dlsu.edu.ph" value={this.state.fields["email"]} onChange={this.handleChange.bind(this, "email")}/>
-                        {/* <input name="email" placeholder="john_delacruz@dlsu.edu.ph" onChange={this.handleChange.bind(this, "email")} value={this.state.fields["email"]}></input> */}
-                        {/* <span className="error">{this.state.errors["email"]}</span> */}
 
-                        <br/>
-                        <br/>
+                <div style={{textAlign: 'center'}}>
+                    <Row>
+                      <Col />
+                      <Col lg="8">
+                        <Jumbotron style={{padding: 32}}>
+                          <h3>
+                            Log in to your account!
+                          </h3>
+                            <div id="signup-form">
+                              <form onSubmit={this.handleSubmit.bind(this)}>
+                                  {/* Email */}
+                                  <br/>
+                                  <TextField style={{width: 350}} error={this.state.errors["email"]} helperText={this.state.helperEmail} id="outlined-basic" label="DLSU Email" variant="outlined" name="email" placeholder="john_delacruz@dlsu.edu.ph" value={this.state.fields["email"]} onChange={this.handleChange.bind(this, "email")}/>
+                                  {/* <input name="email" placeholder="john_delacruz@dlsu.edu.ph" onChange={this.handleChange.bind(this, "email")} value={this.state.fields["email"]}></input> */}
+                                  {/* <span className="error">{this.state.errors["email"]}</span> */}
 
-                        {/* Password */}
-                        <br/>
-                        <TextField error={this.state.errors["pass"]} helperText={this.state.helperPassword} type="password" id="outlined-basic" label="Password" variant="outlined" name="pass" placeholder="●●●●●●●●" value={this.state.fields["pass"]} onChange={this.handleChange.bind(this, "pass")}/>
-                        {/* <input type="password" name="pass" placeholder="●●●●●●●●" onChange={this.handleChange.bind(this, "pass")} value={this.state.fields["pass"]}></input> */}
-                        {/* <span className="error">{this.state.errors["pass"]}</span> */}
+                                  <br/>
+                                  <br/>
 
-                        <br/>
-                        <br/>
+                                  {/* Password */}
+                                  <br/>
+                                  <TextField style={{width: 350}} error={this.state.errors["pass"]} helperText={this.state.helperPassword} type="password" id="outlined-basic" label="Password" variant="outlined" name="pass" placeholder="●●●●●●●●" value={this.state.fields["pass"]} onChange={this.handleChange.bind(this, "pass")}/>
+                                  {/* <input type="password" name="pass" placeholder="●●●●●●●●" onChange={this.handleChange.bind(this, "pass")} value={this.state.fields["pass"]}></input> */}
+                                  {/* <span className="error">{this.state.errors["pass"]}</span> */}
 
-                        {this.renderRedirect()}
-                        <input type="submit" style={{height: 0, width: 0, padding: 0, border: 0}} />
-                        <div className={classes.root}>
-                          <div className={classes.wrapper}> 
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              className={"buttonClassname"}
-                              disabled={this.state.loading}
-                              onClick={this.handleSubmit}
-                              style={{backgroundColor: "green"}}
-                            >
-                              Login
-                            </Button>
-                            {this.state.loading && <CircularProgress size={24} className={classes.buttonProgress}/>}
+                                  <br/>
+                                  <br/>
+
+                                  {this.renderRedirect()}
+                                  <input type="submit" style={{height: 0, width: 0, padding: 0, border: 0}} />
+                                  <div className={classes.root}>
+                                    <div className={classes.wrapper}> 
+                                      <Button
+                                        variant="contained"
+                                        color="primary"
+                                        className={"buttonClassname"}
+                                        disabled={this.state.loading}
+                                        onClick={this.handleSubmit}
+                                        style={{backgroundColor: "green"}}
+                                      >
+                                        Login
+                                      </Button>
+                                      {this.state.loading && <CircularProgress size={24} className={classes.buttonProgress}/>}
+                                    </div>
+                                  </div>
+
+                                  
+                              </form>
+                              <Snackbar open={this.state.snackBar} autoHideDuration={4000} onClose={this.handleCloseSnackBar}>
+                                <Alert onClose={this.handleCloseSnackBar} severity="error">
+                                  {this.state.snackBarText}
+                                </Alert>
+                              </Snackbar>
+                              <br/>
+                              
+                              <p><a href="/password_reset">Forgot your password?</a></p>
+
+                              {/* <div id="signup-message"> */}
+                                  <p>Not a member? <a href="/register">Sign up!</a></p>
+                              {/* </div> */}
+
                           </div>
-                        </div>
 
-                        
-                    </form>
-                    <Snackbar open={this.state.snackBar} autoHideDuration={4000} onClose={this.handleCloseSnackBar}>
-                      <Alert onClose={this.handleCloseSnackBar} severity="error">
-                        {this.state.snackBarText}
-                      </Alert>
-                    </Snackbar>
-                    <br/>
-                    
-                    <p><a href="/password_reset">Forgot your password?</a></p>
+                        </Jumbotron>
+                      </Col>
+                      <Col />
+                    </Row>
                 </div>
-            </div>
         </div>        
       );
     }

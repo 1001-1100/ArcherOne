@@ -66,6 +66,7 @@ class SchedViewHome extends Component {
         allowEdit: props.allowEdit,
       }
       this.editableLabel = React.createRef();
+      
       console.log("reach schedviewhome")
       console.log(props)
     }

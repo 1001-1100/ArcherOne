@@ -332,8 +332,8 @@ class Index extends Component {
                 course_id = offering.course_id
                 section = offering.section
                 faculty = offering.faculty
-                timeslot_begin = offering.timeslot_begin
-                timeslot_end = offering.timeslot_end
+                timeslot_begin = offering.timeslot_begin.substring(0, offering.timeslot_begin.length - 3)
+                timeslot_end = offering.timeslot_end.substring(0, offering.timeslot_end.length - 3)
                 room = offering.room
                 max_enrolled = offering.max_enrolled
                 current_enrolled = offering.current_enrolled
@@ -356,8 +356,8 @@ class Index extends Component {
                     endDate: this.createTimeslot(offering.day,endTime[0],endTime[1]),
                     location: offering.room,
                     professor: offering.faculty,
-                    startTime: offering.timeslot_begin,
-                    endTime: offering.timeslot_end,
+                    startTime: offering.timeslot_begin.substring(0, offering.timeslot_begin.length - 3),
+                    endTime: offering.timeslot_end.substring(0, offering.timeslot_end.length - 3),
                     days: offering.day,
                     classCode: offering.classnumber 
                 }
@@ -371,7 +371,7 @@ class Index extends Component {
 
                 count += 1;
             })
-            schedules.push({
+            schedules.unshift({
                 id: newSchedule.id,
                 title: newSchedule.title,
                 scheduleContent: scheduleContent,
@@ -399,7 +399,7 @@ class Index extends Component {
 
   setSchedInfo = () => {
     console.log(this.state.schedules)
-    if(this.state.schedules.length > 0){
+    if(this.state.schedules.length > 0){      
       const palette = JSON.parse(localStorage.getItem('palette'))
       var generatedContents = this.state.schedules.map((item, index) =>
           <SchedViewHome key={item.id} id={item.id} offerings={item.offerings} tableContent={item.tableContent} scheduleContent={item.scheduleContent} titleName={item.title} earliest={item.earliest} latest={item.latest} updateSchedTitle={this.updateSchedTitle} palette={palette} allowEdit={this.state.allowEdit}/>
@@ -670,7 +670,7 @@ class Index extends Component {
       // snackBarVariables[1].snackBarFailed = true;
       this.setState({snackBarVariables});
       console.log(snackBarVariables);
-      window.location.reload();
+      // window.location.reload();
     }).catch(err => {
       console.log(err.response)
     })
@@ -755,11 +755,11 @@ class Index extends Component {
                       >
                       Edit
                     </Button>
-                      <Modal isOpen={this.state.openModalEdit} toggle={this.toggleModalEdit} returnFocusAfterClose={false} backdrop="static" data-keyboard="false" >
-                        <ModalHeader toggle={this.toggleModalEdit}>Edit Schedule</ModalHeader>
+                      <Modal isOpen={this.state.openModalEdit} toggle={this.toggleModalEdit} returnFocusAfterClose={false} backdrop={true} data-keyboard="false" >
+                        <ModalHeader toggle={this.toggleModalEdit}><h4>Edit Schedule</h4></ModalHeader>
                         <ModalBody>
                           <div className="searchBarEdit" >
-                            <h4>Search, add or remove your classes</h4>
+                            <h5>Search, add or remove your classes:</h5>
                               
                               {/* <h7>Your current classes</h7> */}
                               <div style={{display: "flex", justifyContent: "center", width: "-webkit-fill-available"}}>
@@ -798,17 +798,16 @@ class Index extends Component {
                     >
                       Customize
                     </Button>
-                    <Modal isOpen={this.state.openModalCustomize} toggle={this.toggleModal} returnFocusAfterClose={false} backdrop="static" data-keyboard="false">
-                      <ModalHeader toggle={this.toggleModal}>Customize Schedule</ModalHeader>
+                    <Modal isOpen={this.state.openModalCustomize} toggle={this.toggleModal} returnFocusAfterClose={false} backdrop={true} data-keyboard="false">
+                      <ModalHeader toggle={this.toggleModal}><h4>Customize Schedule</h4></ModalHeader>
                       <ModalBody>
-                        <h4>Color Palette</h4>
-                        Select a class box color palette
-                  
+                        {/* Select a class box color palette */}                  
                         <div>
+                        <h5>Color Palette</h5>
                         <TextField
                             id="outlined-select-break"
                             select
-                            label="class box color palette"
+                            label="Class box color palette"
                             onChange={this.handlePaletteChange}
                             
                             helperText="Choose a color palette"
@@ -831,7 +830,7 @@ class Index extends Component {
                         </TextField>
                         </div>
                         
-                        <h4>Class Box Details</h4>
+                        <h5>Class Box Details</h5>
                         <div>
                           <FormGroup>
                               <FormControlLabel

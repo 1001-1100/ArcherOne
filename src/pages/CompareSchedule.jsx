@@ -123,8 +123,8 @@ class CompareSchedule extends Component {
                     course = offering.course
                     section = offering.section
                     faculty = offering.faculty
-                    timeslot_begin = offering.timeslot_begin
-                    timeslot_end = offering.timeslot_end
+                    timeslot_begin = offering.timeslot_begin.substring(0, offering.timeslot_begin.length - 3)
+                    timeslot_end = offering.timeslot_end.substring(0, offering.timeslot_end.length - 3)
                     room = offering.room
                     max_enrolled = offering.max_enrolled
                     current_enrolled = offering.current_enrolled
@@ -147,8 +147,8 @@ class CompareSchedule extends Component {
                         endDate: this.createTimeslot(offering.day,endTime[0],endTime[1]),
                         location: offering.room,
                         professor: offering.faculty,
-                        startTime: offering.timeslot_begin,
-                        endTime: offering.timeslot_end,
+                        startTime: offering.timeslot_begin.substring(0, offering.timeslot_begin.length - 3),
+                        endTime: offering.timeslot_end.substring(0, offering.timeslot_end.length - 3),
                         days: offering.day,
                         classCode: offering.classnumber 
                     }
@@ -204,8 +204,8 @@ class CompareSchedule extends Component {
                         course = offering.course
                         section = offering.section
                         faculty = offering.faculty
-                        timeslot_begin = offering.timeslot_begin
-                        timeslot_end = offering.timeslot_end
+                        timeslot_begin = offering.timeslot_begin.substring(0, offering.timeslot_begin.length - 3)
+                        timeslot_end = offering.timeslot_end.substring(0, offering.timeslot_end.length - 3)
                         room = offering.room
                         max_enrolled = offering.max_enrolled
                         current_enrolled = offering.current_enrolled
@@ -228,8 +228,8 @@ class CompareSchedule extends Component {
                             endDate: this.createTimeslot(offering.day,endTime[0],endTime[1]),
                             location: offering.room,
                             professor: offering.faculty,
-                            startTime: offering.timeslot_begin,
-                            endTime: offering.timeslot_end,
+                            startTime: offering.timeslot_begin.substring(0, offering.timeslot_begin.length - 3),
+                            endTime: offering.timeslot_end.substring(0, offering.timeslot_end.length - 3),
                             days: offering.day,
                             classCode: offering.classnumber 
                         }

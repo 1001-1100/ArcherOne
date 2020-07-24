@@ -174,8 +174,9 @@ class ComboBox extends React.Component{
                     />
                 )}
                 //   renderInput={params => <TextField {...params} label="Search Courses" variant="outlined" />}
-                  onChange={this.props.onChange}
-                  onInputChange={this.handleSearchInputThrottled}
+                onChange={this.props.onChange}
+                onKeyPress={this.props.onKeyPress}
+                onInputChange={this.handleSearchInputThrottled}
                 />
             );
         } else if(this.props.page == "search_simple"){
@@ -248,7 +249,7 @@ class ComboBox extends React.Component{
             <Autocomplete
             multiple
             options={this.state.offeringList}
-            getOptionLabel={option => option.course + ' ' + option.section + ' (' + option.classNmbr + ')'}
+            getOptionLabel={option => option.course + ' ' + option.section + ' (' + option.classNmbr + ') ' + option.day + ' ' + option.startTime + ' - ' + option.endTime}
             filterSelectedOptions
             noOptionsText={"Start typing to add a course offering!"}
             style={{ width: 500 }}

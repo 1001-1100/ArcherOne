@@ -91,7 +91,7 @@ class Menu extends React.Component{
 
         return(
             <Navbar sticky="top" collapseOnSelect expand="lg" className="color-nav" variant="dark">
-                <Navbar.Brand href="/">ArcherOne</Navbar.Brand>
+                <Navbar.Brand href="/">AnimoSched</Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">                    
                     <Nav className="ml-auto">

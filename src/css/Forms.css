@@ -102,6 +102,7 @@ body {
 
 .backBtn{
     color: white;
+    margin-top: 10px;
 }
 
 .backBtn:hover{

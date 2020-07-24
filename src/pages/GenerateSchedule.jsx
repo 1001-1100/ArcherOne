@@ -683,8 +683,8 @@ class GenerateSchedule extends Component {
                             priorityId: 3,
                             location: offering.room,
                             professor: offering.faculty,
-                            startTime: offering.timeslot_begin,
-                            endTime: offering.timeslot_end,
+                            startTime: offering.timeslot_begin.substring(0, offering.timeslot_begin.length - 3),
+                            endTime: offering.timeslot_end.substring(0, offering.timeslot_end.length - 3),
                             days: offering.day,
                             classCode: offering.classnumber 
                         }
@@ -791,21 +791,9 @@ class GenerateSchedule extends Component {
     }
 
     handleSaveChange=()=>{
-        this.setState({loading: true});
         if(this.state.savedScheds.includes(this.state.currentContent.key)){
-            var newArray = [...this.state.savedScheds];
-            const index = newArray.indexOf(this.state.currentContent.key);
-            if (index > -1) {
-            newArray.splice(index, 1);
-            }
-            
-            this.setState({savedScheds: newArray});
-
-            this.setState({saveButtonLabel: "Save Schedule"});
-            const styleChange = {margin: "30px", backgroundColor: "#16775D", color: "white"};
-            this.setState({saveButtonStyle: styleChange})
-            this.setState({loading: false});
         }else{
+            this.setState({loading: true});
             const courseOfferings = []
             const user_id = localStorage.getItem('user_id')
             console.log(this.state.currentContent)
@@ -1140,7 +1128,7 @@ class GenerateSchedule extends Component {
                                         </div>
                                         <Snackbar open={this.state.snackBar} autoHideDuration={4000} onClose={this.handleCloseSnackBar}>
                                             <Alert onClose={this.handleCloseSnackBar} severity="success">
-                                            Your schedule have been successfully saved! View in <a href="/" style={{color:"#D3D3D3"}}>homepage</a>
+                                                Your schedule have been successfully saved! View in <a href="/" style={{color:"#D3D3D3"}}>homepage</a>
                                             </Alert>
                                         </Snackbar>
                                     </div>

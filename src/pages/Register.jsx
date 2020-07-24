@@ -19,6 +19,8 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
+import { Container, Row, Col, Jumbotron, Card, CardBody } from "reactstrap";
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -45,6 +47,13 @@ const styles = theme => ({
       left: '50%',
       marginTop: -12,
       marginLeft: -12,
+    },
+    backBtn:{
+      color: "white", 
+      marginLeft: "5px",
+    '&:hover': {
+        color: "#d3d3d3"
+      },
     },
   });
 
@@ -323,55 +332,54 @@ class Register extends Component {
     render() {
         const { classes } = this.props;
       return (
-        <div>
-            <div class="sidenav">
-            <a className="backBtn" href="/">
-                  <div className={"backBtn"}></div>
-                  <ArrowBackIosIcon fontSize="large" style={{color: "white", marginLeft: "5px"}} viewBox="0 0 1 24"/> <span className="backBtn">Back</span>
+        <div style={{backgroundColor: "#006A4E"}}>
+
+            
+                  <div className={"backBtn"}>
+                  <a className="backBtn" href="/">
+                  <ArrowBackIosIcon fontSize="large"className={classes.backBtn} viewBox="0 0 1 24"/> <span className="backBtn">Back</span>
                     {/* <svg class="bi bi-backspace" width="3em" height="3em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M8.603 4h7.08a1 1 0 011 1v10a1 1 0 01-1 1h-7.08a1 1 0 01-.76-.35L3 10l4.844-5.65A1 1 0 018.603 4zm7.08-1a2 2 0 012 2v10a2 2 0 01-2 2h-7.08a2 2 0 01-1.519-.698L2.241 10.65a1 1 0 010-1.302L7.084 3.7A2 2 0 018.603 3h7.08z" clip-rule="evenodd"></path>
                         <path fill-rule="evenodd" d="M7.83 7.146a.5.5 0 000 .708l5 5a.5.5 0 00.707-.708l-5-5a.5.5 0 00-.708 0z" clip-rule="evenodd"></path>
                         <path fill-rule="evenodd" d="M13.537 7.146a.5.5 0 010 .708l-5 5a.5.5 0 01-.708-.708l5-5a.5.5 0 01.707 0z" clip-rule="evenodd"></path>
                     </svg> */}
-                </a>
-                <img class='img-responsive' id='lower' src={SidebarIMG}/>
-            </div>
-
-            <div class="sidenav-main">
-                <div id="signup-message">
-                    <h5>Already have an account? <a href="/login">Log in!</a></h5>
-                </div>
+                  </a>
+                  </div>
+            
                 
-                <div id="signup-form">
+                <div style={{textAlign: 'center'}}>
+                    <Row>
+                      <Col />
+                      <Col lg="8">
+                        <Jumbotron style={{padding: 32}}>
+                          <h3>
+                            Account Registration
+                          </h3>
+                          <div id="signup-form">
                     <form onSubmit={this.handleSubmit.bind(this)}>
                         {/* First Name */}
                         <br/>
                         {/* <input name="firstName" placeholder="John" value={this.state.fields["firstName"]} onChange={this.handleChange.bind(this, "firstName")}/> */}
-                        <TextField error={this.state.errorFirstName} helperText={this.state.helperFirstName} id="outlined-basic" label="First Name" variant="outlined" name="firstName" placeholder="John" value={this.state.fields["firstName"]} onChange={this.handleChange.bind(this, "firstName")} style={{marginRight: "15%"}}></TextField>
+                        <TextField error={this.state.errorFirstName} helperText={this.state.helperFirstName} id="outlined-basic" label="First Name" variant="outlined" name="firstName" placeholder="John" value={this.state.fields["firstName"]} onChange={this.handleChange.bind(this, "firstName")} style={{marginRight: 25, width: 250}}></TextField>
                         {/* <span className="error" style={{marginRight: "15%"}}>{this.state.errors["firstName"]}</span>*/}
  
-                        <TextField error={this.state.errorLastName} helperText={this.state.helperLastName} id="outlined-basic" label="Last Name" variant="outlined" name="lastName" placeholder="Dela Cruz" value={this.state.fields["lastName"]} onChange={this.handleChange.bind(this, "lastName")} style={{marginRight: "15%"}}></TextField>
+                        <TextField error={this.state.errorLastName} helperText={this.state.helperLastName} id="outlined-basic" label="Last Name" variant="outlined" name="lastName" placeholder="Dela Cruz" value={this.state.fields["lastName"]} onChange={this.handleChange.bind(this, "lastName")} style={{marginRight: 25, width: 250}}></TextField>
                         {/* <input name="lastName" placeholder="Dela Cruz" value={this.state.fields["lastName"]} onChange={this.handleChange.bind(this, "lastName")}/> */}
                         {/* <span className="error">{this.state.errors["lastName"]}</span>*/}
-                        <br/><br/>
-
-                        {/* Email Address */}
-                        <br/>
-                        <TextField error={this.state.errorEmail} helperText={this.state.helperEmail} id="outlined-basic" label="DLSU Email" variant="outlined" name="email" placeholder="john_delacruz@dlsu.edu.ph" value={this.state.fields["email"]} onChange={this.handleChange.bind(this, "email")} style={{marginRight: "15%"}}/>
-                        {/* <input name="email" placeholder="john_delacruz@dlsu.edu.ph" onChange={this.handleChange.bind(this, "email")} value={this.state.fields["email"]}/> */}
-                        {/* <span className="error" style={{marginRight: "15%"}}>{this.state.errors["email"]}</span>*/}
-                       
 
                         {/* ID Number */}
-                      
-                        <TextField error={this.state.errorID} helperText={this.state.helperID} id="outlined-basic" label="ID Number" variant="outlined" name="idNo" placeholder="11612345" value={this.state.fields["idNo"]} onChange={this.handleChange.bind(this, "idNo")} style={{marginRight: "15%"}}/>
+                        <TextField error={this.state.errorID} helperText={this.state.helperID} id="outlined-basic" label="ID Number" variant="outlined" name="idNo" placeholder="11612345" value={this.state.fields["idNo"]} onChange={this.handleChange.bind(this, "idNo")} style={{width: 185}}/>
                         {/* <input name="idNo" placeholder="11612345" onChange={this.handleChange.bind(this, "idNo")} value={this.state.fields["idNo"]}/> */}
                         {/* <span className="error">{this.state.errors["idNo"]}</span>*/}
                         <br/><br/>
 
                         {/* College */}
-                        <br/>
                         <div className="collegeField">
+                            {/* Email Address */}
+                            <TextField error={this.state.errorEmail} helperText={this.state.helperEmail} id="outlined-basic" label="DLSU Email" variant="outlined" name="email" placeholder="john_delacruz@dlsu.edu.ph" value={this.state.fields["email"]} onChange={this.handleChange.bind(this, "email")} style={{marginRight: 50, width: 345}}/>
+                            {/* <input name="email" placeholder="john_delacruz@dlsu.edu.ph" onChange={this.handleChange.bind(this, "email")} value={this.state.fields["email"]}/> */}
+                            {/* <span className="error" style={{marginRight: "15%"}}>{this.state.errors["email"]}</span>*/}
+
                             <TextField
                                 error={this.state.errorCollege} helperText={this.state.helperCollege}
                                 id="outlined-select-college"
@@ -379,7 +387,7 @@ class Register extends Component {
                                 label="College"
                                 onChange={this.handleChange.bind(this, "college")}
                                 value = {this.state.fields["college"]}
-                                style={{width:"300px"}}
+                                style={{width: 345}}
                                 variant="outlined">
                                 {this.state.colleges.map(college => (
                                     <MenuItem key={college.id} value={college.id}>
@@ -399,24 +407,23 @@ class Register extends Component {
                             </>
                         </select> */}
                        
-                        <br/><br/>
+                        <br/>
                         {/* Degree */}
                         {/* <span className="error">{this.state.errors["degree"]}</span> */}
                         <ComboBox error={this.state.errorDegree} helperText={this.state.helperDegree} ref={this.degreeRef} page="register" name="degree" value={this.state.fields["degree"]} onChange={this.handleAutoCompleteChange} college={this.state.fields["college"]} degrees={this.state.degrees}/><br/>
 
                         {/* Password */}
-                        <br/>
-                        <TextField error={this.state.errorPassword} helperText={this.state.helperPassword} type="password"  id="outlined-basic" label="Password" variant="outlined" name="pass" placeholder="●●●●●●●●" value={this.state.fields["pass"]} onChange={this.handleChange.bind(this, "pass")} style={{marginRight: "15%"}}/>
+                        <TextField error={this.state.errorPassword} helperText={this.state.helperPassword} type="password"  id="outlined-basic" label="Password" variant="outlined" name="pass" placeholder="●●●●●●●●" value={this.state.fields["pass"]} onChange={this.handleChange.bind(this, "pass")} style={{marginRight: 50, width: 345}}/>
                         {/* <input type="password" name="pass" placeholder="●●●●●●●●" onChange={this.handleChange.bind(this, "pass")} value={this.state.fields["pass"]}/> */}
                         {/* <span className="error" style={{marginRight: "15%"}}>{this.state.errors["pass"]}</span>*}
                      
 
                         {/* Confirm Password */}
                        
-                        <TextField error={this.state.errorConPassword} helperText={this.state.helperConPassword} type="password"  id="outlined-basic" label="Confirm Password" variant="outlined" name="passCon" placeholder="●●●●●●●●" value={this.state.fields["pasCon"]} onChange={this.handleChange.bind(this, "passCon")} style={{marginRight: "15%"}}/>
+                        <TextField error={this.state.errorConPassword} helperText={this.state.helperConPassword} type="password"  id="outlined-basic" label="Confirm Password" variant="outlined" name="passCon" placeholder="●●●●●●●●" value={this.state.fields["pasCon"]} onChange={this.handleChange.bind(this, "passCon")} style={{width: 345}}/>
                         {/* <input type="password" name="passCon" placeholder="●●●●●●●●" onChange={this.handleChange.bind(this, "passCon")} value={this.state.fields["passCon"]}/> */}
                         {/* <span className="error">{this.state.errors["passCon"]}</span>*/}
-                        <br/><br/>
+                        <br/>
 
                         {this.renderRedirect()}
                         <input type="submit" style={{height: 0, width: 0, padding: 0, border: 0}} />
@@ -447,9 +454,21 @@ class Register extends Component {
                       </Alert>
                     </Snackbar>
                     <br/>
+
+                    {/* <div id="signup-message"> */}
+                    <p>Already have an account? <a href="/login">Log in!</a></p>
+                {/* </div> */}
                     
                 </div>
-            </div>
+
+                        </Jumbotron>
+                      </Col>
+                      <Col />
+                    </Row>
+                </div>
+                
+                
+            
         </div>        
       );
     }
