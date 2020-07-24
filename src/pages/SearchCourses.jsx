@@ -423,16 +423,16 @@ class SearchCourses extends Component {
                         : 
                         <TableBody>
                           {this.state.siteData.map(row => (
-                            <StyledTableRow key={row.classNmbr} style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}>
-                              <StyledTableCell style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.classNmbr} </StyledTableCell>
+                            <StyledTableRow key={row.classNmbr}>
+                              <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.classNmbr} </StyledTableCell>
                               <StyledTableCell onClick={() => this.handleOpenModalCourseInfo(row.course, "", "3")} style={(row.capacity == row.enrolled) ? {color: "#0099CC", cursor: "pointer", textDecorationLine: 'underline'} : {color: "#006600", cursor: "pointer", textDecorationLine: 'underline'}} > <Tooltip title="More Details" placement="bottom-end"><div>{row.course}</div></Tooltip> </StyledTableCell>
-                              <StyledTableCell style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.section} </StyledTableCell>
-                              <StyledTableCell style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.faculty} </StyledTableCell>
-                              <StyledTableCell style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.day} </StyledTableCell>
-                              <StyledTableCell style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.startTime} - {row.endTime} </StyledTableCell>
-                              <StyledTableCell style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.room} </StyledTableCell>
-                              <StyledTableCell align="right" style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.capacity} </StyledTableCell>
-                              <StyledTableCell align="right" style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.enrolled} </StyledTableCell>
+                              <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.section} </StyledTableCell>
+                              <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.faculty} </StyledTableCell>
+                              <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.day} </StyledTableCell>
+                              <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.startTime} - {row.endTime} </StyledTableCell>
+                              <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.room} </StyledTableCell>
+                              <StyledTableCell align="right" style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.capacity} </StyledTableCell>
+                              <StyledTableCell align="right" style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.enrolled} </StyledTableCell>
                             </StyledTableRow>
                           ))}
                         </TableBody>

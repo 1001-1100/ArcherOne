@@ -467,3 +467,13 @@
     padding-right: 5px;
 
   }
+
+a.card-courseName{
+    cursor: pointer !important;
+    text-decoration: underline !important;
+}
+
+.card-courseName:hover{
+  color: #16775D !important;
+
+}

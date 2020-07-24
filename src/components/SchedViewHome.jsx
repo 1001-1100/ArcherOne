@@ -206,15 +206,15 @@ class SchedViewHome extends Component {
                           <TableBody>
                             {this.state.tableContent.map(row => (
                               <StyledTableRow key={row.classNmbr}>
-                                <StyledTableCell> {row.classNmbr} </StyledTableCell>
-                                <StyledTableCell> {row.course} </StyledTableCell>
-                                <StyledTableCell> {row.section} </StyledTableCell>
-                                <StyledTableCell> {row.faculty} </StyledTableCell>
-                                <StyledTableCell> {row.day} </StyledTableCell>
-                                <StyledTableCell> {row.startTime} - {row.endTime} </StyledTableCell>
-                                <StyledTableCell> {row.room} </StyledTableCell>
-                                <StyledTableCell align="right"> {row.capacity} </StyledTableCell>
-                                <StyledTableCell align="right"> {row.enrolled} </StyledTableCell>
+                                <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {}}> {row.classNmbr} </StyledTableCell>
+                                <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {}}> {row.course} </StyledTableCell>
+                                <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {}}> {row.section} </StyledTableCell>
+                                <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {}}> {row.faculty} </StyledTableCell>
+                                <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {}}> {row.day} </StyledTableCell>
+                                <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {}}> {row.startTime} - {row.endTime} </StyledTableCell>
+                                <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {}}> {row.room} </StyledTableCell>
+                                <StyledTableCell align="right" style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {}}> {row.capacity} </StyledTableCell>
+                                <StyledTableCell align="right" style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {}}> {row.enrolled} </StyledTableCell>
                               </StyledTableRow>
                             ))}
                           </TableBody>

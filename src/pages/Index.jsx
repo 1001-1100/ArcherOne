@@ -711,7 +711,7 @@ class Index extends Component {
 
       return (
         <div style={!this.props.logged_in? sectionStyle : {}}>
-          {this.props.menu()}
+          {this.props.menu('savedSchedules')}
 
           {this.state.dataReceived ? 
           <div className={"homepage"} style={this.props.logged_in ? {} : {display: "none"}}>

@@ -32,12 +32,29 @@ const styles = theme => ({
   wrapper: {
     margin: theme.spacing(1),
     position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  buttonSuccess: {
-    backgroundColor: green[500],
-    '&:hover': {
-      backgroundColor: green[700],
-    },
+  buttonLogin: {
+        fontSize: "100%",
+        width: "110%",
+        alignItems: 'center',
+        justifyContent: 'center',
+        textTransform: "none",
+        borderRadius: "30px",
+        padding: "10px",
+        paddingLeft: "30px",
+        paddingRight: "30px",
+        backgroundColor: "green",
+        border: "none",
+        color: "white",
+        boxShadow: "6px 5px #e8f4ea",
+        borderStyle: "solid",
+        borderColor: "green",
+        '&:hover': {
+            color: "green",
+            backgroundColor: "#FFFFFF",
+          },
   },
   buttonProgress: {
     color: green[500],
@@ -207,7 +224,7 @@ class Login extends Component {
     render() {
       const { classes } = this.props;
       return (
-        <div style={{backgroundColor: "#006A4E"}}>
+        <div style={{backgroundColor: "#9bcfb8"}}>
                 
                   <div className={"backBtn"}>
                   <a className="backBtn" href="/">
@@ -225,7 +242,7 @@ class Login extends Component {
                     <Row>
                       <Col />
                       <Col lg="8">
-                        <Jumbotron style={{padding: 32}}>
+                        <Jumbotron style={{padding: 32, backgroundColor: "white"}}>
                           <h3>
                             Log in to your account!
                           </h3>
@@ -250,22 +267,25 @@ class Login extends Component {
                                   <br/>
 
                                   {this.renderRedirect()}
+                              
                                   <input type="submit" style={{height: 0, width: 0, padding: 0, border: 0}} />
+                                  <Row horizontal = 'center' style={{justifyContent: "center"}}>
                                   <div className={classes.root}>
                                     <div className={classes.wrapper}> 
                                       <Button
                                         variant="contained"
                                         color="primary"
-                                        className={"buttonClassname"}
+                                        className={classes.buttonLogin}
                                         disabled={this.state.loading}
                                         onClick={this.handleSubmit}
-                                        style={{backgroundColor: "green"}}
+                                        style={{}}
                                       >
                                         Login
                                       </Button>
                                       {this.state.loading && <CircularProgress size={24} className={classes.buttonProgress}/>}
                                     </div>
                                   </div>
+                                  </Row>
 
                                   
                               </form>

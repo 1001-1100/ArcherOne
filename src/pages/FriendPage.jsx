@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import '../css/FriendPage.css';
-import { Row, Col, Tabs, Tab } from 'react-bootstrap';
+import { Row, Col, Tabs, Tab, DropdownButton, Dropdown } from 'react-bootstrap';
 import SidebarIMG from '../images/FriendPage.svg';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -50,6 +50,9 @@ import Avatar from 'react-avatar';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import { withRouter } from "react-router";
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+
+import _ from 'underscore';
 
 const styles = theme => ({
     pencilIcon:{ 
@@ -151,6 +154,7 @@ class FriendPage extends Component {
             fromModalIndex: "",
             schedules: [],
             profList: [],
+            dropdownOpen: false,
 
             daysList:[
                 {   id: 1,
@@ -234,8 +238,11 @@ class FriendPage extends Component {
             break_length: '',
             firstName: '',
             lastName: '',
+            searchQuery: '',
 
         }
+
+        this.filterSearchFriendsThrottled = _.debounce(this.filterSearchFriends, 500)
         console.log(props)
 
     }
@@ -396,6 +403,8 @@ class FriendPage extends Component {
             .then(res => {
                 const profList = []
                 const sectionList = []
+                const daysList = []
+                const buildingList = []
                 console.log(res.data)
                 res.data.map(preference =>{
                     if(preference.earliest_class_time != null){
@@ -405,15 +414,11 @@ class FriendPage extends Component {
                         this.setState({latest_class_time:preference.latest_class_time})
                     }
                     if(preference.preferred_days != null){
-                        const newDaysList = [];
                         this.state.daysList.map(day => {
                             if(preference.preferred_days == day.id){
-                                newDaysList.push({'id':day.id, 'day_code':day.day_code, 'day':day.day, 'checked':true})
-                            }else{
-                                newDaysList.push(day);
+                                daysList.push(day.day)
                             }
                         })
-                        this.setState({daysList: newDaysList})
                     }
                     if(preference.break_length != null){
                         this.setState({break_length:preference.break_length})
@@ -429,23 +434,21 @@ class FriendPage extends Component {
                         profList.push(prof);
                     }
                     if(preference.preferred_buildings != null){
-                        const newBuildingList = [];
                         this.state.buildingList.map(bldg => {
                             if(preference.preferred_buildings == bldg.id){
-                                newBuildingList.push({'id':bldg.id, 'bldg_code':bldg.bldg_code, 'building':bldg.building, 'checked':true})
-                            }else{
-                                newBuildingList.push(bldg);
+                                buildingList.push(bldg.building)
                             }
                         })
-                        this.setState({buildingList: newBuildingList})
                     }
                     if(preference.preferred_sections != null){
                         var section = preference.preferred_sections 
                         sectionList.push(section);
                     }
                 })
-                console.log(profList)
-                this.setState({firstName: requests[i].firstName, lastName: requests[i].lastName, sectionList, profList, schedules, college: requests[i].college, degree: requests[i].degree, idnum: requests[i].id_num}, () => {
+                console.log(profList);
+                var idnum = requests[i].id_num;
+                var idnumber = idnum.toString().slice(0, 3);
+                this.setState({firstName: requests[i].firstName, lastName: requests[i].lastName, sectionList, profList, buildingList, daysList, schedules, college: requests[i].college, degree: requests[i].degree, idnum: idnumber}, () => {
                     this.setSchedInfo();
                 })
                 
@@ -521,15 +524,47 @@ class FriendPage extends Component {
 //            console.log(this.props.location.state.selectedFriend);
 //           this.handleClick("clickaway", this.props.location.state.index)
     }
+
+    toggleDrop = () => {
+        var dropdownOpen = this.state.dropdownOpen;
+        this.setState({dropdownOpen: !dropdownOpen});
+      }
+
+    handleSearchChange = (e) => {
+        this.filterSearchFriendsThrottled(e.target.value)
+    }
+
+    filterSearchFriends = (val) => {
+        this.setState({searchQuery: val})
+    }
        
     render() {
         const friendList = [];
         const { classes } = this.props;
 
         for(var i=0; i < this.state.requests.length; i++){
-            if(this.state.requests[i].status == "accept")
-                friendList.push(this.state.requests[i]);
+            if(this.state.requests[i].status == "accept"){
+                var f = this.state.requests[i];
+                if(f.firstName.toLowerCase().includes(this.state.searchQuery.toLowerCase()) || f.lastName.toLowerCase().includes(this.state.searchQuery.toLowerCase())){
+                    console.log(this.state.requests[i]);
+                    friendList.push(this.state.requests[i]);
+                }
+            }
         }
+
+        const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
+            <a
+                ref={ref}
+              onClick={(e) => {
+                e.preventDefault();
+                onClick(e);
+              }}
+            >
+              {children}
+              <ArrowDropDownIcon fontSize="large"/>
+              {/* &#x25bc; */}
+            </a>
+          ));
     
         return (
             <div>
@@ -558,8 +593,7 @@ class FriendPage extends Component {
                                     style={{ width: "95%", marginBottom: "10%", justifyContent: "center" }}
                                     filterSelectedOptions
                                     label="Search Friends" 
-                                    placeholder="FirstName LastName"
-                                    // onChange={this.handleEditChange}
+                                    onChange={this.handleSearchChange}
                                     /*renderInput={(params) => <TextField {...params} label="Search Friends" variant="outlined" placeholder="FirstName LastName"/>}*/
                                     />
                                     {/* <input style={{marginBottom: "10%"}}></input> */}
@@ -573,7 +607,6 @@ class FriendPage extends Component {
                                                 <Avatar name={friend.firstName +" "+ friend.lastName} textSizeRatio={2.30} round={true} size="25" style={{marginRight: "5px",}} />
                                             </Col>
                                             <Col xs={12} md={8}>
-                                                
                                                 <span> {friend.firstName} {friend.lastName} </span>
                                             </Col>
 
@@ -587,12 +620,19 @@ class FriendPage extends Component {
 
                                                         <CheckIcon fontSize="small"/>
                                                     </Button> */}
-                                                     <Tooltip title="Unfriend">
+                                                    <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDrop}>
+                                                        <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
+                                                        <Dropdown.Menu right>
+                                                        <Dropdown.Item eventKey="1" onClick={()=>this.handleClickOpenAlert(friend)}>Unfriend</Dropdown.Item>
+                                                        </Dropdown.Menu>
+                                                        </Dropdown.Toggle>
+                                                    </Dropdown>
+                                                     {/* <Tooltip title="Unfriend">
                                                     <svg onClick={()=>this.handleClickOpenAlert(friend)} class="bi bi-check-circle" width="24" height="24" viewBox="0 0 16 16" fill="#006A4E" xmlns="http://www.w3.org/2000/svg" className={"svgUnfriend"}>
                                                         <path fill-rule="evenodd" d="M15.354 2.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3-3a.5.5 0 11.708-.708L8 9.293l6.646-6.647a.5.5 0 01.708 0z" clip-rule="evenodd"></path>
                                                         <path fill-rule="evenodd" d="M8 2.5A5.5 5.5 0 1013.5 8a.5.5 0 011 0 6.5 6.5 0 11-3.25-5.63.5.5 0 11-.5.865A5.472 5.472 0 008 2.5z" clip-rule="evenodd"></path>
                                                     </svg>
-                                                    </Tooltip>
+                                                    </Tooltip> */}
                                                 </div>
                                             </Col>
                                         </Row>            
@@ -732,53 +772,17 @@ class FriendPage extends Component {
                                                     <tr>
                                                         <th scope="row">Days</th>
                                                         <td>
-                                                            <FormGroup row>
-                                                                <FormControlLabel
-                                                                    control = {<GreenCheckbox checked={this.state.daysList[0].checked} onChange={this.handleDayChange} id={this.state.daysList[0].id} color="primary"/>}label="M" />
-                                                                    <FormControlLabel
-                                                                    control = {<GreenCheckbox checked={this.state.daysList[1].checked} onChange={this.handleDayChange} id={this.state.daysList[1].id} color="primary"/>}label="T" />
-                                                                    <FormControlLabel
-                                                                    control = {<GreenCheckbox checked={this.state.daysList[2].checked} onChange={this.handleDayChange} id={this.state.daysList[2].id} color="primary"/>}label="W" />
-                                                                    <FormControlLabel
-                                                                    control = {<GreenCheckbox checked={this.state.daysList[3].checked} onChange={this.handleDayChange} id={this.state.daysList[3].id} color="primary"/>}label="H" />
-                                                                    <FormControlLabel
-                                                                    control = {<GreenCheckbox checked={this.state.daysList[4].checked} onChange={this.handleDayChange} id={this.state.daysList[4].id} color="primary"/>}label="F" />
-                                                                    <FormControlLabel
-                                                                    control = {<GreenCheckbox checked={this.state.daysList[5].checked} onChange={this.handleDayChange} id={this.state.daysList[5].id} color="primary"/>}label="S" />
-                                                            </FormGroup>
+                                                        {this.state.daysList.map(day => (
+                                                            <Chip label={day}></Chip>
+                                                        ))}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">Buildings</th>
                                                         <td>
-                                                            <Grid container spacing={6}>
-                                                                <Grid item xs={6}>
-
-                                                                <FormGroup>
-                                                                    <FormControlLabel
-                                                                    control = {<GreenCheckbox checked={this.state.buildingList[0].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[0].id}  color="primary"/>}label={this.state.buildingList[0].building} />
-                                                                    <FormControlLabel
-                                                                    control = {<GreenCheckbox checked={this.state.buildingList[1].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[1].id} color="primary"/>}label={this.state.buildingList[1].building} />
-                                                                    <FormControlLabel
-                                                                    control = {<GreenCheckbox checked={this.state.buildingList[2].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[2].id} color="primary"/>}label={this.state.buildingList[2].building}/>
-                                                                    <FormControlLabel
-                                                                    control = {<GreenCheckbox checked={this.state.buildingList[3].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[3].id} color="primary"/>}label={this.state.buildingList[3].building} />
-                                                                </FormGroup>
-                                                                </Grid>
-
-                                                                <Grid item xs={6}>
-                                                                <FormGroup>
-                                                                <FormControlLabel
-                                                                control = {<GreenCheckbox checked={this.state.buildingList[4].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[4].id} color="primary"/>}label={this.state.buildingList[4].building}/>
-                                                                <FormControlLabel
-                                                                control = {<GreenCheckbox checked={this.state.buildingList[5].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[5].id} color="primary"/>}label={this.state.buildingList[5].building} />
-                                                                    <FormControlLabel
-                                                                control = {<GreenCheckbox checked={this.state.buildingList[6].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[6].id} color="primary"/>}label={this.state.buildingList[6].building}/>
-                                                                <FormControlLabel
-                                                                control = {<GreenCheckbox checked={this.state.buildingList[7].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[7].id} color="primary"/>}label={this.state.buildingList[7].building} />
-                                                                </FormGroup>
-                                                                </Grid>
-                                                            </Grid>
+                                                        {this.state.buildingList.map(building => (
+                                                            <Chip label={building}></Chip>
+                                                        ))}
                                                         </td>
 
                                                     </tr>

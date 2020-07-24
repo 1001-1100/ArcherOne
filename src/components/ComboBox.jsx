@@ -217,6 +217,7 @@ class ComboBox extends React.Component{
             <Autocomplete
             multiple
             options={this.state.courseList}
+            disabled={this.props.disabled}
             getOptionLabel={option => option.course_code}
             filterSelectedOptions
             noOptionsText={"Start typing to add a course!"}

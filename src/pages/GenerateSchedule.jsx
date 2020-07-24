@@ -163,7 +163,9 @@ class GenerateSchedule extends Component {
             siteDataArray: [],
             allCheckBox: true,
      
-            skeletons: [...Array(8).keys()]
+            skeletons: [...Array(8).keys()],
+
+            openModalWait: false,
         };
 
     }
@@ -440,8 +442,9 @@ class GenerateSchedule extends Component {
                 if(total <= done){
                     this.setState({dataReceived: true})
                 }
-                console.log(this.state.highCourses)
-                console.log(this.state.lowCourses)
+                console.log(this.state.highCourses.length)
+                console.log(this.state.lowCourses.length)
+                console.log(this.state.loading || this.state.highCourses.length + this.state.lowCourses.length <= 0);
             });
         })
     }
@@ -518,6 +521,7 @@ class GenerateSchedule extends Component {
         this.setState({AutoCompleteValue: []})
         this.setState({currentCourse: []})
         this.setState({courseAdded: false})
+        this.setState({loading: true})
         const newCourseList = [];
 
         if(val != undefined && val != []){
@@ -527,6 +531,8 @@ class GenerateSchedule extends Component {
             //     }
             // })
             // this.setState({courseList:newCourseList})
+            var count = 0
+            var max = val.length
             val.map(course => {
                 if(course.course_code != undefined && course.course_code.trim() != ''){
                     const id = localStorage.getItem('user_id');
@@ -543,16 +549,20 @@ class GenerateSchedule extends Component {
                     })
                     .then(res => {
                         this.getSingleCourseOfferings(res.data.id, course, () => {
+                            count += 1
+                            if(max >= count){
+                                this.setState({loading: false})
+                            }
 
                         })
 
                     })
                     .catch(error => {
                         console.log(error.response)
+                        this.setState({loading: false})
                     });
                 }
             })
-            this.setState({courseAdded: true})
         }       
     }
 
@@ -569,7 +579,7 @@ class GenerateSchedule extends Component {
             return {currentPage};
             });
 
-        // this.handleScrollToGen();
+        this.handleScrollToGen();
 
         if(this.state.savedScheds.includes(this.state.generatedContents[index].key)){
             this.setState({saveButtonLabel: "Saved"});
@@ -620,9 +630,12 @@ class GenerateSchedule extends Component {
         if(!this.state.loading){
             this.setState({loading: true});
             this.setState({success: false});
+            this.toggleModalWait();
+            //modal popped out here
           }else{
             this.setState({success: true});
             this.setState({loading: false});
+            this.toggleModalWait();
         } 
         this.setState({savedScheds: [], hideGenContent: true, generatedContents: [], currentContent: ""});
 
@@ -739,10 +752,12 @@ class GenerateSchedule extends Component {
                 this.setSchedInfo();
                 this.setState({success: true});
                 this.setState({loading: false});
+                this.toggleModalWait();
             }).catch(error => {
                 console.log(error.response)
                 this.setState({success: false});
                 this.setState({loading: false});
+                this.toggleModalWait();
             })
         })
 
@@ -909,7 +924,11 @@ class GenerateSchedule extends Component {
         console.log("Course Offerings changes saved");
         this.setState({openModalCourseOfferings: false});
       } 
-
+    
+    toggleModalWait = () => {
+        var openModalVar = this.state.openModalWait;
+        this.setState({openModalWait: !openModalVar});
+      }
     render() { 
         let search_field = this.props.search_field;
         // const { currentPage } = this.state;
@@ -956,6 +975,7 @@ class GenerateSchedule extends Component {
                                     /> */}
                                     <ComboBox
                                     page={"add"}
+                                    disabled={this.state.loading}
                                     onChange={this.handleAutoCompleteChange}
                                     onKeyPress={this.handleAutoCompletePress}
                                     value={this.state.AutoCompleteValue}
@@ -966,7 +986,7 @@ class GenerateSchedule extends Component {
                                     <Button
                                         variant="contained"
                                         color = "Primary"
-                                        disabled={!this.state.courseAdded}
+                                        disabled={this.state.loading}
                                         style={{backgroundColor: "green", color:"white", height:"56px"}}
                                         onClick={this.handleAddCoursePriority}>
                                         <AddIcon fontSize="medium"/>  
@@ -976,18 +996,18 @@ class GenerateSchedule extends Component {
                             </Row>
                             <Row horizontal='center' style={{margin: "20px"}}>
                                 <FormControlLabel
-                                control = {<GreenCheckbox checked={this.state.filterFull} onChange={this.handleFilterFull} color="primary"/>}label="Filter out closed classes" />
+                                control = {<GreenCheckbox disabled={this.state.loading} checked={this.state.filterFull} onChange={this.handleFilterFull} color="primary"/>}label="Filter out closed classes" />
                             </Row>
                             <div className={"DnDContainer"}>
                                 <Row vertical = 'center'>
                                     <Column flexGrow={1} horizontal = 'center'>
                                         <h3 className='priortyTitle'>Highest Priority</h3>
-                                        <CourseDnD idTag={this.state.highPriorityId} courses={this.state.highCourses} updateFunction={this.updateHighPriority} handleCourseDelete={this.handleCourseDelete} triggerModal={this.triggerModal}/>
+                                        <CourseDnD idTag={this.state.highPriorityId} courses={this.state.highCourses} updateFunction={this.updateHighPriority} handleCourseDelete={this.handleCourseDelete} triggerModal={this.triggerModal} loading={this.state.loading}/>
 
                                     </Column>
                                     <Column flexGrow={1} horizontal = 'center'>
                                         <h3 className='priortyTitle'>Lowest Priority</h3>
-                                        <CourseDnD idTag={this.state.lowPriorityId} courses={this.state.lowCourses} updateFunction={this.updateLowPriority} handleCourseDelete={this.handleCourseDelete} triggerModal={this.triggerModal}/>
+                                        <CourseDnD idTag={this.state.lowPriorityId} courses={this.state.lowCourses} updateFunction={this.updateLowPriority} handleCourseDelete={this.handleCourseDelete} triggerModal={this.triggerModal} loading={this.state.loading}/>
                                     </Column>
                                 </Row>
                             </div>
@@ -1069,13 +1089,13 @@ class GenerateSchedule extends Component {
                             </Row> */}
                             <Row horizontal = 'center' style={{margin: "20px"}}>
                                 <div className={classes.root}>
-                                    <div className={classes.wrapper}> 
+                                    <div className={classes.wrapper} ref={this.generatedRef}> 
                                         <Button
                                         variant="contained"
                                         className={classes.schedButton}
-                                        disabled={!this.state.courseAdded}
+                                        disabled={this.state.loading || this.state.highCourses.length + this.state.lowCourses.length <= 0}
                                         onClick={()=>this.createSchedInfo()}
-                                        
+                                         
                                         // style={{backgroundColor: "green"}}
                                         >
                                         Generate Schedule
@@ -1085,9 +1105,18 @@ class GenerateSchedule extends Component {
                                 </div>
                                 {/* <button className="schedButton" onClick={()=>this.createSchedInfo()} style={{marginTop: "20px"}}>Generate Schedule</button> */}
                             </Row>
+
+                            <Modal isOpen={this.state.openModalWait} toggle={this.toggleModalWait} returnFocusAfterClose={false} backdrop={true} data-keyboard="false" centered={true}>
+                                <ModalHeader toggle={this.toggleModalWait}><p>Please wait...In the process of making your schedule</p></ModalHeader>
+                                
+                                {/* <ModalBody>
+                                
+                                </ModalBody> */}
+                                
+                            </Modal> 
                         </div>
 
-                        <div  ref={this.generatedRef}  className = "genSchedInfoContainer" style={this.state.hideGenContent ? {display: "none"} :  {margin: "40px"}}>
+                        <div   className = "genSchedInfoContainer" style={this.state.hideGenContent ? {display: "none"} :  {margin: "40px"}}>
                             <span>{this.state.currentContent}</span>
                         
                             <div className = "paginationContainer">
@@ -1118,7 +1147,6 @@ class GenerateSchedule extends Component {
                                             <Button
                                             variant="contained"
                                             className={classes.schedButton}
-                                            disabled={this.state.loading}
                                             onClick={this.handleSaveChange}
                                             style={this.state.saveButtonStyle}
                                             >

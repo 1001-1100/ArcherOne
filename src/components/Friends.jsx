@@ -297,8 +297,11 @@ class Friends extends React.Component{
                                         {/* <svg class="bi bi-circle-fill" id='profileLink' width="32" height="32" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                             <circle cx="10" cy="10" r="8"></circle>
                                         </svg> */}
+
+                                        <Link  className="friendItem"  to={request.acceptStatus ? {pathname: "/view_friends" , state:{selectedFriendId: request.id}}: {}}>
                                         <Avatar name={request.firstName +" "+ request.lastName} textSizeRatio={2.30} round={true} size="25" style={{marginRight: "12px",}} />
                                         <span> {request.firstName} {request.lastName} </span>
+                                        </Link>
                                     </Col>
 
                                     {!request.acceptStatus &&

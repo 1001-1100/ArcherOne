@@ -354,7 +354,7 @@ class Profile extends Component {
                         control = {<GreenCheckbox color="primary"/>} label={"Your friends make changes to their schedules and preferences."}/>
                     </FormGroup>
                     <center>
-                        <input class="btn btn-success submit-form" type="submit" value="Submit"/>
+                        <input class="btn btn-success submit-form" type="submit" value="Save"/>
                     </center>
                     {/* <form>
                         <input className="checkbox-description" type="checkbox" id="" name="" value=""/>
@@ -388,7 +388,7 @@ class Profile extends Component {
                         control = {<GreenCheckbox color="primary"/>} label={"College and course details."}/>
                     </FormGroup>
                     <center>
-                        <input class="btn btn-success submit-form" type="submit" value="Submit"/>
+                        <input class="btn btn-success submit-form" type="submit" value="Save"/>
                     </center>
 
                     {/* <form>

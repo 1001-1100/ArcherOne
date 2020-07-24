@@ -192,10 +192,6 @@ class Preferences extends Component {
             
             breakOptions: [
                 {
-                    option: "None",
-                    value: 0
-                },
-                {
                     option: "15 Minutes",
                     value: 15
                 },
@@ -540,9 +536,17 @@ class Preferences extends Component {
     
     render() {
         const { classes } = this.props;
+        const facultyOptions = this.state.profList.map((option) => {
+            const firstLetter = option.profName[0].toUpperCase();
+            return {
+              firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
+              ...option,
+            };
+          });
+
       return (
         <div>
-            {this.props.menu('profile')}
+            {this.props.menu('preferences')}
 
             {/* <div class="prefIntro"> */}
                 {/* <a href="/"> */}
@@ -741,8 +745,9 @@ class Preferences extends Component {
                                 <Autocomplete
                                     multiple
                                     id="tags-outlined"
-                                    options={this.state.profList}
+                                    options={facultyOptions.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
                                     defaultValue={this.state.selectedProfs}
+                                    groupBy={(option) => option.firstLetter}
                                     getOptionLabel={option => option.profName}
                                     //   style={{ width: 500 }}
                                     filterSelectedOptions
