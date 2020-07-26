@@ -154,6 +154,7 @@ class ComboBox extends React.Component{
                   options={this.state.courseList}
                   getOptionLabel={option => option.course_code}
                 //   style={{ width: 500 }}
+                  defaultValue={this.props.defaultValue}
                   filterSelectedOptions
                   loading={this.state.loading}
                   noOptionsText={"Start typing to search a course!"}

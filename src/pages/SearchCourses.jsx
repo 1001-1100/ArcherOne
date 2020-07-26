@@ -118,6 +118,9 @@ class SearchCourses extends Component {
         //         this.setState({courseList: courses, dataReceived: true})
         //     })
         // })
+        var selectedCourses = JSON.parse(localStorage.getItem('selectedCourses'))
+        console.log(selectedCourses)
+        this.setState({selectedCourses})
         this.setState({dataReceived: true})
     }
 
@@ -250,7 +253,9 @@ class SearchCourses extends Component {
     }
 
     handleSearch = (e, val) =>{
-      this.setState({selectedCourses: val})
+      this.setState({selectedCourses: val}, () => {
+        localStorage.setItem('selectedCourses', JSON.stringify(val))
+      })
     }
     
     handleSearchPress = (e) => {
@@ -329,7 +334,7 @@ class SearchCourses extends Component {
                   <h2>Search all your courses in one go!</h2>
                     <div style={{display: "flex", justifyContent: "center"}}>
                     {/* <ComboBox style={{width: "-webkit-fill-available"}} page="search" onChange={this.handleSearch}/> */}
-                      <div className="barArea"><ComboBox style={{width: "-webkit-fill-available"}} page="search" onChange={this.handleSearch} onKeyPress={this.handleSearchPress}/></div>
+                      <div className="barArea"><ComboBox style={{width: "-webkit-fill-available"}} page="search" onChange={this.handleSearch} onKeyPress={this.handleSearchPress} defaultValue={this.state.selectedCourses}/></div>
                       <div className={classes.root}>
                           <div className={classes.wrapper} >
                             <Button

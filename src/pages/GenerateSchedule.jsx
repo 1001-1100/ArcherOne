@@ -399,6 +399,10 @@ class GenerateSchedule extends Component {
 
     componentDidMount(){
         const id = localStorage.getItem('user_id');
+        var AutoCompleteValue = JSON.parse(localStorage.getItem('addCourses'))
+        if(AutoCompleteValue != null){
+            this.setState({AutoCompleteValue})
+        }
         axios.get('https://archerone-backend.herokuapp.com/api/courses/')
         .then(res => {
             res.data.map(course => {
@@ -505,7 +509,9 @@ class GenerateSchedule extends Component {
 
     handleAutoCompleteChange = (e, val) => {
         this.setState({currentCourse: val});
-        this.setState({AutoCompleteValue: val});
+        this.setState({AutoCompleteValue: val},() => {
+            localStorage.setItem('addCourses', JSON.stringify(val))
+        });
     }
 
     handleAutoCompletePress = (e) => {
@@ -979,6 +985,7 @@ class GenerateSchedule extends Component {
                                     onChange={this.handleAutoCompleteChange}
                                     onKeyPress={this.handleAutoCompletePress}
                                     value={this.state.AutoCompleteValue}
+                                    defaultValue={this.state.AutoCompleteValue}
                                     />
                                      
                                 </div>
