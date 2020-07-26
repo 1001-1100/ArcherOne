@@ -39,12 +39,24 @@ body {
 
 }
 
+.tabArea {
+    margin-top: 2%;
+}
+
 .flowchart-area {
     margin-top: 3%;
     overflow: auto;
     display: inline-block;
     margin-left: 12%;
     margin-right: auto;
+}
+
+.flowchart-table-area {
+    margin-top: 3%;
+    /* overflow: auto; */
+    /* display: inline-block; */
+    margin-left: 20%;
+    margin-right: 20%;
 }
 
 .flowchart-header-parent {
@@ -99,4 +111,25 @@ body {
     right: 0;
     margin-right: 5%;
     background-color: white;
+}
+
+.legendEntry {
+    font-size: 0.85em;
+    display: inline-block;
+    margin-right: 2%;
+}
+
+.legendEntryFlowchart {
+    font-size: 0.85em;
+    display: inline-block;
+    margin-right: 2%;
+}
+
+.flowchartLegendLine {
+    width: 120px;
+}
+
+.legendArea {
+    color: black;
+    margin-bottom: 2%;
 }

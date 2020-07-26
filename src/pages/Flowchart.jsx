@@ -17,6 +17,18 @@ import html2canvas from 'html2canvas';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+
+import { Row, Col, Tabs, Tab } from 'react-bootstrap';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+
+import { Chip } from "@material-ui/core";
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -106,14 +118,22 @@ class Flowchart extends Component {
                 var tempCoursesList = [];
                 // termsList.push(newTerm);
                 term.courses.map((course, j) => {
+                  var tempCourse = course;
+                  tempCourse.year = term.year;
+                  tempCourse.term = term.term;
+                  tempCourse.prerequisites = [];
+                  tempCourse.softPrerequisites = [];
+                  tempCourse.corequisites = [];
+                  // console.log(tempCourse);
                   // var outputsList = {};
-                  coursesList.push(course);
-                  tempCoursesList.push(course);
+                  coursesList.push(tempCourse);
+                  tempCoursesList.push(tempCourse);
                   // course.prerequisite_to.map((prereq_to) => {
                   //   outputsList[prereq_to] = { output: "right", input: "left" }                    
                   // })            
                   // flowpointsList.push({'key': course.id, 'name': course.course_code, 'units': course.units, 'startPosition': { x:(currentTerm-1)*85, y:tracks[j]*45 }, 'width': 70, 'height': 40, 'dragX': false, 'dragY': false, 'outputs': outputsList, 'year': term.year, 'term': term.term});
                 })
+                
                 tempCoursesList.sort(function(a, b) {
                   var keyA = new String(a.course_code),
                     keyB = new String(b.course_code);
@@ -121,10 +141,25 @@ class Flowchart extends Component {
                   if (keyA > keyB) return 1;
                   return 0;
                 });
+
+                coursesList.sort(function (a, b) {
+                  if(a.year == b.year) {
+                    if(a.term == b.term) {
+                      return (a.units < b.units) ? 1 : -1;
+                    }
+                    else {                    
+                      return (a.term > b.term) ? 1 : -1;
+                    }
+                  }
+                  else {
+                      return (a.year > b.year) ? 1 : -1;
+                  }
+                });
+
                 for(var k = 0; k < tempCoursesList.length; k++) {
-                  var outputsList = {};                  
+                  var outputsList = {};
                   tempCoursesList[k].prerequisite_to.map((prereq_to) => {
-                    outputsList[prereq_to] = { output: "right", input: "left", inputColor: "#16775d", outputColor: "#16775d" }                    
+                    outputsList[prereq_to] = { output: "right", input: "left", inputColor: "#16775d", outputColor: "#16775d" }
                   })
                   tempCoursesList[k].soft_prerequisite_to.map((prereq_to) => {
                     outputsList[prereq_to] = { output: "right", input: "left", inputColor: "#16775d", outputColor: "#16775d", dash: "3" }                    
@@ -134,24 +169,44 @@ class Flowchart extends Component {
                   })
                   flowpointsList.push({'key': tempCoursesList[k].id, 'name': tempCoursesList[k].course_code, 'units': tempCoursesList[k].units, 'startPosition': { x:(currentTerm-1)*85, y:tracks[k]*50 }, 'width': 70, 'height': 40, 'dragX': false, 'dragY': false, 'outputs': outputsList, 'year': term.year, 'term': term.term});
                 }
-                console.log(tempCoursesList)               
+                
+                // console.log(tempCoursesList)
                 // this.setState({terms: termsList})
                 this.setState({courses: coursesList})
                 this.setState({flowpoints: flowpointsList})                
         })
+
+        for(var k = 0; k < this.state.courses.length; k++) {
+          this.state.courses[k].prerequisite_to.map((prereq_to) => {
+            var tempCourse = this.state.courses.findIndex(course => (course.id).toString() === prereq_to.toString());
+            if(tempCourse != -1) {
+              this.state.courses[tempCourse].prerequisites.push(this.state.courses[k]);
+            }
+          })
+          this.state.courses[k].soft_prerequisite_to.map((prereq_to) => {
+            var tempCourse = this.state.courses.findIndex(course => (course.id).toString() === prereq_to.toString());
+            if(tempCourse != -1) {
+              this.state.courses[tempCourse].softPrerequisites.push(this.state.courses[k]);
+            }
+          })
+          this.state.courses[k].co_requisite.map((prereq_to) => {
+            var tempCourse = this.state.courses.findIndex(course => (course.id).toString() === prereq_to.toString());
+            if(tempCourse != -1) {
+              this.state.courses[tempCourse].corequisites.push(this.state.courses[k]);
+            }
+          })
+        }
+        
         this.setState({dataReceived: true})
       })
     }
     
-    exportSched = () => {
+    exportFlowchart = () => {
         window.scrollTo(0, 0);
         html2canvas(document.querySelector("#flowchart-area")).then(canvas => {
     //      document.location.href = canvas.toDataURL().replace('image/png', 'image/octet-stream');
             var filename = "flowchart" + ".png";
-         
             this.saveAs(canvas.toDataURL(), filename); 
-
-
         });
         
         this.setState({snackbar: true});
@@ -163,6 +218,17 @@ class Flowchart extends Component {
 //        this.setState({snackBarVariables});
 //        console.log(snackBarVariables);
   }
+    
+  exportFlowchartTable = () => {
+      window.scrollTo(0, 0);
+      html2canvas(document.querySelector("#flowchart-table-area")).then(canvas => {
+  //      document.location.href = canvas.toDataURL().replace('image/png', 'image/octet-stream');
+          var filename = "flowchart" + ".png";
+          this.saveAs(canvas.toDataURL(), filename); 
+      });
+      
+      this.setState({snackbar: true});
+}
   
   saveAs = (uri, filename) => {
 
@@ -199,6 +265,28 @@ class Flowchart extends Component {
 
     render() {
       const { classes } = this.props;
+        
+      const StyledTableCell = withStyles(theme => ({
+        head: {
+          backgroundColor: '#006A4E',
+          color: theme.palette.common.white,
+        },
+        body: {
+          fontSize: 12,
+          // borderBottom: "1px solid white",
+        },
+      }))(TableCell);
+
+      const StyledTableRow = withStyles(theme => ({
+        root: {
+          '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.background.default,
+          },
+        },
+      }))(TableRow);
+
+      const coursesProcessing = this.state.courses;
+
       return (
         <div>
             {this.props.menu('flowchart')}
@@ -224,93 +312,182 @@ class Flowchart extends Component {
                 <br/>
                   <center><h2 style={{width: "80%"}}>YOUR FLOWCHART</h2></center>
                   <center><h3>CCS 116 CS</h3></center>
-                  <center><Button
-                      variant="contained"
-                      className={classes.buttonStyle}
-                      onClick={this.exportSched}
-                      endIcon={ <GetAppIcon/>}
-                      >
-                      Export
-                    </Button></center>
-                    <Snackbar open={this.state.snackbar} autoHideDuration={4000} onClose={this.handleCloseBar}>
-                    <Alert onClose={this.handleCloseBar} severity="success">
-                    Your flowchart image is downloading!
-                    </Alert>
-                </Snackbar>
-                  <div class="flowchart-area" id="flowchart-area">
-                    <div class="flowchart-header-parent">
-                      <div class="header-year-parent">
-                        <div class="header-year">Year 1</div>
-                        <div class="header-term-parent">
-                          <div class="header-term">Term 1</div>
-                          <div class="header-term">Term 2</div>
-                          <div class="header-term">Term 3</div>
-                        </div>
-                      </div>
-                      <div class="header-year-parent">
-                        <div class="header-year">Year 2</div>
-                        <div class="header-term-parent">
-                          <div class="header-term">Term 1</div>
-                          <div class="header-term">Term 2</div>
-                          <div class="header-term">Term 3</div>
-                        </div>
-                      </div>
-                      <div class="header-year-parent">
-                        <div class="header-year">Year 3</div>
-                        <div class="header-term-parent">
-                          <div class="header-term">Term 1</div>
-                          <div class="header-term">Term 2</div>
-                          <div class="header-term">Term 3</div>
-                        </div>
-                      </div>
-                      <div class="header-year-parent">
-                        <div class="header-year">Year 4</div>
-                        <div class="header-term-parent">
-                          <div class="header-term">Term 1</div>
-                          <div class="header-term">Term 2</div>
-                          <div class="header-term">Term 3</div>
-                        </div>
-                      </div>
-                    </div>
-                      <Flowspace theme="green" variant="paper" background="white" connectionSize="2" style={{ overflow: 'hidden', height:"100%", width:"100",}}>
-                        {
-                          Object.keys(this.state.flowpoints).map(key => {
-                            const point = this.state.flowpoints[key]
-                            return (
-                              <Flowpoint
-                                key={point.key}
-                                startPosition={point.startPosition} 
-                                width={point.width} 
-                                height={point.height} 
-                                dragX={point.dragX} 
-                                dragY={point.dragY} 
-                                outputs={point.outputs}>
-                                <div className={classes.flowchartText}>{point.name}<br />{point.units}</div>
-                              </Flowpoint>
 
-                              // <Flowpoint
-                              //   key={key}
-                              //   startPosition={point.pos}
-                              //   onClick={() => {
-                              //     var selected_point = this.state.selected_point
-                              //     if (selected_point === key) {
-                              //       selected_point = null
-                              //     } else {
-                              //       selected_point = key
-                              //     }
-                              //     this.setState({selected_point})
-                              //   }}
-                              //   onDrag={position => {
-                              //     var flowpoints = this.state.flowpoints
-                              //     flowpoints[key].position = position
-                              //     this.setState({flowpoints})
-                              //   }}>                                
-                              // </Flowpoint>
-                            )
-                          })
-                        }
-                    </Flowspace>
-                  </div>
+                  <Tabs defaultActiveKey="visual" id="uncontrolled-tab-example">
+                    <Tab eventKey="visual" title="Visual">
+                      <div class="tabArea">
+                        <center>
+                          <Button
+                            variant="contained"
+                            className={classes.buttonStyle}
+                            onClick={this.exportFlowchart}
+                            endIcon={ <GetAppIcon/>}
+                            >
+                            Export
+                          </Button>
+                        </center>
+                        <Snackbar open={this.state.snackbar} autoHideDuration={4000} onClose={this.handleCloseBar}>
+                          <Alert onClose={this.handleCloseBar} severity="success">
+                          Your flowchart image is downloading!
+                          </Alert>
+                        </Snackbar>
+                        <div class="flowchart-area" id="flowchart-area">                          
+                          <div class="legendArea">
+                            <div class="header"><h5>Legend</h5></div>
+                              <div class="legendEntryFlowchart"><div class="flowchartLegendLine"><hr style={{borderColor: "#16775d", borderWidth: "2px"}}></hr></div><div class="flowchartLegendText">Prerequisite or corequisite</div></div>
+                              <div class="legendEntryFlowchart"><div class="flowchartLegendLine"><hr style={{borderColor: "#16775d", borderWidth: "1px", borderStyle: "dashed"}}></hr></div><div class="flowchartLegendText">Soft prerequisite</div></div>
+                          </div>
+                          <div class="flowchart-header-parent">
+                            <div class="header-year-parent">
+                              <div class="header-year">Year 1</div>
+                              <div class="header-term-parent">
+                                <div class="header-term">Term 1</div>
+                                <div class="header-term">Term 2</div>
+                                <div class="header-term">Term 3</div>
+                              </div>
+                            </div>
+                            <div class="header-year-parent">
+                              <div class="header-year">Year 2</div>
+                              <div class="header-term-parent">
+                                <div class="header-term">Term 1</div>
+                                <div class="header-term">Term 2</div>
+                                <div class="header-term">Term 3</div>
+                              </div>
+                            </div>
+                            <div class="header-year-parent">
+                              <div class="header-year">Year 3</div>
+                              <div class="header-term-parent">
+                                <div class="header-term">Term 1</div>
+                                <div class="header-term">Term 2</div>
+                                <div class="header-term">Term 3</div>
+                              </div>
+                            </div>
+                            <div class="header-year-parent">
+                              <div class="header-year">Year 4</div>
+                              <div class="header-term-parent">
+                                <div class="header-term">Term 1</div>
+                                <div class="header-term">Term 2</div>
+                                <div class="header-term">Term 3</div>
+                              </div>
+                            </div>
+                          </div>
+                            <Flowspace theme="green" variant="paper" background="white" connectionSize="2" style={{ overflow: 'hidden', height:"100%", width:"100",}}>
+                              {
+                                Object.keys(this.state.flowpoints).map(key => {
+                                  const point = this.state.flowpoints[key]
+                                  return (
+                                    <Flowpoint
+                                      key={point.key}
+                                      startPosition={point.startPosition} 
+                                      width={point.width} 
+                                      height={point.height} 
+                                      dragX={point.dragX} 
+                                      dragY={point.dragY} 
+                                      outputs={point.outputs}>
+                                      <div className={classes.flowchartText}>{point.name}<br />{point.units}</div>
+                                    </Flowpoint>
+
+                                    // <Flowpoint
+                                    //   key={key}
+                                    //   startPosition={point.pos}
+                                    //   onClick={() => {
+                                    //     var selected_point = this.state.selected_point
+                                    //     if (selected_point === key) {
+                                    //       selected_point = null
+                                    //     } else {
+                                    //       selected_point = key
+                                    //     }
+                                    //     this.setState({selected_point})
+                                    //   }}
+                                    //   onDrag={position => {
+                                    //     var flowpoints = this.state.flowpoints
+                                    //     flowpoints[key].position = position
+                                    //     this.setState({flowpoints})
+                                    //   }}>                                
+                                    // </Flowpoint>
+                                  )
+                                })
+                              }
+                          </Flowspace>
+                        </div>
+                    </div>
+                  </Tab>
+                  <Tab eventKey="table" title="Table">
+                    <div class="tabArea">
+                    <center>
+                      <Button
+                        variant="contained"
+                        className={classes.buttonStyle}
+                        onClick={this.exportFlowchartTable}
+                        endIcon={ <GetAppIcon/>}
+                        >
+                        Export
+                      </Button>
+                    </center>
+                    <Snackbar open={this.state.snackbar} autoHideDuration={4000} onClose={this.handleCloseBar}>
+                      <Alert onClose={this.handleCloseBar} severity="success">
+                      Your flowchart image is downloading!
+                      </Alert>
+                    </Snackbar>
+                    <div class="flowchart-table-area" id="flowchart-table-area">
+                    <div class="legendArea">
+                      <div class="header"><h5>Legend</h5></div>
+                        <div class="legendEntry"><Chip style={{width: '25px', height: '25px', borderRadius: "50%", borderStyle: 'solid', borderWidth: '2px', borderColor: 'lightgray'}} size="medium"></Chip> Prerequisite</div>
+                        <div class="legendEntry"><Chip style={{width: '25px', height: '25px', borderRadius: "50%", borderStyle: 'dotted', borderWidth: '2px', borderColor: 'grey'}} size="medium"></Chip> Soft prerequisite</div>
+                        <div class="legendEntry"><Chip style={{width: '25px', height: '25px', borderRadius: "50%", backgroundColor: '#c7ebd1', borderStyle: 'solid', borderWidth: '2px', borderColor: 'gainsboro'}} size="medium"></Chip> Corerequisite</div>
+                    </div>
+                    <TableContainer component={Paper}>
+                      <Table aria-label="customized table">
+                        <TableHead>
+                          <TableRow>
+                            <StyledTableCell> Year </StyledTableCell>
+                            <StyledTableCell> Term </StyledTableCell>
+                            <StyledTableCell> Code </StyledTableCell>
+                            <StyledTableCell> Title </StyledTableCell>
+                            <StyledTableCell> Units </StyledTableCell>
+                            <StyledTableCell> Prerequisites and Corequisites </StyledTableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {coursesProcessing.map((row) => (                                  
+                            <StyledTableRow key={row.course_name} style={{color: "#006600", height: '30px'}}>
+                              <StyledTableCell style={{color: "#006600"}}> {row.year} </StyledTableCell>
+                              <StyledTableCell style={{color: "#006600"}}> {row.term} </StyledTableCell>
+                              <StyledTableCell style={{color: "#006600"}}> {row.course_code} </StyledTableCell>
+                              <StyledTableCell style={{color: "#006600"}}> {row.course_name} </StyledTableCell>
+                              <StyledTableCell style={{color: "#006600"}}> {row.units} </StyledTableCell>
+                              <StyledTableCell style={{color: "#006600"}}>                                
+                                {row.prerequisites.map((prereq) => (
+                                  // {coursesProcessing.map((row, index) => (
+                                      // <StyledTableCell style={{marginRight: "5px"}}> 
+                                      <Chip label={prereq.course_code} style={{width: '8em', height: '25px', borderStyle: 'solid', borderWidth: '2px', borderColor: 'lightgray'}} size="medium"></Chip>
+                                      // </StyledTableCell>
+                                  // ))}
+                                ))}                                
+                                {row.softPrerequisites.map((prereq) => (
+                                  // {coursesProcessing.map((row, index) => (
+                                      // <StyledTableCell style={{marginRight: "5px"}}> 
+                                      <Chip label={prereq.course_code} style={{width: '8em', height: '25px', borderStyle: 'dotted', borderWidth: '2px', borderColor: 'grey'}} size="medium"></Chip>
+                                      // </StyledTableCell>
+                                  // ))}
+                                ))}                                
+                                {row.corequisites.map((prereq) => (
+                                  // {coursesProcessing.map((row, index) => (
+                                      // <StyledTableCell style={{marginRight: "5px"}}> 
+                                      <Chip label={prereq.course_code} style={{width: '8em', height: '25px', backgroundColor: '#c7ebd1', borderStyle: 'solid', borderWidth: '2px', borderColor: 'gainsboro'}} size="medium"></Chip>
+                                      // </StyledTableCell>
+                                  // ))}
+                                ))}
+                              </StyledTableCell>
+                            </StyledTableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                    </div>
+                    </div>
+                  </Tab>
+                  </Tabs>
               </div>
                 <div class="sideRight" >
                 </div>

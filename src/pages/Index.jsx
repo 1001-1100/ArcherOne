@@ -468,7 +468,7 @@ class Index extends Component {
     this.setState({openAlert: false});
 
     let snackBarVariables = [...this.state.snackBarVariables];
-    this.setState({snackbarMsg: "Your schedule has been successfully discarded!"});
+    this.setState({snackbarMsg: "Your schedule has been successfully deleted!"});
     snackBarVariables[0].snackBarSuccess = true;
     // snackBarVariables[1].snackBarFailed = true;
     this.setState({snackBarVariables});
@@ -759,12 +759,10 @@ class Index extends Component {
                         <ModalHeader toggle={this.toggleModalEdit}><h4>Edit Schedule</h4></ModalHeader>
                         <ModalBody>
                           <div className="searchBarEdit" >
-                            <h5>Search, add or remove your classes:</h5>
-                              
+                            <h5>Classes currently in this schedule:</h5>                              
                               {/* <h7>Your current classes</h7> */}
-                              <div style={{display: "flex", justifyContent: "center", width: "-webkit-fill-available"}}>
-                                
-                                <span className={'edit-current-classes-container'}>
+                              <div style={{display: "flex", justifyContent: "center", width: "-webkit-fill-available"}}>                              
+                                <span style={{borderRadius: "4px", minHeight: "3.8em", width: "-webkit-fill-available"}} className={'edit-current-classes-container'}>
                                   {this.state.currentClasses.map((current, index) => (
                                     <Chip label={current.title} onDelete={() => this.handleDelete(index)} style={{marginBottom: "5px", marginRight: "5px"}}></Chip>
                                   ))}
@@ -807,14 +805,13 @@ class Index extends Component {
                         <TextField
                             id="outlined-select-break"
                             select
-                            label="Class box color palette"
+                            label="Color Palette"
                             onChange={this.handlePaletteChange}
-                            
-                            helperText="Choose a color palette"
+                            helperText="Choose a color palette for the class boxes in your schedule."
                             variant="outlined"
-                            style={{width: "100%", marginTop: "20px", marginBottom: "20px"}}
-                            value = {this.state.chosenPalette}
-                            maxRows = "3"
+                            style={{width: "100%", marginTop: "10px", marginBottom: "25px"}}
+                            value={this.state.chosenPalette}
+                            maxRows="3"
                             autoWidth= {true}
                             >
                             
@@ -876,10 +873,10 @@ class Index extends Component {
                         aria-labelledby="alert-dialog-title"
                         aria-describedby="alert-dialog-description"
                       >
-                        <DialogTitle id="alert-dialog-title">{"Schedule Deletion"}</DialogTitle>
+                        <DialogTitle id="alert-dialog-title">{"Confirm Deletion of Schedule"}</DialogTitle>
                         <DialogContent>
                           <DialogContentText id="alert-dialog-description">
-                            Are you deleting "{this.state.currentContent.props.titleName}" from your saved schedules?
+                            Do you want to delete "{this.state.currentContent.props.titleName}" from your saved schedules?
                           </DialogContentText>
                         </DialogContent>
                         <DialogActions>
@@ -896,7 +893,7 @@ class Index extends Component {
 
                       <Snackbar open={this.state.snackBarVariables[0].snackBarSuccess} autoHideDuration={4000} onClose={(event, reason)=>this.handleCloseSnackBar(event, reason,0)}>
                         <Alert onClose={(event, reason)=>this.handleCloseSnackBar(event, reason, 0)} severity="success">
-                          {this.state.snackbarMsg}{/* Your schedule has been successfully discarded! */}
+                          {this.state.snackbarMsg}{/* Your schedule has been successfully deleted! */}
                         </Alert>
                       </Snackbar>
 

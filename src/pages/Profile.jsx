@@ -344,14 +344,14 @@ class Profile extends Component {
                 <h2>Notification Settings</h2>
                     
                 <div className="profile-category-content" >
-                    Receive notifications when:
+                    Notify me on AnimoSched when:
                     <FormGroup>
                         <FormControlLabel
-                        control = {<GreenCheckbox color="primary"/>} label={"The status of a chosen section in your schedule has changed."} />
+                        control = {<GreenCheckbox color="primary"/>} label={"A class in my schedule is full, or has open slots"} />
                         <FormControlLabel
-                        control = {<GreenCheckbox color="primary"/>} label={"A course conflict in your schedule has been detected."} />
+                        control = {<GreenCheckbox color="primary"/>} label={"A conflict between classes in my schedule is detected"} />
                         <FormControlLabel
-                        control = {<GreenCheckbox color="primary"/>} label={"Your friends make changes to their schedules and preferences."}/>
+                        control = {<GreenCheckbox color="primary"/>} label={"My friends make changes to their schedules and preferences"}/>
                     </FormGroup>
                     <center>
                         <input class="btn btn-success submit-form" type="submit" value="Save"/>
@@ -381,11 +381,11 @@ class Profile extends Component {
                     Allow friends to view
                     <FormGroup>
                         <FormControlLabel
-                        control = {<GreenCheckbox color="primary"/>} label={"Your saved schedules."} />
+                        control = {<GreenCheckbox color="primary"/>} label={"Your saved schedules"} />
                         <FormControlLabel
-                        control = {<GreenCheckbox color="primary"/>} label={"Your schedule preferences."} />
+                        control = {<GreenCheckbox color="primary"/>} label={"Your schedule preferences"} />
                         <FormControlLabel
-                        control = {<GreenCheckbox color="primary"/>} label={"College and course details."}/>
+                        control = {<GreenCheckbox color="primary"/>} label={"College and course details"}/>
                     </FormGroup>
                     <center>
                         <input class="btn btn-success submit-form" type="submit" value="Save"/>

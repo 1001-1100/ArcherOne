@@ -9,7 +9,7 @@ import { DateTimePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider, Keyboa
 // import { IconButton, InputAdornment } from "@material-ui/core";
 // import DateFnsUtils from '@date-io/date-fns';
 
-import { green } from '@material-ui/core/colors';
+import { green, red } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -27,6 +27,12 @@ import HomeIcon from '@material-ui/icons/Home';
 import PropTypes from 'prop-types';
 
 import ReactLoading from 'react-loading';
+
+import {Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+
+import IconButton from '@material-ui/core/IconButton';
+import HelpIcon from '@material-ui/icons/Help';
+import { Row, Col } from 'reactstrap';
 
 const styles = theme => ({
     homeButton:{
@@ -55,6 +61,7 @@ class Preferences extends Component {
     constructor(props){
         super(props)
         this.state = {
+            openModalHelp: false,
             savedPrefBar: false,
             earliest_class_time: '07:30',
             latest_class_time: '21:00',
@@ -246,6 +253,19 @@ class Preferences extends Component {
 
         
     }
+
+    handleCloseModalHelp = ()=>{
+        this.setState({openModalHelp: false})
+    }
+
+    handleOpenModalHelp = ()=>{
+        this.setState({openModalHelp: true})
+    }
+
+    toggleModal = () => {
+        var openModalVar = this.state.openModalHelp;
+        this.setState({openModalHelp: !openModalVar});
+      }
     
     componentDidMount(){
         const id = localStorage.getItem('user_id');
@@ -556,6 +576,20 @@ class Preferences extends Component {
         <div>
             {this.props.menu('preferences')}
 
+            <button onClick={() => this.handleOpenModalHelp()}>Help</button>
+            <IconButton aria-label="help" disabled color="primary" onClick={() => this.handleOpenModalHelp()}>
+                <HelpIcon />
+            </IconButton>
+
+            <Modal isOpen={this.state.openModalHelp} toggle={this.toggleModal} returnFocusAfterClose={false} backdrop={true} data-keyboard="false">
+                <ModalHeader toggle={this.toggleModal}><h4>Preferences</h4></ModalHeader>
+                
+                <ModalBody>
+                    <p>Adding your preferences will help our system identify the schedules that best suit you among all possible schedules. Take note that this will not necessarily guarantee that all your preferences will be satisfied, as taking into account the courses you need is our upmost priority.</p>
+                </ModalBody>
+                
+            </Modal>
+
             {/* <div class="prefIntro"> */}
                 {/* <a href="/"> */}
                     {/* <HomeIcon className="homeIcon" fontSize="large" className={classes.homeButton}/> */}
@@ -564,16 +598,7 @@ class Preferences extends Component {
                         <path fill-rule="evenodd" d="M15 4.5V8l-2-2V4.5a.5.5 0 01.5-.5h1a.5.5 0 01.5.5z" clip-rule="evenodd"></path>
                     </svg> */}
                 {/* </a> */}
-                
-                {/* <div class="introduction"> */}
-                    <h2>Preferences</h2>
-                    <p>Disclaimer: Adding your preferences will help our system identify the schedules that best suit you among all possible schedules. Take note that this will not necessarily guarantee that all your preferences will be satisfied, as taking into account the courses you need is our upmost priority.</p>
-                    {this.state.dataSaved ?
-                    <center><button onClick={this.handleSave} class="btn btn-success change-flowchart" disabled>Save</button></center>
-                    :
-                    <center><button onClick={this.handleSave} class="btn btn-success change-flowchart">Save</button></center>
-                    }
-                {/* </div> */}
+
                 <Snackbar open={this.state.savedPrefBar} autoHideDuration={4000} onClose={this.handleCloseSaveBar}>
                     <Alert onClose={this.handleCloseSaveBar} severity="success">
                     Your preferences have been successfully saved!
@@ -583,287 +608,315 @@ class Preferences extends Component {
 
             {/* <div class="prefIntro-main"> */}
                 {this.state.dataReceived ? 
-                <div className="preference-category">
-                    <div className="timePreferences">
-                        <h2>Time Preferences</h2>
-                        
-                        <div className="preference-category-content">
-                            {/* Earliest Time
-                            <br/> */}
-                            
-                            {/* <input value={this.state.earliest_class_time} type="time"/><br/><br/> */}
-                            {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
-
-                            
-                                <KeyboardTimePicker
-                                    margin="normal"
-                                    id="time-picker"
-                                    label="Earliest Time"
-                                    value={this.selectedDate}
-                                    onChange={this.handleDateChange}
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'change time',
-                                    }}
-                                />
-                            </MuiPickersUtilsProvider> */}
+                // <div className="preference-category">
+                <div>
+                    <Row xs="2">
+                        <Col>
+                            <div className="timePreferences">
+                                <h2>Time Preferences</h2>
                                 
-                                {/* <KeyboardDateTimePicker
-                                    value={this.selectedDate}
-                                    onChange={this.handleDateChange}
-                                    label="Earliest Time"
-                                    // onError={console.log}
-                                    // minDate={new Date("2020-01-01T00:00")}
-                                    format="hh:mm a"
-                                /> */}
-                            
-                            <form className={"timeContainer"} noValidate>
-                                <TextField
-                                    id="time"
-                                    label="Earliest Time"
-                                    type="time"
-                                    value={this.state.earliest_class_time}
-                                    className={"earliestTimeField"}
-                                    onChange={this.handleEarliestChange}
-                                    InputLabelProps={{
-                                    shrink: true,
-                                    }}
-                                    inputProps={{
-                                    step: 300, // 5 min
-                                    }}
-                                />
-                                </form>
-                           
-
-                            {/* Latest Time
-                            <br/>
-                            <input value={this.state.latest_class_time} type="time"/><br/><br/> */}
-                            
-                            <form className={"timeContainer"} noValidate>
-                                <TextField
-                                    id="time"
-                                    label="Latest Time"
-                                    type="time"
-                                    value={this.state.latest_class_time}
-                                    className={"lastestTimeField"}
-                                    onChange={this.handleLatestChange}
-                                    InputLabelProps={{
-                                    shrink: true,
-                                    }}
-                                    inputProps={{
-                                    step: 300, // 5 min
-                                    }}
-                                />
-                                </form>
-                            
-                            <div className={'days-preference'}>
-                                <div className={'subheader'}>Preferred Days</div>
-                                <FormGroup row>
-                                    <FormControlLabel
-                                        control = {<GreenCheckbox checked={this.state.daysList[0].checked} onChange={this.handleDayChange} id={this.state.daysList[0].id} color="primary"/>}label="M" />
-                                        <FormControlLabel
-                                        control = {<GreenCheckbox checked={this.state.daysList[1].checked} onChange={this.handleDayChange} id={this.state.daysList[1].id} color="primary"/>}label="T" />
-                                        <FormControlLabel
-                                        control = {<GreenCheckbox checked={this.state.daysList[2].checked} onChange={this.handleDayChange} id={this.state.daysList[2].id} color="primary"/>}label="W" />
-                                        <FormControlLabel
-                                        control = {<GreenCheckbox checked={this.state.daysList[3].checked} onChange={this.handleDayChange} id={this.state.daysList[3].id} color="primary"/>}label="H" />
-                                        <FormControlLabel
-                                        control = {<GreenCheckbox checked={this.state.daysList[4].checked} onChange={this.handleDayChange} id={this.state.daysList[4].id} color="primary"/>}label="F" />
-                                        <FormControlLabel
-                                        control = {<GreenCheckbox checked={this.state.daysList[5].checked} onChange={this.handleDayChange} id={this.state.daysList[5].id} color="primary"/>}label="S" />
-                                </FormGroup>
-                            </div>
-
-                            {/* Break Length */}
-                            <div className={'break-preference'}>
-                                <TextField
-                                    id="outlined-select-break"
-                                    select
-                                    label="Break Length"
-                                    onChange={this.handleBreakChange}
-                                    value = {this.state.break_length == null ? 15 : this.state.break_length}
-                                    helperText="Please select your preferred break length"
-                                    variant="outlined"
-                                    autoWidth= {true}
-                                    >
+                                <div className="preference-category-content">
+                                    {/* Earliest Time
+                                    <br/> */}
                                     
-                                    {this.state.breakOptions.map((option) => (
-                                        <MenuItem key={option.value} value={option.value}>
-                                        {option.option}
-                                        </MenuItem>
-                                            ))}
-                                </TextField>
-                            </div>
-                            
-                        </div>
-                    </div>
+                                    {/* <input value={this.state.earliest_class_time} type="time"/><br/><br/> */}
+                                    {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
 
-                    <div className="workloadPreferences">
-                        <h2>Workload Preferences</h2>
-                        
-                        <div className="preference-category-content">
-                            {/* Minimum Courses per Day */}
-                            <br/>
-                            {/* <input type = "number" /><br/><br/> */}
-                            <TextField
-                                className={'workload-field'}
-                                id="min-courses"
-                                value={this.state.min_courses}
-                                label="Minimum Courses per Day"
-                                onChange={this.handleMinCourseChange}
-                                type="number"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                placeholder="0"
-                                size="medium"
-                                inputProps={{
-                                    min: 0,
-                                    max: 10,
-                                }}
-                            />
-                            <br/>
-                            {/* Maximum Courses per Day */}
-                            <br/>
-                            {/* <input type = "number" value={this.state.max_courses}/><br/><br/> */}
-                            <TextField
-                                className={'workload-field'}
-                                id="max-courses"
-                                value={this.state.max_courses}
-                                label="Maximum Courses per Day"
-                                onChange={this.handleMaxCourseChange}
-                                type="number"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                placeholder="0"
-                                inputProps={{
-                                    min: 0,
-                                    max: 10,
-                                }}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="classDetails">
-                        <h2>Class Details</h2>
-                        
-                        <div className="preference-category-content">
-                            <div className="professor-preference">
-                                <div className={'subheader'}>Faculty Preferences</div>
-                                <Autocomplete
-                                    multiple
-                                    id="tags-outlined"
-                                    options={facultyOptions.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
-                                    defaultValue={this.state.selectedProfs}
-                                    groupBy={(option) => option.firstLetter}
-                                    getOptionLabel={option => option.profName}
-                                    //   style={{ width: 500 }}
-                                    filterSelectedOptions
-                                    renderInput={params => <TextField {...params} variant="outlined" />}
-                                    // renderInput={params => <TextField {...params} label="Faculty Preferences" variant="outlined" />}
-                                    onChange={this.handleProfPrefChange}
-                                    // onKeyPress={this.handleProfPrefress}
-                                    />
-                            </div>
-
-
-                           
-                            <div className={'building-preference'}>
-                                <div className={'subheader'}>Building Preferences</div>
-                                <Grid container spacing={6}>
-                                    <Grid item xs={6}>
-                                    <FormGroup>
-                                        <FormControlLabel
-                                        control = {<GreenCheckbox checked={this.state.buildingList[0].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[0].id}  color="primary"/>}label={this.state.buildingList[0].building} />
-                                        <FormControlLabel
-                                        control = {<GreenCheckbox checked={this.state.buildingList[1].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[1].id} color="primary"/>}label={this.state.buildingList[1].building} />
-                                        <FormControlLabel
-                                        control = {<GreenCheckbox checked={this.state.buildingList[2].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[2].id} color="primary"/>}label={this.state.buildingList[2].building}/>
-                                        <FormControlLabel
-                                        control = {<GreenCheckbox checked={this.state.buildingList[3].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[3].id} color="primary"/>}label={this.state.buildingList[3].building} />
-                                    </FormGroup>
-                                    </Grid>
-
-                                    <Grid item xs={6}>
-                                    <FormGroup>
-                                    <FormControlLabel
-                                    control = {<GreenCheckbox checked={this.state.buildingList[4].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[4].id} color="primary"/>}label={this.state.buildingList[4].building}/>
-                                    <FormControlLabel
-                                    control = {<GreenCheckbox checked={this.state.buildingList[5].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[5].id} color="primary"/>}label={this.state.buildingList[5].building} />
-                                        <FormControlLabel
-                                    control = {<GreenCheckbox checked={this.state.buildingList[6].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[6].id} color="primary"/>}label={this.state.buildingList[6].building}/>
-                                    <FormControlLabel
-                                    control = {<GreenCheckbox checked={this.state.buildingList[7].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[7].id} color="primary"/>}label={this.state.buildingList[7].building} />
-                                    </FormGroup>
-                                    </Grid>
-                                </Grid>
-                            </div>
-                           
-                            {/* <FormGroup>
-                                <FormControlLabel
-                                control = {<Checkbox checked={this.state.buildingList[0].checked} onChange={this.handleBuildingChange} id = '1' color="primary"/>}label={this.state.buildingList[0].building} />
-                                <FormControlLabel
-                                control = {<Checkbox checked={this.state.buildingList[1].checked} onChange={this.handleBuildingChange} id = '2' color="primary"/>}label={this.state.buildingList[1].building} />
-                                <FormControlLabel
-                                control = {<Checkbox checked={this.state.buildingList[2].checked} onChange={this.handleBuildingChange} id = '3' color="primary"/>}label={this.state.buildingList[2].building}/>
-                                <FormControlLabel
-                                control = {<Checkbox checked={this.state.buildingList[3].checked} onChange={this.handleBuildingChange} id = '4' color="primary"/>}label={this.state.buildingList[3].building} />
-                                <FormControlLabel
-                                control = {<Checkbox checked={this.state.buildingList[4].checked} onChange={this.handleBuildingChange} id = '5' color="primary"/>}label={this.state.buildingList[4].building}/>
-                                <FormControlLabel
-                                control = {<Checkbox checked={this.state.buildingList[5].checked} onChange={this.handleBuildingChange} id = '6' color="primary"/>}label={this.state.buildingList[5].building} />
-                                    <FormControlLabel
-                                control = {<Checkbox checked={this.state.buildingList[6].checked} onChange={this.handleBuildingChange} id = '7' color="primary"/>}label={this.state.buildingList[6].building}/>
-                                <FormControlLabel
-                                control = {<Checkbox checked={this.state.buildingList[7].checked} onChange={this.handleBuildingChange} id = '8' color="primary"/>}label={this.state.buildingList[7].building} />
+                                    
+                                        <KeyboardTimePicker
+                                            margin="normal"
+                                            id="time-picker"
+                                            label="Earliest Time"
+                                            value={this.selectedDate}
+                                            onChange={this.handleDateChange}
+                                            KeyboardButtonProps={{
+                                                'aria-label': 'change time',
+                                            }}
+                                        />
+                                    </MuiPickersUtilsProvider> */}
                                         
-                            </FormGroup> */}
-                                
-                            {/* <input className="checkbox-description" type="checkbox" id="" name="" value=""/>
-                            <label className="checkbox-description" for=""> St. La Salle Hall </label><br/>
+                                        {/* <KeyboardDateTimePicker
+                                            value={this.selectedDate}
+                                            onChange={this.handleDateChange}
+                                            label="Earliest Time"
+                                            // onError={console.log}
+                                            // minDate={new Date("2020-01-01T00:00")}
+                                            format="hh:mm a"
+                                        /> */}
+                                    
+                                    <Row xs="2">
+                                        <Col>
+                                            <form className={"timeContainer"} noValidate>
+                                                <TextField
+                                                    id="time"
+                                                    label="No Classes Before"
+                                                    type="time"
+                                                    value={this.state.earliest_class_time}
+                                                    className={"earliestTimeField"}
+                                                    onChange={this.handleEarliestChange}
+                                                    InputLabelProps={{
+                                                    shrink: true,
+                                                    }}
+                                                    inputProps={{
+                                                    step: 900, // 5 min
+                                                    }}
+                                                />
+                                            </form>
+                                        </Col>
 
-                            <input className="checkbox-description" type="checkbox" id="" name="" value=""/>
-                            <label className="checkbox-description" for=""> Enrique Yuchengco Hall </label><br/>
+                                        <Col>
+                                            {/* Latest Time
+                                            <br/>
+                                            <input value={this.state.latest_class_time} type="time"/><br/><br/> */}
+                                            
+                                            <form className={"timeContainer"} noValidate>
+                                                <TextField
+                                                    id="time"
+                                                    label="No Classes After"
+                                                    type="time"
+                                                    value={this.state.latest_class_time}
+                                                    className={"lastestTimeField"}
+                                                    onChange={this.handleLatestChange}
+                                                    InputLabelProps={{
+                                                    shrink: true,
+                                                    }}
+                                                    inputProps={{
+                                                    step: 300, // 5 min
+                                                    }}
+                                                />
+                                            </form>
+                                        </Col>
+                                    </Row>
 
-                            <input className="checkbox-description" type="checkbox" id="" name="" value=""/>
-                            <label className="checkbox-description" for=""> St. Joseph Hall </label><br/>
+                                    <div className={'days-preference'}>
+                                        <div className={'subheader'}>Preferred Days</div>
+                                        <FormGroup row>
+                                            <FormControlLabel
+                                                control = {<GreenCheckbox checked={this.state.daysList[0].checked} onChange={this.handleDayChange} id={this.state.daysList[0].id} color="primary"/>}label="M" />
+                                                <FormControlLabel
+                                                control = {<GreenCheckbox checked={this.state.daysList[1].checked} onChange={this.handleDayChange} id={this.state.daysList[1].id} color="primary"/>}label="T" />
+                                                <FormControlLabel
+                                                control = {<GreenCheckbox checked={this.state.daysList[2].checked} onChange={this.handleDayChange} id={this.state.daysList[2].id} color="primary"/>}label="W" />
+                                                <FormControlLabel
+                                                control = {<GreenCheckbox checked={this.state.daysList[3].checked} onChange={this.handleDayChange} id={this.state.daysList[3].id} color="primary"/>}label="H" />
+                                                <FormControlLabel
+                                                control = {<GreenCheckbox checked={this.state.daysList[4].checked} onChange={this.handleDayChange} id={this.state.daysList[4].id} color="primary"/>}label="F" />
+                                                <FormControlLabel
+                                                control = {<GreenCheckbox checked={this.state.daysList[5].checked} onChange={this.handleDayChange} id={this.state.daysList[5].id} color="primary"/>}label="S" />
+                                        </FormGroup>
+                                    </div>
 
-                            <input className="checkbox-description" type="checkbox" id="" name="" value=""/>
-                            <label className="checkbox-description" for=""> Velasco Hall </label><br/>
-
-                            <input className="checkbox-description" type="checkbox" id="" name="" value=""/>
-                            <label className="checkbox-description" for=""> St. Miguel Hall </label><br/>
-
-                            <input className="checkbox-description" type="checkbox" id="" name="" value=""/>
-                            <label className="checkbox-description" for=""> St. Mutien Marie Hall </label><br/>
-
-                            <input className="checkbox-description" type="checkbox" id="" name="" value=""/>
-                            <label className="checkbox-description" for=""> Gokongwei Hall </label><br/>
-
-                            <input className="checkbox-description" type="checkbox" id="" name="" value=""/>
-                            <label className="checkbox-description" for=""> Br. Andrew Gonzales Hall </label><br/><br/> */}
-
-                            <div className="section-preference">
-                                <div className={'subheader'}>Section Preferences</div>
-                                <Autocomplete
-                                    multiple
-                                    id="tags-outlined"
-                                    options={this.state.sectionList}
-                                    options={sectionOptions.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
-                                    defaultValue={this.state.selectedSections}
-                                    groupBy={(option) => option.firstLetter}
-                                    getOptionLabel={option => option.sectionName}
-                                    //   style={{ width: 500 }}
-                                    filterSelectedOptions
-                                    renderInput={params => <TextField {...params} variant="outlined" />}
-                                    // renderInput={params => <TextField {...params} label="Section Preferences" variant="outlined" />}
-                                    onChange={this.handleSectionPrefChange}
-                                    // onKeyPress={this.handleSectionPrefress}
-                                    />
+                                    {/* Break Length */}
+                                    <div className={'break-preference'}>
+                                        <TextField
+                                            id="outlined-select-break"
+                                            select
+                                            label="Break Length"
+                                            onChange={this.handleBreakChange}
+                                            value = {this.state.break_length == null ? 15 : this.state.break_length}
+                                            helperText="Please select your preferred break length"
+                                            variant="outlined"
+                                            autoWidth= {true}
+                                            >
+                                            
+                                            {this.state.breakOptions.map((option) => (
+                                                <MenuItem key={option.value} value={option.value}>
+                                                {option.option}
+                                                </MenuItem>
+                                                    ))}
+                                        </TextField>
+                                    </div>
+                                    
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
+                            <div className="workloadPreferences">
+                                <h2>Workload Preferences</h2>
+                                
+                                <div className="preference-category-content">
+                                    {/* Minimum Courses per Day */}
+                                    <br/>
+                                    {/* <input type = "number" /><br/><br/> */}
+
+                                    <Row xs="2">
+
+                                        <Col>
+                                            <TextField
+                                                className={'workload-field'}
+                                                id="min-courses"
+                                                value={this.state.min_courses}
+                                                label="Minimum Courses per Day"
+                                                onChange={this.handleMinCourseChange}
+                                                type="number"
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                placeholder="0"
+                                                size="medium"
+                                                inputProps={{
+                                                    min: 0,
+                                                    max: 10,
+                                                }}
+                                            />
+                                        </Col>
+
+                                        <Col>
+                                            {/* <input type = "number" value={this.state.max_courses}/><br/><br/> */}
+                                            <TextField
+                                                className={'workload-field'}
+                                                id="max-courses"
+                                                value={this.state.max_courses}
+                                                label="Maximum Courses per Day"
+                                                onChange={this.handleMaxCourseChange}
+                                                type="number"
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                placeholder="0"
+                                                inputProps={{
+                                                    min: 0,
+                                                    max: 10,
+                                                }}
+                                            />
+                                        </Col>
+
+                                    </Row>
+
+                                    {/* <br/> */}
+                                    {/* Maximum Courses per Day */}
+                                    {/* <br/> */}
+                                    
+                                </div>
+                            </div>
+                        </Col>
+
+                        {/* <Col>
+                            
+                        </Col> */}
+
+                        <Col>
+                            <div className="classDetails">
+                                <h2>Class Details</h2>
+                                
+                                <div className="preference-category-content">
+                                    <div className="professor-preference">
+                                        <div className={'subheader'}>Faculty Preferences</div>
+                                        <Autocomplete
+                                            multiple
+                                            id="tags-outlined"
+                                            options={facultyOptions.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
+                                            defaultValue={this.state.selectedProfs}
+                                            groupBy={(option) => option.firstLetter}
+                                            getOptionLabel={option => option.profName}
+                                            //   style={{ width: 500 }}
+                                            filterSelectedOptions
+                                            renderInput={params => <TextField {...params} variant="outlined" />}
+                                            // renderInput={params => <TextField {...params} label="Faculty Preferences" variant="outlined" />}
+                                            onChange={this.handleProfPrefChange}
+                                            // onKeyPress={this.handleProfPrefress}
+                                            />
+                                    </div>
+
+
+                                
+                                    <div className={'building-preference'}>
+                                        <div className={'subheader'}>Building Preferences</div>
+                                        <Grid container spacing={6}>
+                                            <Grid item xs={6}>
+                                            <FormGroup>
+                                                <FormControlLabel
+                                                control = {<GreenCheckbox checked={this.state.buildingList[0].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[0].id}  color="primary"/>}label={this.state.buildingList[0].building} />
+                                                <FormControlLabel
+                                                control = {<GreenCheckbox checked={this.state.buildingList[1].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[1].id} color="primary"/>}label={this.state.buildingList[1].building} />
+                                                <FormControlLabel
+                                                control = {<GreenCheckbox checked={this.state.buildingList[2].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[2].id} color="primary"/>}label={this.state.buildingList[2].building}/>
+                                                <FormControlLabel
+                                                control = {<GreenCheckbox checked={this.state.buildingList[3].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[3].id} color="primary"/>}label={this.state.buildingList[3].building} />
+                                            </FormGroup>
+                                            </Grid>
+
+                                            <Grid item xs={6}>
+                                            <FormGroup>
+                                            <FormControlLabel
+                                            control = {<GreenCheckbox checked={this.state.buildingList[4].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[4].id} color="primary"/>}label={this.state.buildingList[4].building}/>
+                                            <FormControlLabel
+                                            control = {<GreenCheckbox checked={this.state.buildingList[5].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[5].id} color="primary"/>}label={this.state.buildingList[5].building} />
+                                                <FormControlLabel
+                                            control = {<GreenCheckbox checked={this.state.buildingList[6].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[6].id} color="primary"/>}label={this.state.buildingList[6].building}/>
+                                            <FormControlLabel
+                                            control = {<GreenCheckbox checked={this.state.buildingList[7].checked} onChange={this.handleBuildingChange} id={this.state.buildingList[7].id} color="primary"/>}label={this.state.buildingList[7].building} />
+                                            </FormGroup>
+                                            </Grid>
+                                        </Grid>
+                                    </div>
+                                
+                                    {/* <FormGroup>
+                                        <FormControlLabel
+                                        control = {<Checkbox checked={this.state.buildingList[0].checked} onChange={this.handleBuildingChange} id = '1' color="primary"/>}label={this.state.buildingList[0].building} />
+                                        <FormControlLabel
+                                        control = {<Checkbox checked={this.state.buildingList[1].checked} onChange={this.handleBuildingChange} id = '2' color="primary"/>}label={this.state.buildingList[1].building} />
+                                        <FormControlLabel
+                                        control = {<Checkbox checked={this.state.buildingList[2].checked} onChange={this.handleBuildingChange} id = '3' color="primary"/>}label={this.state.buildingList[2].building}/>
+                                        <FormControlLabel
+                                        control = {<Checkbox checked={this.state.buildingList[3].checked} onChange={this.handleBuildingChange} id = '4' color="primary"/>}label={this.state.buildingList[3].building} />
+                                        <FormControlLabel
+                                        control = {<Checkbox checked={this.state.buildingList[4].checked} onChange={this.handleBuildingChange} id = '5' color="primary"/>}label={this.state.buildingList[4].building}/>
+                                        <FormControlLabel
+                                        control = {<Checkbox checked={this.state.buildingList[5].checked} onChange={this.handleBuildingChange} id = '6' color="primary"/>}label={this.state.buildingList[5].building} />
+                                            <FormControlLabel
+                                        control = {<Checkbox checked={this.state.buildingList[6].checked} onChange={this.handleBuildingChange} id = '7' color="primary"/>}label={this.state.buildingList[6].building}/>
+                                        <FormControlLabel
+                                        control = {<Checkbox checked={this.state.buildingList[7].checked} onChange={this.handleBuildingChange} id = '8' color="primary"/>}label={this.state.buildingList[7].building} />
+                                                
+                                    </FormGroup> */}
+                                        
+                                    {/* <input className="checkbox-description" type="checkbox" id="" name="" value=""/>
+                                    <label className="checkbox-description" for=""> St. La Salle Hall </label><br/>
+
+                                    <input className="checkbox-description" type="checkbox" id="" name="" value=""/>
+                                    <label className="checkbox-description" for=""> Enrique Yuchengco Hall </label><br/>
+
+                                    <input className="checkbox-description" type="checkbox" id="" name="" value=""/>
+                                    <label className="checkbox-description" for=""> St. Joseph Hall </label><br/>
+
+                                    <input className="checkbox-description" type="checkbox" id="" name="" value=""/>
+                                    <label className="checkbox-description" for=""> Velasco Hall </label><br/>
+
+                                    <input className="checkbox-description" type="checkbox" id="" name="" value=""/>
+                                    <label className="checkbox-description" for=""> St. Miguel Hall </label><br/>
+
+                                    <input className="checkbox-description" type="checkbox" id="" name="" value=""/>
+                                    <label className="checkbox-description" for=""> St. Mutien Marie Hall </label><br/>
+
+                                    <input className="checkbox-description" type="checkbox" id="" name="" value=""/>
+                                    <label className="checkbox-description" for=""> Gokongwei Hall </label><br/>
+
+                                    <input className="checkbox-description" type="checkbox" id="" name="" value=""/>
+                                    <label className="checkbox-description" for=""> Br. Andrew Gonzales Hall </label><br/><br/> */}
+
+                                    <div className="section-preference">
+                                        <div className={'subheader'}>Section Preferences</div>
+                                          <Autocomplete
+                                            multiple
+                                            id="tags-outlined"
+                                            options={this.state.sectionList}
+                                            options={sectionOptions.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
+                                            defaultValue={this.state.selectedSections}
+                                            groupBy={(option) => option.firstLetter}
+                                            getOptionLabel={option => option.sectionName}
+                                            //   style={{ width: 500 }}
+                                            filterSelectedOptions
+                                            renderInput={params => <TextField {...params} variant="outlined" />}
+                                            // renderInput={params => <TextField {...params} label="Section Preferences" variant="outlined" />}
+                                            onChange={this.handleSectionPrefChange}
+                                            // onKeyPress={this.handleSectionPrefress}
+                                          />
+                                    </div>
+                                </div>
+                            </div>
+                        </Col>
+
+                    </Row>
 
                 </div>
                 : 
@@ -871,6 +924,13 @@ class Preferences extends Component {
                     <ReactLoading type={'spin'} color={'#9BCFB8'} height={'5%'} width={'5%'}/>
                 </div> }
             {/* </div> */}
+
+            {this.state.dataSaved ?
+                <center><button onClick={this.handleSave} class="btn btn-success change-flowchart" disabled>Save Preferences</button></center>
+                :
+                <center><button onClick={this.handleSave} class="btn btn-success change-flowchart">Save Preferences</button></center>
+            }
+
         </div>        
       );
     }

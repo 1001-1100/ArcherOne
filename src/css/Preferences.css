@@ -124,8 +124,8 @@ body {
 }
 
 .days-preference{
-    margin-top: 30px;
-    margin-bottom: 20px;
+    /* margin-top: 30px; */
+    margin-bottom: 10px;
 }
 
 .timeContainer{
@@ -141,6 +141,9 @@ body {
 .preference-category-content{
     margin-top: 10px;
     margin-bottom: 40px;
+    border-color: #007453;
+    border-style: solid;
+    padding: 3%;
 
 }
 
@@ -169,4 +172,8 @@ body {
     letter-spacing: 0.00938em;
     transform: scale(0.75);
     transform-origin: top left;
+}
+
+.timePreferences, .workloadPreferences, .classDetails {
+    margin: 10px;
 }

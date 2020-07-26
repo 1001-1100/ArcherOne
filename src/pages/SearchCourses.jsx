@@ -120,7 +120,9 @@ class SearchCourses extends Component {
         // })
         var selectedCourses = JSON.parse(localStorage.getItem('selectedCourses'))
         console.log(selectedCourses)
-        this.setState({selectedCourses})
+        if(selectedCourses != null){
+          this.setState({selectedCourses})
+        }
         this.setState({dataReceived: true})
     }
 
@@ -320,6 +322,9 @@ class SearchCourses extends Component {
           '&:nth-of-type(odd)': {
             backgroundColor: theme.palette.background.default,
           },
+          "&:hover": {
+            backgroundColor: "#efefef"
+          },
         },
       }))(TableRow);
 
@@ -428,9 +433,9 @@ class SearchCourses extends Component {
                         : 
                         <TableBody>
                           {this.state.siteData.map(row => (
-                            <StyledTableRow key={row.classNmbr}>
+                            <StyledTableRow key={row.classNmbr} onClick={() => this.handleOpenModalCourseInfo(row.course, "", "3")} style={{cursor: "pointer"}}>
                               <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.classNmbr} </StyledTableCell>
-                              <StyledTableCell onClick={() => this.handleOpenModalCourseInfo(row.course, "", "3")} style={(row.capacity == row.enrolled) ? {color: "#0099CC", cursor: "pointer", textDecorationLine: 'underline'} : {color: "#006600", cursor: "pointer", textDecorationLine: 'underline'}} > <Tooltip title="More Details" placement="bottom-end"><div>{row.course}</div></Tooltip> </StyledTableCell>
+                              <StyledTableCell style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> <Tooltip title="More Details" placement="bottom-end"><div>{row.course}</div></Tooltip> </StyledTableCell>
                               <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.section} </StyledTableCell>
                               <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.faculty} </StyledTableCell>
                               <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.day} </StyledTableCell>

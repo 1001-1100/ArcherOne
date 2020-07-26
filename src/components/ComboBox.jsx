@@ -157,7 +157,7 @@ class ComboBox extends React.Component{
                   defaultValue={this.props.defaultValue}
                   filterSelectedOptions
                   loading={this.state.loading}
-                  noOptionsText={"Start typing to search a course!"}
+                  noOptionsText={"Start typing to search for a course!"}
                 renderInput={(params) => (
                     <TextField
                         {...params}
@@ -190,7 +190,7 @@ class ComboBox extends React.Component{
                 //   style={{ width: 500 }}
                   filterSelectedOptions
                   loading={this.state.loading}
-                  noOptionsText={"Start typing to search a course!"}
+                  noOptionsText={"Start typing to search for a course!"}
                 renderInput={(params) => (
                     <TextField
                         {...params}
@@ -253,13 +253,14 @@ class ComboBox extends React.Component{
             options={this.state.offeringList}
             getOptionLabel={option => option.course + ' ' + option.section + ' (' + option.classNmbr + ') ' + option.day + ' ' + option.startTime + ' - ' + option.endTime}
             filterSelectedOptions
-            noOptionsText={"Start typing to add a course offering!"}
+            noOptionsText={"Start typing to search for a course offering!"}
             style={{ width: 500 }}
             loading={this.state.loading}
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label="Course Offering"
+                    label="Search Course"
+                    helperText="Search for a course code or class number to select a class to add to this schedule."
                     variant="outlined"
                     InputProps={{
                     ...params.InputProps,
@@ -285,7 +286,7 @@ class ComboBox extends React.Component{
             options={this.state.offeringList}
             getOptionLabel={option => option.course + ' ' + option.section + ' (' + option.classNmbr + ')'}
             filterSelectedOptions
-            noOptionsText={"Start typing to add specific course offering!"}
+            noOptionsText={"Start typing to add a specific course offering!"}
             style={{ width: 500 }}
             loading={this.state.loading}
             renderInput={(params) => (
