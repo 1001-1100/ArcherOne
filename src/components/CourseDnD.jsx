@@ -9,12 +9,30 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 import Skeleton from '@material-ui/lab/Skeleton';
 import ReactLoading from 'react-loading';
+import LaunchIcon from '@material-ui/icons/Launch';
+import ListIcon from '@material-ui/icons/List';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+import { green } from '@material-ui/core/colors';
 
 const groupStyle = {
     marginLeft: '50px',
     flex: 1
   };
 
+const styles = theme => ({
+    iconStyle:{ 
+      marginBottom: "5px", 
+      float: "left", 
+      marginTop: "11px", 
+      marginLeft: "16px",
+        '&:hover': {
+          color: green[500],
+          },
+    },
+  });
 
 class CourseDnD extends Component {
 
@@ -96,6 +114,8 @@ triggerUpdate=(e)=>{
 }
 
   render() {
+    const { classes } = this.props;
+
     return (
        
       <div>
@@ -109,10 +129,13 @@ triggerUpdate=(e)=>{
                 return (
                     <Draggable key={p.id}>
                     <div className="draggable-item">
-                        <DragHandleIcon style={{ marginBottom: "5px", float: "left", marginTop: "12px", marginLeft: "16px"}}/>
                         <Tooltip title="Select sections" placement="left">
-                            <a className = "card-courseName" onClick={() => this.triggerModal(p.data, p.siteData)} /*style={{cursor: "pointer", textDecorationLine: 'underline'}}*/>{p.data}</a>
+                        <LaunchIcon className={classes.iconStyle} onClick={() => this.triggerModal(p.data, p.siteData)}/>
                         </Tooltip>
+                        {/* <DragHandleIcon style={{ marginBottom: "5px", float: "left", marginTop: "12px", marginLeft: "16px"}}/> */}
+                        {/* <Tooltip title="Select sections" placement="left"> */}
+                            <a className = "card-courseName" onClick={() => this.triggerModal(p.data, p.siteData)} /*style={{cursor: "pointer", textDecorationLine: 'underline'}}*/>{p.data}</a>
+                        {/* </Tooltip> */}
                         <Button close  style={{ marginTop: "11px", marginRight: "10px"}} onClick={() => this.removeCourse(index)}/>
                     </div>
                     </Draggable>
@@ -242,5 +265,8 @@ triggerUpdate=(e)=>{
     };
   }
 
-//figure out how to add children when adding a new course
-export default CourseDnD;
+  CourseDnD.propTypes={
+    classes: PropTypes.object.isRequired,
+  };
+
+  export default withStyles(styles)(CourseDnD);

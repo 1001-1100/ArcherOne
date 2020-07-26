@@ -4,7 +4,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import _ from 'underscore';
 import axios from 'axios'
-import groupArray from 'group-array'
+import groupArray from 'group-array';
 
 class ComboBox extends React.Component{
     constructor(props){

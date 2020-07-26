@@ -1114,11 +1114,17 @@ class GenerateSchedule extends Component {
                             </Row>
 
                             <Modal isOpen={this.state.openModalWait} toggle={this.toggleModalWait} returnFocusAfterClose={false} backdrop={true} data-keyboard="false" centered={true}>
-                                <ModalHeader toggle={this.toggleModalWait}><p>Please wait...In the process of making your schedule</p></ModalHeader>
+                                <ModalHeader toggle={this.toggleModalWait}>
+                                    <center>
+                                        <br></br><p>Please wait...In the process of making your schedule</p>
+                                        <ReactLoading type={'spin'} color={'#9BCFB8'} height={'10%'} width={'10%'}/>
+                                    </center>
+                                    </ModalHeader>
                                 
-                                {/* <ModalBody>
-                                
-                                </ModalBody> */}
+                                    <ModalFooter>
+                                        
+                                        <Button style={{color: "gray"}}>Cancel</Button>
+                                    </ModalFooter>
                                 
                             </Modal> 
                         </div>

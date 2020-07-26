@@ -101,11 +101,15 @@ body {
   }
 
 .backBtn{
-    color: white;
+    color: white !important;
     margin-top: 10px;
 }
 
 .backBtn:hover{
-    color: "#d3d3d3";
-    text-decoration: none;
+    color: "#d3d3d3" !important;
+    text-decoration: none !important;
+}
+
+.jumboClass{
+    padding: 32 !important;
 }

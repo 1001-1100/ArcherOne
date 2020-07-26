@@ -52,10 +52,43 @@ const styles = theme => ({
       color: "white", 
       marginLeft: "5px",
     '&:hover': {
-        color: "#d3d3d3"
+        color: "#d3d3d3",
       },
     },
+
+    buttonRegister: {
+      fontSize: "100%",
+      width: "110%",
+      alignItems: 'center',
+      justifyContent: 'center',
+      textTransform: "none",
+      borderRadius: "30px",
+      padding: "10px",
+      paddingLeft: "30px",
+      paddingRight: "30px",
+      backgroundColor: "green",
+      border: "none",
+      color: "white",
+      boxShadow: "6px 5px #e8f4ea",
+      borderStyle: "solid",
+      borderColor: "green",
+      '&:hover': {
+          color: "green",
+          backgroundColor: "#FFFFFF",
+        },
+},
   });
+
+  var sectionStyle = {
+    // width: "100%",
+    minHeight: "100vh",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    overflow: "hidden",
+    backgroundImage: "linear-gradient(#086e53, #579d8b)"
+  
+  };
 
 class Register extends Component {
     constructor(props){
@@ -332,7 +365,7 @@ class Register extends Component {
     render() {
         const { classes } = this.props;
       return (
-        <div style={{backgroundColor: "#006A4E"}}>
+        <div style={sectionStyle}>
 
             
                   <div className={"backBtn"}>
@@ -351,7 +384,7 @@ class Register extends Component {
                     <Row>
                       <Col />
                       <Col lg="8">
-                        <Jumbotron style={{padding: 32}}>
+                        <Jumbotron className={"jumboClass"} style={{padding: 32, backgroundColor: "white", boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
                           <h3>
                             Account Registration
                           </h3>
@@ -410,7 +443,7 @@ class Register extends Component {
                         <br/>
                         {/* Degree */}
                         {/* <span className="error">{this.state.errors["degree"]}</span> */}
-                        <ComboBox error={this.state.errorDegree} helperText={this.state.helperDegree} ref={this.degreeRef} page="register" name="degree" value={this.state.fields["degree"]} onChange={this.handleAutoCompleteChange} college={this.state.fields["college"]} degrees={this.state.degrees}/><br/>
+                        <center><ComboBox error={this.state.errorDegree} helperText={this.state.helperDegree} ref={this.degreeRef} page="register" name="degree" value={this.state.fields["degree"]} onChange={this.handleAutoCompleteChange} college={this.state.fields["college"]} degrees={this.state.degrees}/></center><br/>
 
                         {/* Password */}
                         <TextField error={this.state.errorPassword} helperText={this.state.helperPassword} type="password"  id="outlined-basic" label="Password" variant="outlined" name="pass" placeholder="●●●●●●●●" value={this.state.fields["pass"]} onChange={this.handleChange.bind(this, "pass")} style={{marginRight: 50, width: 345}}/>
@@ -427,21 +460,23 @@ class Register extends Component {
 
                         {this.renderRedirect()}
                         <input type="submit" style={{height: 0, width: 0, padding: 0, border: 0}} />
-                        <div className={classes.root}>
-                          <div className={classes.wrapper}> 
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              className={"buttonClassname"}
-                              disabled={this.state.loading}
-                              onClick={this.handleSubmit}
-                              style={{backgroundColor: "green"}}
-                            >
-                              Register
-                            </Button>
-                            {this.state.loading && <CircularProgress size={24} className={classes.buttonProgress}/>}
+                        <Row horizontal = 'center' style={{justifyContent: "center"}}>
+                          <div className={classes.root}>
+                            <div className={classes.wrapper}> 
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                className={classes.buttonRegister}
+                                disabled={this.state.loading}
+                                onClick={this.handleSubmit}
+                                style={{backgroundColor: "green"}}
+                              >
+                                Register
+                              </Button>
+                              {this.state.loading && <CircularProgress size={24} className={classes.buttonProgress}/>}
                           </div>
                         </div>
+                      </Row>
                     </form>
                     <Snackbar open={this.state.snackBar} autoHideDuration={4000} onClose={this.handleCloseSnackBar}>
                       <Alert onClose={this.handleCloseSnackBar} severity="error">
