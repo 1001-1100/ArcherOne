@@ -33,6 +33,7 @@ import {Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import IconButton from '@material-ui/core/IconButton';
 import HelpIcon from '@material-ui/icons/Help';
 import { Row, Col } from 'reactstrap';
+import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
     homeButton:{
@@ -41,8 +42,36 @@ const styles = theme => ({
         '&:hover': {
             color: "#79c879"
           },
+    },
+
+    iconStyle:{ 
+        margin: "10px", 
+          '&:hover': {
+            color: green[500],
+        },
+    },
+    buttonStyle:{
+        marginBottom: "50px",
+        textTransform: "none",
+        width: "160px",
+        borderRadius: "25px",
+        padding: "10px",
+        paddingLeft: "10px",
+        paddingRight: "10px",
+        backgroundColor: "#16775D",
+        border: "none",
+        color: "white",
+        boxShadow: "6px 5px #e8f4ea",
+        borderStyle: "solid",
+        borderColor: "#16775D",
+        marginTop: "20px",
+        justifyContent: 'center',
+        '&:hover': {
+            backgroundColor: "white",
+            color: "#16775D"
+        },
     }
-  });
+});
 
 const GreenCheckbox = withStyles({
     root: {
@@ -576,6 +605,8 @@ class Preferences extends Component {
         <div>
             {this.props.menu('preferences')}
 
+            {/* <HelpIcon className={classes.iconStyle} onClick={() => this.handleOpenModalHelp()}/> */}
+
             <Modal isOpen={this.state.openModalHelp} toggle={this.toggleModal} returnFocusAfterClose={false} backdrop={true} data-keyboard="false">
                 <ModalHeader toggle={this.toggleModal}><h4>Preferences</h4></ModalHeader>
                 
@@ -736,7 +767,11 @@ class Preferences extends Component {
                             </div>
 
                             <div className="workloadPreferences">
-                                <h2>Workload Preferences</h2>
+                                <h2>Workload Preferences
+                                <IconButton aria-label="help" onClick={() => this.handleOpenModalHelp()}>
+                                    <HelpIcon />
+                                </IconButton>
+                                </h2>
                                 
                                 <div className="preference-category-content">
                                     {/* Minimum Courses per Day */}
@@ -801,7 +836,11 @@ class Preferences extends Component {
 
                         {/* <Col> */}
                             <div className="classDetails">
-                                <h2>Class Details</h2>
+                                <h2>Class Details
+                                <IconButton aria-label="help" onClick={() => this.handleOpenModalHelp()}>
+                                    <HelpIcon />
+                                </IconButton>
+                                </h2>
                                 
                                 <div className="preference-category-content">
                                     <div className="professor-preference">
@@ -931,9 +970,24 @@ class Preferences extends Component {
             {/* </div> */}
 
             {this.state.dataSaved ?
-                <center><button onClick={this.handleSave} class="btn btn-success change-flowchart" disabled>Save Preferences</button></center>
+                
+                // <center><button onClick={this.handleSave} class="savePrefBtn" disabled>Save Preferences</button></center>
+                <center><Button
+                    variant="contained"
+                    className={classes.buttonStyle}
+                    onClick={this.handleSave}
+                    disabled>
+                    Save Preferences
+                </Button></center>
                 :
-                <center><button onClick={this.handleSave} class="btn btn-success change-flowchart">Save Preferences</button></center>
+                // <center><button onClick={this.handleSave} class="savePrefBtn">Save Preferences</button></center>
+                <center><Button
+                    variant="contained"
+                    className={classes.buttonStyle}
+                    onClick={this.handleSave}
+                    >
+                    Save Preferences
+                </Button></center>
             }
 
         </div>        

@@ -130,7 +130,7 @@ triggerUpdate=(e)=>{
                     <Draggable key={p.id}>
                     <div className="draggable-item">
                         <Tooltip title="Select sections" placement="left">
-                        <LaunchIcon className={classes.iconStyle} onClick={() => this.triggerModal(p.data, p.siteData)}/>
+                        <LaunchIcon id="launch" style={{cursor: "pointer"}} className={classes.iconStyle} onClick={() => this.triggerModal(p.data, p.siteData)}/>
                         </Tooltip>
                         {/* <DragHandleIcon style={{ marginBottom: "5px", float: "left", marginTop: "12px", marginLeft: "16px"}}/> */}
                         {/* <Tooltip title="Select sections" placement="left"> */}

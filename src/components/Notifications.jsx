@@ -40,6 +40,7 @@ class Notifications extends React.Component{
             notifRefresh: props.notifRefresh,
             skeletons: [...Array(2).keys()],
             dataReceived: false,
+            unread: false,
         }
     }
 
@@ -185,7 +186,7 @@ class Notifications extends React.Component{
 
                     {options.map(option => (
                         <Link className="friendItem" to={option.category=="Friend" ? {pathname: "/view_friends", state:{selectedFriendId: -1}} : "/#viewCoursesHome"} >
-                        <DropdownItem disabled className="notifItem">
+                        <DropdownItem disabled className="notifItem" style={this.state.unread ? {backgroundColor: "#e0e0e0"} : {}}>
                             <DropdownItem divider />
                             <this.specifyIcon category={option.category} />
                             <span id="notifDate"> {option.date} </span>

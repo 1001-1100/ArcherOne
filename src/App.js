@@ -157,6 +157,7 @@ class App extends Component {
     localStorage.removeItem('first_name');
     localStorage.removeItem('last_name');
     localStorage.removeItem('id_num');
+    localStorage.removeItem('hints');
     this.setState({
       logged_in: false,
       first_name: '',

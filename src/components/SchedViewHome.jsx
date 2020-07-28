@@ -205,7 +205,7 @@ class SchedViewHome extends Component {
                           </TableHead>
                           <TableBody>
                             {this.state.tableContent.map(row => (
-                              <StyledTableRow style={row.compareMatch ? {backgroundColor: "#90ee90"} : {}} key={row.classNmbr}>
+                              <StyledTableRow style={row.compareMatch ? {backgroundColor: "#b8d4cd"} : {}} key={row.classNmbr}>
                                 <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {}}> {row.classNmbr} </StyledTableCell>
                                 <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {}}> {row.course} </StyledTableCell>
                                 <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {}}> {row.section} </StyledTableCell>

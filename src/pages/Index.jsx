@@ -68,6 +68,7 @@ import { Redirect } from "react-router-dom";
 import MuiAlert from '@material-ui/lab/Alert';
 
 import StarIcon from '@material-ui/icons/Star';
+import TodayIcon from '@material-ui/icons/Today';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -125,24 +126,29 @@ prefbuttonStyle:{
 },
 
 testbuttonStyle:{
+  fontSize: "1vw",
   textTransform: "none",
-  width: "90%",
+  width: "110%",
   height: "120%",
-  borderRadius: "25px",
+  borderRadius: "10px",
   padding: "2%",
-  paddingLeft: "10px",
-  paddingRight: "10px",
-  border: "none",
-  backgroundColor: "white",
-  color: "#16775D",
-  boxShadow: "6px 5px #e8f4ea",
-  borderStyle: "solid",
-  borderColor: "#16775D",
+  paddingLeft: "15px",
+  paddingRight: "15px",
+  border: "2px solid #16775D",
+  // backgroundColor: "white",
+  backgroundColor: "#16775D",
+  color: "white",
+  // color: "#16775D",
+  boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+  // borderStyle: "solid",
+  // borderColor: "#16775D",
   marginTop: "20px",
   justifyContent: 'center',
   '&:hover': {
-    backgroundColor: "#16775D",
-    color: "white",
+    // backgroundColor: "#16775D",
+    // color: "white",
+    color: "#16775D",
+    backgroundColor: "white",
     },
 },
 
@@ -986,7 +992,7 @@ class Index extends Component {
                     You haven't made any schedules yet!
               </Typography>
               {/* Test A original */}
-              <center>
+              {/* <center>
                   <a href="/preferences" style={{textDecoration: "none"}}>
                   <Button
                     variant="contained"
@@ -1008,24 +1014,50 @@ class Index extends Component {
                     Create Schedule
                   </Button>
                 </a>
-              </center>
+              </center> */}
             {/* Test B Big boi buttons */}
-            {/* <Row horizontal='center' flexShrink={1}>
-              <Column>
+            <Typography gutterBottom variant="h5" align="center" style={{marginTop: "30px", marginBottom: "30px"}}>
+                    Do you want to:
+              </Typography>
+            <Row horizontal='center' flexShrink={5}>
+            <Column style={{marginLeft:"30px"}}>
+                <a href="/search_courses" style={{textDecoration: "none"}}>
+                    <Button
+                      variant="contained"
+                      className={classes.testbuttonStyle}
+                      startIcon={<SearchIcon fontSize="large"/>}
+                      >
+                      
+                      <span style={{float: "bottom"}}>Search Classes</span>
+                    </Button>
+                  </a>
+              </Column>
+              <Column style={{marginLeft:"30px"}}>
                 <a href="/preferences" style={{textDecoration: "none"}}>
                     <Button
                       variant="contained"
                       className={classes.testbuttonStyle}
+                      startIcon={<StarIcon fontSize="large"/>}
                       >
-                      <StarIcon fontsize="large"/>
-                      <br></br>
-                      Set Schedule Preferences
+                      
+                      <span style={{float: "bottom"}}>Set Preferences</span>
                     </Button>
                   </a>
               </Column>
-              <Column><span>button2</span></Column>
-              <Column><span>button3</span></Column>
-            </Row> */}
+              <Column style={{marginLeft:"30px"}}>
+                <a href="/generateSchedule" style={{textDecoration: "none"}}>
+                  <Button
+                    variant="contained"
+                    className={classes.testbuttonStyle}
+                    startIcon={<TodayIcon fontSize="large"/>}
+                    >
+                    
+                    <span style={{float: "bottom"}}>Create Schedule</span>
+                  </Button>
+                </a>
+              </Column>
+ 
+            </Row>
 
             </div>
 
