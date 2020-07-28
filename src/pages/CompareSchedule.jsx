@@ -89,8 +89,39 @@ class CompareSchedule extends Component {
         }
     }
 
-    createData(classNmbr, course, section, faculty, day, startTime, endTime, room, capacity, enrolled) {
-      return { classNmbr, course, section, faculty, day, startTime, endTime, room, capacity, enrolled };
+    createData(classNmbr, course, section, faculty, day, startTime, endTime, room, capacity, enrolled, compareMatch) {
+      return { classNmbr, course, section, faculty, day, startTime, endTime, room, capacity, enrolled, compareMatch };
+    }
+
+    checkCompare(){
+        var user = this.state.generatedContentsUser;
+        var friend = this.state.generatedContentsFriend;
+        for(var i = 0 ; i < user.length ; i++){
+          for(var j = 0 ; j < friend.length ; j++){
+            console.log(user)
+            console.log(friend)
+            var userContent = user[i].props.tableContent
+            var friendContent = friend[j].props.tableContent
+            for(var k = 0 ; k < userContent.length ; k++){
+              for(var l = 0 ; l < friendContent.length ; l++){
+                if(userContent[k].classNmbr == friendContent[l].classNmbr){
+                  user[i].props.tableContent[k].compareMatch = true
+                  friend[j].props.tableContent[l].compareMatch = true
+                  this.setState({generatedContentsUser: user})
+                  this.setState({generatedContentsFriend: friend})
+                  console.log(user)
+                  console.log(friend)
+                }else{
+                  // user[i].props.tableContent.compareMatch = false
+                  // friend[i].props.tableContent.compareMatch = false
+                  // this.setState({generatedContentsUser: user})
+                  // this.setState({generatedContentsFriend: friend})
+                  // console.log("no hit")
+                }
+              }
+            }
+          }
+        }
     }
 
     componentDidMount(){
@@ -132,7 +163,7 @@ class CompareSchedule extends Component {
                   days.map(day_code => {
                     day += day_code;
                   })
-                  const newTableContent = this.createData(classnumber, course, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled);
+                  const newTableContent = this.createData(classnumber, course, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled, false);
                   tableContent.push(newTableContent)
                 }
                 newSchedule.courseOfferings.map(offering=>{
@@ -213,7 +244,7 @@ class CompareSchedule extends Component {
                       days.map(day_code => {
                         day += day_code;
                       })
-                      const newTableContent = this.createData(classnumber, course, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled);
+                      const newTableContent = this.createData(classnumber, course, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled, false);
                       tableContent.push(newTableContent)
                     }
                     newSchedule.courseOfferings.map(offering=>{
@@ -291,7 +322,6 @@ class CompareSchedule extends Component {
             return {currentPageUser};
           });
           console.log("pressed page " + index);
-          console.log(this.state.generatedContentsUser[index]);
         }else if (type == "friend"){
             this.setState(state =>{
             var currentContentFriend = state.generatedContentsFriend[index];
@@ -304,21 +334,23 @@ class CompareSchedule extends Component {
             return {currentPageFriend};
           });
           console.log("pressed page " + index);
-          console.log(this.state.generatedContentsFriend[index]);
         }
-      
+
   }
     
 componentWillMount(){
     this.setState({pagesCountUser: this.state.generatedContentsUser.length});
     this.setState({pagesCountFriend: this.state.generatedContentsFriend.length});
-    this.setState({currentContentUser: this.state.generatedContentsUser[this.state.currentPageUser]});
-    this.setState({currentContentFriend: this.state.generatedContentsFriend[this.state.currentPageFriend]});
+    this.setState({currentContentUser: this.state.generatedContentsUser[this.state.currentPageUser]}, () => {
+    });
+    this.setState({currentContentFriend: this.state.generatedContentsFriend[this.state.currentPageFriend]}, () => {
+    });
 }
 
 setSchedInfo = () => {
     const palette = JSON.parse(localStorage.getItem('palette'))
     
+        console.log(this.state.schedulesUser)
          var generatedContentsUser = this.state.schedulesUser.map((item, index) =>
         <SchedViewHome key={item.id} id={item.id} offerings={item.offerings} tableContent={item.tableContent} scheduleContent={item.scheduleContent} titleName={item.title} allowEdit={this.state.allowEdit} palette={palette}/>
         );
@@ -326,12 +358,14 @@ setSchedInfo = () => {
         this.setState({generatedContentsUser}, ()=>{
             this.setState({currentContentUser: generatedContentsUser[0]}, () => {
 //                this.setState({hasSelectedFriend: true})
+              console.log(this.state.currentContentUser)
 
             })
             this.setState({pagesCountUser: generatedContentsUser.length});
             this.setState({currentPageUser: 0})
         });
 
+        console.log(this.state.schedulesFriend)
          var generatedContentsFriend = this.state.schedulesFriend.map((item, index) =>
         <SchedViewHome key={item.id} id={item.id} offerings={item.offerings} tableContent={item.tableContent} scheduleContent={item.scheduleContent} titleName={item.title} allowEdit={this.state.allowEdit} palette={palette}/>
         );
@@ -339,11 +373,40 @@ setSchedInfo = () => {
         this.setState({generatedContentsFriend}, ()=>{
             this.setState({currentContentFriend: generatedContentsFriend[0]}, () => {
 //                this.setState({hasSelectedFriend: true})
+              console.log(this.state.currentContentFriend)
 
             })
             this.setState({pagesCountFriend: generatedContentsFriend.length});
             this.setState({currentPageFriend: 0})
          });
+        var user = this.state.generatedContentsUser;
+        var friend = this.state.generatedContentsFriend;
+        for(var i = 0 ; i < user.length ; i++){
+          for(var j = 0 ; j < friend.length ; j++){
+            console.log(user)
+            console.log(friend)
+            var userContent = user[i].props.tableContent
+            var friendContent = friend[j].props.tableContent
+            for(var k = 0 ; k < userContent.length ; k++){
+              for(var l = 0 ; l < friendContent.length ; l++){
+                if(userContent[k].classNmbr == friendContent[l].classNmbr){
+                  user[i].props.tableContent[k].compareMatch = true
+                  friend[j].props.tableContent[l].compareMatch = true
+                  this.setState({generatedContentsUser: user})
+                  this.setState({generatedContentsFriend: friend})
+                  console.log(user)
+                  console.log(friend)
+                }else{
+                  // user[i].props.tableContent.compareMatch = false
+                  // friend[i].props.tableContent.compareMatch = false
+                  // this.setState({generatedContentsUser: user})
+                  // this.setState({generatedContentsFriend: friend})
+                  // console.log("no hit")
+                }
+              }
+            }
+          }
+        }
 
   }
     

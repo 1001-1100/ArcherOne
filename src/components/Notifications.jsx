@@ -13,6 +13,8 @@ import {
     Link
 } from "react-router-dom";*/
 
+import {Link as Linker} from "react-router-dom";
+
 import { HashLink as Link } from 'react-router-hash-link';
 
 import Badge from '@material-ui/core/Badge';
@@ -182,12 +184,14 @@ class Notifications extends React.Component{
                     </DropdownItem>
 
                     {options.map(option => (
+                        <Link className="friendItem" to={option.category=="Friend" ? {pathname: "/view_friends", state:{selectedFriendId: -1}} : "/#viewCoursesHome"} >
                         <DropdownItem disabled className="notifItem">
                             <DropdownItem divider />
                             <this.specifyIcon category={option.category} />
                             <span id="notifDate"> {option.date} </span>
-                            <span> {option.message} </span>
+                            <span>{option.message}</span>
                         </DropdownItem>
+                        </Link>
                     ))}
 
                     {options.length == 0 &&

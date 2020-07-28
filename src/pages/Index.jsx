@@ -67,6 +67,8 @@ import ComboBox from "../components/ComboBox.jsx";
 import { Redirect } from "react-router-dom";
 import MuiAlert from '@material-ui/lab/Alert';
 
+import StarIcon from '@material-ui/icons/Star';
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -101,6 +103,48 @@ const styles = theme => ({
           color: "#16775D"
         },
   },
+prefbuttonStyle:{
+    textTransform: "none",
+    width: "15%",
+    borderRadius: "25px",
+    padding: "10px",
+    paddingLeft: "10px",
+    paddingRight: "10px",
+    backgroundColor: "#16775D",
+    border: "none",
+    color: "white",
+    boxShadow: "6px 5px #e8f4ea",
+    borderStyle: "solid",
+    borderColor: "#16775D",
+    marginTop: "20px",
+    justifyContent: 'center',
+    '&:hover': {
+        backgroundColor: "white",
+        color: "#16775D"
+      },
+},
+
+testbuttonStyle:{
+  textTransform: "none",
+  width: "90%",
+  height: "120%",
+  borderRadius: "25px",
+  padding: "2%",
+  paddingLeft: "10px",
+  paddingRight: "10px",
+  border: "none",
+  backgroundColor: "white",
+  color: "#16775D",
+  boxShadow: "6px 5px #e8f4ea",
+  borderStyle: "solid",
+  borderColor: "#16775D",
+  marginTop: "20px",
+  justifyContent: 'center',
+  '&:hover': {
+    backgroundColor: "#16775D",
+    color: "white",
+    },
+},
 
     deleteButtonStyle:{
       textTransform: "none",
@@ -908,7 +952,7 @@ class Index extends Component {
               </Grid>
 
               <Grid item xs={12} justify="center" alignItems="center">
-                <div className = "paginationContainer" style={(this.state.generatedContents != null) ? {} : {display: "none"}}>
+                <div id="viewCoursesHome" className = "paginationContainer" style={(this.state.generatedContents != null) ? {} : {display: "none"}}>
                       <Pagination aria-label="Page navigation example" style={{justifyContent: "center"}}>
                           <PaginationItem disabled={this.state.currentPage <= 0}>
                               <PaginationLink onClick={e => this.handlePageChange(e, this.state.currentPage - 1)}
@@ -941,6 +985,20 @@ class Index extends Component {
               <Typography gutterBottom variant="h4" align="center" style={{marginTop: "30px"}}>
                     You haven't made any schedules yet!
               </Typography>
+              {/* Test A original */}
+              <center>
+                  <a href="/preferences" style={{textDecoration: "none"}}>
+                  <Button
+                    variant="contained"
+                    className={classes.prefbuttonStyle}
+                    >
+                    Set Schedule Preferences
+                  </Button>
+                </a>
+              </center>
+              <Typography gutterBottom variant="h5" align="center" style={{marginTop: "30px"}}>
+                    or
+              </Typography>
                 <center>
                   <a href="/generateSchedule" style={{textDecoration: "none"}}>
                   <Button
@@ -951,6 +1009,24 @@ class Index extends Component {
                   </Button>
                 </a>
               </center>
+            {/* Test B Big boi buttons */}
+            {/* <Row horizontal='center' flexShrink={1}>
+              <Column>
+                <a href="/preferences" style={{textDecoration: "none"}}>
+                    <Button
+                      variant="contained"
+                      className={classes.testbuttonStyle}
+                      >
+                      <StarIcon fontsize="large"/>
+                      <br></br>
+                      Set Schedule Preferences
+                    </Button>
+                  </a>
+              </Column>
+              <Column><span>button2</span></Column>
+              <Column><span>button3</span></Column>
+            </Row> */}
+
             </div>
 
           </div>

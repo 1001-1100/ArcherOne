@@ -187,7 +187,7 @@ class SchedViewHome extends Component {
                     </center>
                   
                   <Row horizontal='center' flexShrink={1}>
-                    <div className="viewCoursesHome">
+                    <div className="viewCoursesHome" id="viewCoursesHome">
                       <TableContainer component={Paper} style={{maxHeight: "428px", overflowY: "auto", overflowX: "auto", width: "auto"}}>
                         <Table aria-label="customized table" fixedHeader={false} style={{ tableLayout: 'auto' }} >
                           <TableHead>
@@ -205,7 +205,7 @@ class SchedViewHome extends Component {
                           </TableHead>
                           <TableBody>
                             {this.state.tableContent.map(row => (
-                              <StyledTableRow key={row.classNmbr}>
+                              <StyledTableRow style={row.compareMatch ? {backgroundColor: "#90ee90"} : {}} key={row.classNmbr}>
                                 <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {}}> {row.classNmbr} </StyledTableCell>
                                 <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {}}> {row.course} </StyledTableCell>
                                 <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {}}> {row.section} </StyledTableCell>
