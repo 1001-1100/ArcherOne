@@ -533,6 +533,7 @@ class GenerateSchedule extends Component {
     handleAddCoursePriority = () => {
         console.log(this.state.currentCourse)
         const val = this.state.currentCourse;
+        localStorage.removeItem('addCourses')
 
         if(val != undefined && val != [] && val.length != 0){
             this.setState({AutoCompleteValue: []})
@@ -972,7 +973,7 @@ class GenerateSchedule extends Component {
                     {
                         element: '#launch',
                         hint:"Click here to filter out your classes!",
-                        hintPosition: 'left',
+                        hintPosition: 'top-middle',
                     }
                 ];
 

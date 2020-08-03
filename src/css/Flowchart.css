@@ -63,6 +63,10 @@ body {
     display: inline-flex;
 }
 
+.header-table-term {
+    margin-top: 2%;
+}
+
 .header-year {
     /* float: left; */
     /* padding-left: 10%; */

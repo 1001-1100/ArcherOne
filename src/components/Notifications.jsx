@@ -137,15 +137,15 @@ class Notifications extends React.Component{
     handleNotifsClick = (e, action) => {
         this.setState({polling: false})
         this.setState({newNotifs: 0})
-        const database = []
+        // const database = []
         this.state.database.map(notif => {
             axios.patch('https://archerone-backend.herokuapp.com/api/notifications/'+notif.id+'/',{
                 seen: true
             })
-            notif.seen = true;
-            database.push(notif)
+            // notif.seen = true;
+            // database.push(notif)
         })
-        this.setState({database})
+        // this.setState({database})
         this.setState({polling: true})
     }
 
@@ -186,7 +186,7 @@ class Notifications extends React.Component{
 
                     {options.map(option => (
                         <Link className="friendItem" to={option.category=="Friend" ? {pathname: "/view_friends", state:{selectedFriendId: -1}} : "/#viewCoursesHome"} >
-                        <DropdownItem disabled className="notifItem" style={this.state.unread ? {backgroundColor: "#e0e0e0"} : {}}>
+                        <DropdownItem disabled className="notifItem" style={{backgroundColor: option.bgColor}}>
                             <DropdownItem divider />
                             <this.specifyIcon category={option.category} />
                             <span id="notifDate"> {option.date} </span>

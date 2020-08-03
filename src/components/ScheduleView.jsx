@@ -173,6 +173,12 @@ class ScheduleView extends Component {
       if(props.latest != undefined){
         latest = props.latest;
       }
+
+      var matched = []
+      if(props.matched != undefined){
+        matched = props.matched
+      }
+
       this.state = {  
         classes: props.content,
         latest: latest,
@@ -181,8 +187,10 @@ class ScheduleView extends Component {
         coloredClasses: [],
         palIndex: 0,
         dataReceived: false,
+        matched: matched,
       }
       console.log("reach schedview")
+      console.log(props.matched)
     }
 
     componentWillReceiveProps(props){
@@ -194,12 +202,18 @@ class ScheduleView extends Component {
       if(props.latest != undefined){
         latest = props.latest;
       }
-      
+
+      var matched = []
+      if(props.matched != undefined){
+        matched = props.matched
+      }
+
       this.setState({
         classes: props.content,
         latest: latest,
         earliest: earliest,
         palette: props.palette,
+        matched: matched
       });
 
       this.processColoredClasses();
@@ -216,14 +230,14 @@ class ScheduleView extends Component {
           console.log(data.color);
           changeColor = <Appointments.Appointment
               {...restProps}
-              style={{ ...style, backgroundColor: data.color, whiteSpace: 'normal'}}
+              style={this.state.matched.includes(data.title) ? { ...style, backgroundColor: data.color, whiteSpace: 'normal', border: 'dashed #65656f'} : { ...style, backgroundColor: data.color, whiteSpace: 'normal'}}
               // className="CLASS_ROOM1"
               data={restProps.data.title}
             />
           return (
             <Appointments.Appointment
               {...restProps}
-              style={{ ...style, backgroundColor: data.color, whiteSpace: 'normal'}}
+              style={data.title in this.state.matched ? { ...style, backgroundColor: data.color, whiteSpace: 'normal', border: 'dashed #65656f'} : { ...style, backgroundColor: data.color, whiteSpace: 'normal'}}
               // className="CLASS_ROOM1"
               data={restProps.data.title}
             />

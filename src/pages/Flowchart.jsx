@@ -29,6 +29,9 @@ import Paper from '@material-ui/core/Paper';
 
 import { Chip } from "@material-ui/core";
 
+import Grid from '@material-ui/core/Grid';
+import { Pagination, PaginationItem, PaginationLink} from 'reactstrap';
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -93,13 +96,18 @@ class Flowchart extends Component {
     constructor(props){
       super(props);
       this.state = {
-        // terms: [],
+        terms: [],
         courses: [],
         flowpoints: [],
         degreekey: '1',
         batchkey: '116',
         dataReceived: false,
         snackbar: false,
+        currentPage: 0,
+        currentContent: "",
+        generatedContents: [],
+        pagesCount: 1,
+        pagesEnabled: true,
       }
     }
 
@@ -109,14 +117,12 @@ class Flowchart extends Component {
       axios.get('https://archerone-backend.herokuapp.com/api/flowcharttermslist/'+this.state.degreekey+'/'+this.state.batchkey+'/')
       .then(res => {
         res.data.map((term, i) => {
-                // var termsList = this.state.terms;
                 var coursesList = this.state.courses;
                 var flowpointsList = this.state.flowpoints;
                 var newTerm = {'id':term.id, 'degree':term.degree, 'batch': term.batch, 'courses': term.courses, 'tracks': term.tracks, 'year': term.year, 'term': term.term} 
                 var currentTerm = term.term + 3 * (term.year - 1);
                 var tracks = newTerm.tracks.split(',');
                 var tempCoursesList = [];
-                // termsList.push(newTerm);
                 term.courses.map((course, j) => {
                   var tempCourse = course;
                   tempCourse.year = term.year;
@@ -170,10 +176,11 @@ class Flowchart extends Component {
                   flowpointsList.push({'key': tempCoursesList[k].id, 'name': tempCoursesList[k].course_code, 'units': tempCoursesList[k].units, 'startPosition': { x:(currentTerm-1)*85, y:tracks[k]*50 }, 'width': 70, 'height': 40, 'dragX': false, 'dragY': false, 'outputs': outputsList, 'year': term.year, 'term': term.term});
                 }
                 
-                // console.log(tempCoursesList)
-                // this.setState({terms: termsList})
+                var tempTerm = {'year': term.year, 'term':term.term, 'courses':[]};
+                this.state.terms.push(tempTerm);
+
                 this.setState({courses: coursesList})
-                this.setState({flowpoints: flowpointsList})                
+                this.setState({flowpoints: flowpointsList})
         })
 
         for(var k = 0; k < this.state.courses.length; k++) {
@@ -196,11 +203,37 @@ class Flowchart extends Component {
             }
           })
         }
-        
+
+        this.state.terms.sort(function (a, b) {
+          if(a.year == b.year) {
+            return (a.term > b.term) ? 1 : -1;
+          }
+          else {
+              return (a.year > b.year) ? 1 : -1;
+          }
+        });
+
+        for(var k = 0; k < this.state.courses.length; k++) {
+          var tempTerm = this.state.terms.findIndex(term => ((term.year === this.state.courses[k].year) && (term.term === this.state.courses[k].term)));
+          this.state.terms[tempTerm].courses.push(this.state.courses[k]);
+        }
+        console.log(this.state.terms);
+
+        this.setFlowchartTables();
+        this.setState({currentPage: 0})
+        this.setState({currentContent: this.state.generatedContents[0]});
         this.setState({dataReceived: true})
       })
     }
-    
+
+    componentDidUpdate(prevProp, prevState) {
+      if(prevState.currentPage != this.state.currentPage){    
+        console.log("blah");
+        this.setState({currentContent: this.state.generatedContents[this.state.currentPage]});
+        this.handleScrollToGen();
+      }     
+    }
+
     exportFlowchart = () => {
         window.scrollTo(0, 0);
         html2canvas(document.querySelector("#flowchart-area")).then(canvas => {
@@ -217,18 +250,111 @@ class Flowchart extends Component {
         // snackBarVariables[1].snackBarFailed = true;
 //        this.setState({snackBarVariables});
 //        console.log(snackBarVariables);
-  }
+      }
     
-  exportFlowchartTable = () => {
-      window.scrollTo(0, 0);
-      html2canvas(document.querySelector("#flowchart-table-area")).then(canvas => {
-  //      document.location.href = canvas.toDataURL().replace('image/png', 'image/octet-stream');
-          var filename = "flowchart" + ".png";
-          this.saveAs(canvas.toDataURL(), filename); 
-      });
-      
-      this.setState({snackbar: true});
-}
+      exportFlowchartTable = () => {
+            window.scrollTo(0, 0);
+            html2canvas(document.querySelector("#flowchart-table-area")).then(canvas => {
+        //      document.location.href = canvas.toDataURL().replace('image/png', 'image/octet-stream');
+                var filename = "flowchart" + ".png";
+                this.saveAs(canvas.toDataURL(), filename); 
+            });
+              
+              this.setState({snackbar: true});
+        }
+
+    setFlowchartTables = () => {
+      const StyledTableCell = withStyles(theme => ({
+        head: {
+          backgroundColor: '#006A4E',
+          color: theme.palette.common.white,
+        },
+        body: {
+          fontSize: 12,
+          // borderBottom: "1px solid white",
+        },
+      }))(TableCell);
+
+      const StyledTableRow = withStyles(theme => ({
+        root: {
+          '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.background.default,
+          },
+        },
+      }))(TableRow);
+
+      if(this.state.terms.length > 0) {
+        var generatedContents = this.state.terms.map((term) =>
+        <TableContainer component={Paper}>
+        <center><div class="header-table-term"><h3>YEAR {term.year}, TERM {term.term}</h3></div></center>
+          <Table aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                {/* <StyledTableCell> Year </StyledTableCell>
+                <StyledTableCell> Term </StyledTableCell> */}
+                <StyledTableCell> Code </StyledTableCell>
+                <StyledTableCell style={{width: "20em"}}> Title </StyledTableCell>
+                <StyledTableCell> Units </StyledTableCell>
+                <StyledTableCell> Prerequisites and Corequisites </StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {term.courses.map((row) => (                                  
+                <StyledTableRow key={row.course_name} style={{color: "#006600", height: '30px'}}>
+                  {/* <StyledTableCell style={{color: "#006600"}}> {row.year} </StyledTableCell>
+                  <StyledTableCell style={{color: "#006600"}}> {row.term} </StyledTableCell> */}
+                  <StyledTableCell style={{color: "#006600"}}> {row.course_code} </StyledTableCell>
+                  <StyledTableCell style={{color: "#006600"}}> {row.course_name} </StyledTableCell>
+                  <StyledTableCell style={{color: "#006600"}}> {row.units} </StyledTableCell>
+                  <StyledTableCell style={{color: "#006600"}}>                                
+                    {row.prerequisites.map((prereq) => (
+                      <Chip label={prereq.course_code} style={{width: '8em', height: '25px', borderStyle: 'solid', borderWidth: '2px', borderColor: 'lightgray'}} size="medium"></Chip>
+                    ))}                                
+                    {row.softPrerequisites.map((prereq) => (
+                        <Chip label={prereq.course_code} style={{width: '8em', height: '25px', borderStyle: 'dotted', borderWidth: '2px', borderColor: 'grey'}} size="medium"></Chip>
+                    ))}                                
+                    {row.corequisites.map((prereq) => (
+                        <Chip label={prereq.course_code} style={{width: '8em', height: '25px', backgroundColor: '#c7ebd1', borderStyle: 'solid', borderWidth: '2px', borderColor: 'gainsboro'}} size="medium"></Chip>
+                    ))}
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        );
+
+        this.setState({generatedContents: generatedContents});
+        this.setState({pagesCount: generatedContents.length});
+        console.log("created stuff");
+        // this.setState({currentPage: 0})
+        // this.setState({currentContent: generatedContents[0]});
+      }
+    }
+
+    handlePageChange = (e, index) => {
+      this.setState({currentContent: ""});
+      // this.setState({currentContent: this.state.generatedContents[index]});      
+      // this.setState(state =>{
+      //     var currentContent = state.generatedContents[index];
+      //     return {currentContent};
+      // });
+      this.setState({currentPage: index});
+      // this.setState(state =>{
+      //   var currentPage = index;
+      //   return {currentPage};
+      // });
+
+      console.log("soy");
+      // console.log(this.state.currentPage);
+      // console.log(this.state.currentContent);
+
+      // this.handleScrollToGen();
+    }
+    
+    handleScrollToGen = () => {
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }
   
   saveAs = (uri, filename) => {
 
@@ -253,14 +379,18 @@ class Flowchart extends Component {
         window.open(uri);
 
     }
-}
+  }
 
-  handleCloseBar = (event, reason) => {
-        if (reason === 'clickaway') {
-          return;
-        }
-    
-        this.setState({snackbar: false});
+    handleCloseBar = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      this.setState({snackbar: false});
+    }
+
+    onChangePagesEnabled(event) {
+      this.setState({pagesEnabled: false});
     }
 
     render() {
@@ -286,6 +416,7 @@ class Flowchart extends Component {
       }))(TableRow);
 
       const coursesProcessing = this.state.courses;
+      const termsProcessing = this.state.terms;
 
       return (
         <div>
@@ -429,14 +560,60 @@ class Flowchart extends Component {
                       Your flowchart image is downloading!
                       </Alert>
                     </Snackbar>
+
+                    {/* <div class="flowchart-table-options" onChange={this.onChangePagesEnabled}>
+                        <input type="radio" name="pages" 
+                                      value="true" /> Page view
+                        <input type="radio" name="pages" 
+                                      value="false"/> Consolidated view
+                    </div> */}
+
                     <div class="flowchart-table-area" id="flowchart-table-area">
                     <div class="legendArea">
                       <div class="header"><h5>Legend</h5></div>
                         <div class="legendEntry"><Chip style={{width: '25px', height: '25px', borderRadius: "50%", borderStyle: 'solid', borderWidth: '2px', borderColor: 'lightgray'}} size="medium"></Chip> Prerequisite</div>
                         <div class="legendEntry"><Chip style={{width: '25px', height: '25px', borderRadius: "50%", borderStyle: 'dotted', borderWidth: '2px', borderColor: 'grey'}} size="medium"></Chip> Soft prerequisite</div>
                         <div class="legendEntry"><Chip style={{width: '25px', height: '25px', borderRadius: "50%", backgroundColor: '#c7ebd1', borderStyle: 'solid', borderWidth: '2px', borderColor: 'gainsboro'}} size="medium"></Chip> Corerequisite</div>
-                    </div>
-                    <TableContainer component={Paper}>
+                    </div>                    
+                    <span style={(this.state.pagesEnabled === true) ? {} : {display: "none"}}>{this.state.currentContent}</span>
+
+                    {/* {termsProcessing.map((term) => (    
+                      <TableContainer component={Paper}>
+                      <center><div class="header-table-term"><h3>YEAR {term.year}, TERM {term.term}</h3></div></center>
+                        <Table aria-label="customized table">
+                          <TableHead>
+                            <TableRow>
+                              <StyledTableCell> Code </StyledTableCell>
+                              <StyledTableCell style={{width: "20em"}}> Title </StyledTableCell>
+                              <StyledTableCell> Units </StyledTableCell>
+                              <StyledTableCell> Prerequisites and Corequisites </StyledTableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {term.courses.map((row) => (                                  
+                              <StyledTableRow key={row.course_name} style={{color: "#006600", height: '30px'}}>
+                                <StyledTableCell style={{color: "#006600"}}> {row.course_code} </StyledTableCell>
+                                <StyledTableCell style={{color: "#006600"}}> {row.course_name} </StyledTableCell>
+                                <StyledTableCell style={{color: "#006600"}}> {row.units} </StyledTableCell>
+                                <StyledTableCell style={{color: "#006600"}}>                                
+                                  {row.prerequisites.map((prereq) => (
+                                    <Chip label={prereq.course_code} style={{width: '8em', height: '25px', borderStyle: 'solid', borderWidth: '2px', borderColor: 'lightgray'}} size="medium"></Chip>
+                                  ))}                                
+                                  {row.softPrerequisites.map((prereq) => (
+                                      <Chip label={prereq.course_code} style={{width: '8em', height: '25px', borderStyle: 'dotted', borderWidth: '2px', borderColor: 'grey'}} size="medium"></Chip>
+                                  ))}                                
+                                  {row.corequisites.map((prereq) => (
+                                      <Chip label={prereq.course_code} style={{width: '8em', height: '25px', backgroundColor: '#c7ebd1', borderStyle: 'solid', borderWidth: '2px', borderColor: 'gainsboro'}} size="medium"></Chip>
+                                  ))}
+                                </StyledTableCell>
+                              </StyledTableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    ))} */}
+
+                    {/* <TableContainer component={Paper}>
                       <Table aria-label="customized table">
                         <TableHead>
                           <TableRow>
@@ -458,33 +635,45 @@ class Flowchart extends Component {
                               <StyledTableCell style={{color: "#006600"}}> {row.units} </StyledTableCell>
                               <StyledTableCell style={{color: "#006600"}}>                                
                                 {row.prerequisites.map((prereq) => (
-                                  // {coursesProcessing.map((row, index) => (
-                                      // <StyledTableCell style={{marginRight: "5px"}}> 
-                                      <Chip label={prereq.course_code} style={{width: '8em', height: '25px', borderStyle: 'solid', borderWidth: '2px', borderColor: 'lightgray'}} size="medium"></Chip>
-                                      // </StyledTableCell>
-                                  // ))}
+                                  <Chip label={prereq.course_code} style={{width: '8em', height: '25px', borderStyle: 'solid', borderWidth: '2px', borderColor: 'lightgray'}} size="medium"></Chip>
                                 ))}                                
                                 {row.softPrerequisites.map((prereq) => (
-                                  // {coursesProcessing.map((row, index) => (
-                                      // <StyledTableCell style={{marginRight: "5px"}}> 
-                                      <Chip label={prereq.course_code} style={{width: '8em', height: '25px', borderStyle: 'dotted', borderWidth: '2px', borderColor: 'grey'}} size="medium"></Chip>
-                                      // </StyledTableCell>
-                                  // ))}
+                                    <Chip label={prereq.course_code} style={{width: '8em', height: '25px', borderStyle: 'dotted', borderWidth: '2px', borderColor: 'grey'}} size="medium"></Chip>
                                 ))}                                
                                 {row.corequisites.map((prereq) => (
-                                  // {coursesProcessing.map((row, index) => (
-                                      // <StyledTableCell style={{marginRight: "5px"}}> 
-                                      <Chip label={prereq.course_code} style={{width: '8em', height: '25px', backgroundColor: '#c7ebd1', borderStyle: 'solid', borderWidth: '2px', borderColor: 'gainsboro'}} size="medium"></Chip>
-                                      // </StyledTableCell>
-                                  // ))}
+                                    <Chip label={prereq.course_code} style={{width: '8em', height: '25px', backgroundColor: '#c7ebd1', borderStyle: 'solid', borderWidth: '2px', borderColor: 'gainsboro'}} size="medium"></Chip>
                                 ))}
                               </StyledTableCell>
                             </StyledTableRow>
                           ))}
                         </TableBody>
                       </Table>
-                    </TableContainer>
+                    </TableContainer> */}
                     </div>
+                    
+                    <Grid item xs={12} justify="center" alignItems="center">
+                      <div className = "paginationContainer" style={(this.state.generatedContents != null) ? {} : {display: "none"}}>
+                            <Pagination aria-label="Page navigation example" style={{justifyContent: "center"}}>
+                                <PaginationItem disabled={this.state.currentPage <= 0}>
+                                    <PaginationLink onClick={e => this.handlePageChange(e, this.state.currentPage - 1)}
+                                        previous/>
+                                </PaginationItem>
+                                {[...Array(this.state.pagesCount)].map((page, i) => 
+                                    <PaginationItem active={i === this.state.currentPage} key={i} className={'paginationItemStyle'}>
+                                        <PaginationLink onClick={e => this.handlePageChange(e, i)} className={'paginationLinkStyle'}>
+                                        {i + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                    )}
+                                <PaginationItem disabled={this.state.currentPage >= this.state.generatedContents.length - 1}>
+                                    <PaginationLink
+                                        onClick={e => this.handlePageChange(e, this.state.currentPage + 1)}
+                                        next
+                                    />                                   
+                                </PaginationItem>
+                            </Pagination>
+                      </div>
+                    </Grid>
                     </div>
                   </Tab>
                   </Tabs>

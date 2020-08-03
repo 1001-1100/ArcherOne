@@ -76,7 +76,14 @@ const styles = theme => ({
           color: "green",
           backgroundColor: "#FFFFFF",
         },
-},
+    },
+
+    degreeStyle: {
+      alignItems: "center", 
+      justifyContent: "center", 
+      justify: "center", 
+      placeItems: "center"
+    }
   });
 
   var sectionStyle = {
@@ -384,6 +391,14 @@ class Register extends Component {
                     <Row>
                       <Col />
                       <Col lg="8">
+                      <h1 style={{color: "white"}}>
+                            <img
+                            alt=""
+                            src="/logo.svg"
+                            width="40"
+                            height="40"
+                            className="d-inline-block align-top"/> 
+                        AnimoSched</h1>
                         <Jumbotron className={"jumboClass"} style={{padding: 32, backgroundColor: "white", boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
                           <h3>
                             Account Registration
@@ -443,8 +458,11 @@ class Register extends Component {
                         <br/>
                         {/* Degree */}
                         {/* <span className="error">{this.state.errors["degree"]}</span> */}
-                        <center><ComboBox error={this.state.errorDegree} helperText={this.state.helperDegree} ref={this.degreeRef} page="register" name="degree" value={this.state.fields["degree"]} onChange={this.handleAutoCompleteChange} college={this.state.fields["college"]} degrees={this.state.degrees}/></center><br/>
-
+                        <Row horizontal = 'center' style={{justifyContent: "center"}}>
+                          <div>
+                            <ComboBox error={this.state.errorDegree} helperText={this.state.helperDegree} ref={this.degreeRef} page="register" name="degree" value={this.state.fields["degree"]} onChange={this.handleAutoCompleteChange} college={this.state.fields["college"]} degrees={this.state.degrees} className={classes.degreeStyle}/><br/>
+                          </div>
+                        </Row>
                         {/* Password */}
                         <TextField error={this.state.errorPassword} helperText={this.state.helperPassword} type="password"  id="outlined-basic" label="Password" variant="outlined" name="pass" placeholder="●●●●●●●●" value={this.state.fields["pass"]} onChange={this.handleChange.bind(this, "pass")} style={{marginRight: 50, width: 345}}/>
                         {/* <input type="password" name="pass" placeholder="●●●●●●●●" onChange={this.handleChange.bind(this, "pass")} value={this.state.fields["pass"]}/> */}
@@ -469,7 +487,7 @@ class Register extends Component {
                                 className={classes.buttonRegister}
                                 disabled={this.state.loading}
                                 onClick={this.handleSubmit}
-                                style={{backgroundColor: "green"}}
+                                
                               >
                                 Register
                               </Button>

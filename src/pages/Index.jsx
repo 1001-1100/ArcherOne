@@ -36,8 +36,10 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import Snackbar from '@material-ui/core/Snackbar';
 
-
 import html2canvas from 'html2canvas';
+import { Steps, Hints } from 'intro.js-react';
+import 'intro.js/introjs.css';
+import '../css/introjs-modern.css';
 
 // import Modal from '@material-ui/core/Modal';
 
@@ -128,12 +130,12 @@ prefbuttonStyle:{
 testbuttonStyle:{
   fontSize: "1vw",
   textTransform: "none",
-  width: "110%",
-  height: "120%",
+  width: "100%",
+  height: "100%",
   borderRadius: "10px",
-  padding: "2%",
-  paddingLeft: "15px",
-  paddingRight: "15px",
+  // padding: "2%",
+  // paddingLeft: "15px",
+  // paddingRight: "15px",
   border: "2px solid #16775D",
   // backgroundColor: "white",
   backgroundColor: "#16775D",
@@ -142,8 +144,8 @@ testbuttonStyle:{
   boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
   // borderStyle: "solid",
   // borderColor: "#16775D",
-  marginTop: "20px",
-  justifyContent: 'center',
+  // marginTop: "20px",
+  // justifyContent: 'center',
   '&:hover': {
     // backgroundColor: "#16775D",
     // color: "white",
@@ -277,6 +279,9 @@ class Index extends Component {
       }
       if(localStorage.getItem('palette') == undefined){
         localStorage.setItem('palette', JSON.stringify(['#9BCFB8', '#7FB174', '#689C97', '#072A24', '#D1DDDB', '#85B8CB', '#1D6A96', '#283B42','#FFB53C', '#EEB3A3', '#F3355C', '#FAA98B', '#E6AECF', '#AEE0DD', '#01ACBD','#FED770', ' #F29F8F', '#FB7552', '#076A67','#324856', '#4A746A', '#D18237', '#D66C44', '#FFA289', '#6A92CC', '#706FAB', '#50293C']))
+      }
+      if(localStorage.getItem('steps') == undefined){
+        localStorage.setItem('steps',true)
       }
       
     }
@@ -753,11 +758,41 @@ class Index extends Component {
 
   }
 
+  tutorialDone = () => {
+    localStorage.setItem('steps',false)
+  }
+
     render() {
         this.state.pagesCount = this.state.generatedContents.length;
         this.state.currentContent = this.state.generatedContents[this.state.currentPage];
 
         const { classes } = this.props;
+        
+        const steps = [
+          {
+            intro: 'Welcome to AnimoSched!',
+          },
+          {
+            element: '#searchStep',
+            intro: 'Use the course search to find available classes!',
+            // position: 'right',
+            // tooltipClass: 'myTooltipClass',
+            // highlightClass: 'myHighlightClass',
+          },
+          {
+            element: '#preferencesStep',
+            intro: 'Setting your preferences allows us to generate the schedules that suit you best!',
+          },
+          {
+            element: '#genschedStep',
+            intro: 'Generate and save a schedule!',
+          },
+          {
+            // element: '',
+            // position: 'bottom-right-aligned',
+            intro: 'Explore the site!',
+          },
+        ];
 
       return (
         <div style={!this.props.logged_in? sectionStyle : {}}>
@@ -767,7 +802,14 @@ class Index extends Component {
           <div className={"homepage"} style={this.props.logged_in ? {} : {display: "none"}}>
             <div className={"hasContent"} style={(this.state.generatedContents.length > 0) ? {} : {display: "none"}}>
 
-              
+
+            <Steps
+              enabled={localStorage.getItem('steps') == 'true' && this.state.generatedContents.length <= 0}
+              steps={steps}
+              initialStep={0}
+              onExit={this.tutorialDone}
+              onComplete={this.tutorialDone}
+            />
             <Grid container>
               <Grid item xs={12}>
                 <br></br>
@@ -1023,40 +1065,42 @@ class Index extends Component {
             <Column style={{marginLeft:"30px"}}>
                 <a href="/search_courses" style={{textDecoration: "none"}}>
                     <Button
+                      id="searchStep"
                       variant="contained"
                       className={classes.testbuttonStyle}
                       startIcon={<SearchIcon fontSize="large"/>}
+                      size="large"
                       >
-                      
-                      <span style={{float: "bottom"}}>Search Classes</span>
+                      Search Classes
                     </Button>
                   </a>
               </Column>
               <Column style={{marginLeft:"30px"}}>
                 <a href="/preferences" style={{textDecoration: "none"}}>
                     <Button
+                      id="preferencesStep"
                       variant="contained"
                       className={classes.testbuttonStyle}
                       startIcon={<StarIcon fontSize="large"/>}
+                      size="large"
                       >
-                      
-                      <span style={{float: "bottom"}}>Set Preferences</span>
+                      Set Preferences
                     </Button>
                   </a>
               </Column>
               <Column style={{marginLeft:"30px"}}>
                 <a href="/generateSchedule" style={{textDecoration: "none"}}>
                   <Button
+                    id="genschedStep"
                     variant="contained"
                     className={classes.testbuttonStyle}
                     startIcon={<TodayIcon fontSize="large"/>}
+                      size="large"
                     >
-                    
-                    <span style={{float: "bottom"}}>Create Schedule</span>
+                    Create Schedule
                   </Button>
                 </a>
               </Column>
- 
             </Row>
 
             </div>

@@ -105,6 +105,8 @@ class SearchCourses extends Component {
         showPlaceholder: true,
         applyPreference: false,
         noResults: false,
+        testGroupedData: [],
+        courseInfo: {}
       }
       this.radioRef = React.createRef()
     }
@@ -119,7 +121,7 @@ class SearchCourses extends Component {
         //     })
         // })
         var selectedCourses = JSON.parse(localStorage.getItem('selectedCourses'))
-        console.log(selectedCourses)
+        // console.log(selectedCourses)
         if(selectedCourses != null){
           this.setState({selectedCourses})
         }
@@ -141,15 +143,41 @@ class SearchCourses extends Component {
       let filteredList = [];
 
       if(option == "all"){
-        console.log("all");
+        // console.log("all");
         filteredList = this.state.allSiteData;
 
-        this.setState({siteData: filteredList});
+        // start of grouping
+        const togroupdata = filteredList;
 
-        console.log(filteredList);
+        const groupedSiteData = togroupdata.reduce((coursesSoFar, { classNmbr, course, section, faculty, day, startTime, endTime, room, capacity, enrolled }) => {
+          if(!coursesSoFar[course])
+            coursesSoFar[course] = [];
+          
+          coursesSoFar[course].push({ classNmbr, course, section, faculty, day, startTime, endTime, room, capacity, enrolled });
+
+          return coursesSoFar;
+        }, {});
+
+
+        // const newGroupTest = [];
+        // for(var i=0; i < this.state.selectedCourses.length; i++){
+
+        //   newGroupTest.push([]);
+
+        //   for(var j=0; j < 3; j++){
+        //     newGroupTest[i].push(j);
+        //   }
+        // }
+
+        // end of grouping
+
+        this.setState({siteData: filteredList, testGroupedData: groupedSiteData},() => {
+        });
+
+        // console.log(filteredList);
       }
       else if(option == "open"){
-        console.log("open");
+        // console.log("open");
 
         var i;
         for(i = 0; i < this.state.allSiteData.length; i++) {
@@ -159,12 +187,29 @@ class SearchCourses extends Component {
           }
         }
 
-        this.setState({siteData: filteredList});
+        // start of grouping
+        const togroupdata = filteredList;
 
-        console.log(filteredList);
+        const groupedSiteData = togroupdata.reduce((coursesSoFar, { classNmbr, course, section, faculty, day, startTime, endTime, room, capacity, enrolled }) => {
+          if(!coursesSoFar[course])
+            coursesSoFar[course] = [];
+          
+          coursesSoFar[course].push({ classNmbr, course, section, faculty, day, startTime, endTime, room, capacity, enrolled });
+
+          return coursesSoFar;
+        }, {});
+
+        console.log("GROUPED IN OPEN");
+        console.log(groupedSiteData);
+        // end of grouping
+
+
+        this.setState({siteData: filteredList, testGroupedData: groupedSiteData});
+
+        // console.log(filteredList);
       }
       else{
-        console.log("closed");
+        // console.log("closed");
 
         var i;
         for(i = 0; i < this.state.allSiteData.length; i++) {
@@ -174,9 +219,25 @@ class SearchCourses extends Component {
           }
         }
 
-        this.setState({siteData: filteredList});
+        // console.log(filteredList);
 
-        console.log(filteredList);
+        // start of grouping
+        const togroupdata = filteredList;
+
+        const groupedSiteData = togroupdata.reduce((coursesSoFar, { classNmbr, course, section, faculty, day, startTime, endTime, room, capacity, enrolled }) => {
+          if(!coursesSoFar[course])
+            coursesSoFar[course] = [];
+          
+          coursesSoFar[course].push({ classNmbr, course, section, faculty, day, startTime, endTime, room, capacity, enrolled });
+
+          return coursesSoFar;
+        }, {});
+
+        console.log("GROUPED IN CLOSED");
+        console.log(groupedSiteData);
+        // end of grouping
+
+        this.setState({siteData: filteredList, testGroupedData: groupedSiteData});
       }
     }
 
@@ -195,12 +256,17 @@ class SearchCourses extends Component {
           this.setState({loading: true});
         });
       }
-
+      
       const selectedCourses = []
       this.state.selectedCourses.map(course => {
         selectedCourses.push(course.id)
+        const courseInfo = this.state.courseInfo
+        axios.get('https://archerone-backend.herokuapp.com/api/courseinfo/'+course.id).then(res => {
+          courseInfo[course.course_code] = res.data
+          this.setState({courseInfo})
+        })
       })
-     
+
       axios.post('https://archerone-backend.herokuapp.com/api/courseofferingslist/',{
         courses: selectedCourses,
         applyPreference: this.state.applyPreference,
@@ -208,12 +274,12 @@ class SearchCourses extends Component {
       })
       .then(res => {
           const newSiteData = [];
-          console.log(res.data)
+          // console.log(res.data)
           res.data.map(bundle => {
             var arranged = groupArray(bundle, 'classnumber');
-            console.log(arranged)
+            // console.log(arranged)
             for (let key in arranged) {
-              console.log(key, arranged[key]);
+              // console.log(key, arranged[key]);
               var days = []
               var day = ''
               var classnumber = ''
@@ -244,10 +310,13 @@ class SearchCourses extends Component {
               newSiteData.push(offering);
             }
           })
+
         this.setState({siteData: newSiteData, allSiteData: newSiteData},() => {
-          this.setFilter()
+          console.log(this.state.siteData);
+          this.setFilter();
           this.setState({loading: false});
         })
+
         //Finish Loading
       }).catch(err => {
         console.log(err.response)
@@ -284,13 +353,9 @@ class SearchCourses extends Component {
     }
   
     handleOpenModalCourseInfo = (courseCode, courseName, courseUnits)=>{
-      courseName = "Lorem ipsum"
-      var courseDesc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-      var coursePre = "N/A"
-      var courseCo = "N/A"
-      var courseEq = "N/A"
-      this.setState({courseCode, courseName, courseUnits})
-      this.setState({courseDesc, coursePre, courseCo, courseEq})
+      this.setState({courseCode, courseName, courseUnits}, () => {
+        console.log(this.state.courseInfo[this.state.courseCode]['course_code'])
+      })
       this.setState({openModalCourseInfo: true})
     }
 
@@ -327,24 +392,49 @@ class SearchCourses extends Component {
           },
         },
       }))(TableRow);
-      const loadedData = () => {
-          return(
-          <TableBody>
-            {this.state.siteData.map(row => (
-              <StyledTableRow key={row.classNmbr} onClick={() => this.handleOpenModalCourseInfo(row.course, "", "3")} style={{cursor: "pointer"}}>
-                <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.classNmbr} </StyledTableCell>
-                <StyledTableCell style={(row.capacity == row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> <Tooltip title="More Details" placement="bottom-end"><div>{row.course}</div></Tooltip> </StyledTableCell>
-                <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.section} </StyledTableCell>
-                <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.faculty} </StyledTableCell>
-                <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.day} </StyledTableCell>
-                <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.startTime} - {row.endTime} </StyledTableCell>
-                <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.room} </StyledTableCell>
-                <StyledTableCell align="right" style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.capacity} </StyledTableCell>
-                <StyledTableCell align="right" style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.enrolled} </StyledTableCell>
+      
+      const loadedData = (index) => {
+        // console.log(this.state.testGroupedData[index])
+        // console.log(typeof(this.state.testGroupedData[index]))
+        // console.log(index)
+        // console.log(this.state.testGroupedData[index])
+        // console.log(this.state.testGroupedData[index][0])
+          if(this.state.siteData.length > 0 && this.state.testGroupedData[index] != undefined){
+            // console.log(this.state.testGroupedData[index])
+        // console.log(this.state.testGroupedData[index][0])
+            return(
+            <TableBody>
+              {this.state.testGroupedData[index].map(row => (
+                <Tooltip title="More Details" placement="bottom">
+                  <StyledTableRow key={row.classNmbr} onClick={() => this.handleOpenModalCourseInfo(row.course, "", "3")} style={{cursor: "pointer"}}>
+                    <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.classNmbr} </StyledTableCell>
+                    <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.course} </StyledTableCell>
+                    <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.section} </StyledTableCell>
+                    <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.faculty} </StyledTableCell>
+                    <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.day} </StyledTableCell>
+                    <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.startTime} - {row.endTime} </StyledTableCell>
+                    <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.room} </StyledTableCell>
+                    <StyledTableCell align="right" style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.capacity} </StyledTableCell>
+                    <StyledTableCell align="right" style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {color: "#006600"}}> {row.enrolled} </StyledTableCell>
+                  </StyledTableRow>
+                </Tooltip>
+              ))}
+            </TableBody>
+            )
+          }else{
+            return(
+            <TableBody>
+              <StyledTableRow>
+                <StyledTableCell colSpan={9}>
+                  <center><p>
+                    No available course offerings.
+                  </p></center>
+                </StyledTableCell>
               </StyledTableRow>
-            ))}
-          </TableBody>
-          )
+            </TableBody>
+            )
+        }
+
       };
 
       return (
@@ -417,9 +507,12 @@ class SearchCourses extends Component {
                     </div>
                 </div>
                 
-                  <div className="viewCourses" style={!this.state.showPlaceholder ? {} : {display: "none"}}>
-                    <TableContainer component={Paper}>
-                      <Table aria-label="customized table">
+                {/* start of table */}
+                <div className="viewCourses" style={!this.state.showPlaceholder ? {} : {display: "none"}}>
+                  <TableContainer>
+
+                    {this.state.selectedCourses.map(index => (
+                      <Table aria-label="customized table" style={{marginBottom: 25}} component={Paper}>
                         <TableHead>
                           <TableRow>
                             <StyledTableCell> Class Number </StyledTableCell>
@@ -450,44 +543,83 @@ class SearchCourses extends Component {
                             ))}
                         </TableBody>
                         : 
-                        loadedData()
+                        loadedData(index.course_code)
                         }
                       </Table>
+                    ))}
+
+                    {/* <Table aria-label="customized table">
+                      <TableHead>
+                        <TableRow>
+                          <StyledTableCell> Class Number </StyledTableCell>
+                          <StyledTableCell> Course </StyledTableCell>
+                          <StyledTableCell> Section </StyledTableCell>
+                          <StyledTableCell> Faculty </StyledTableCell>
+                          <StyledTableCell> Day </StyledTableCell>
+                          <StyledTableCell> Time </StyledTableCell>
+                          <StyledTableCell> Room </StyledTableCell>
+                          <StyledTableCell> Capacity </StyledTableCell>
+                          <StyledTableCell> Enrolled </StyledTableCell>
+                        </TableRow>
+                      </TableHead>
+                        {this.state.loading ? 
+                        <TableBody>
+                            {this.state.skeletons.map(skeleton =>(
+                              <StyledTableRow>
+                                <StyledTableCell> <Skeleton width={'100%'} height={'100%'}></Skeleton> </StyledTableCell>
+                                <StyledTableCell> <Skeleton width={'100%'} height={'100%'}></Skeleton> </StyledTableCell>
+                                <StyledTableCell> <Skeleton width={'100%'} height={'100%'}></Skeleton> </StyledTableCell>
+                                <StyledTableCell> <Skeleton width={'100%'} height={'100%'}></Skeleton> </StyledTableCell>
+                                <StyledTableCell> <Skeleton width={'100%'} height={'100%'}></Skeleton> </StyledTableCell>
+                                <StyledTableCell> <Skeleton width={'100%'} height={'100%'}></Skeleton> </StyledTableCell>
+                                <StyledTableCell> <Skeleton width={'100%'} height={'100%'}></Skeleton> </StyledTableCell>
+                                <StyledTableCell> <Skeleton width={'100%'} height={'100%'}></Skeleton> </StyledTableCell>
+                                <StyledTableCell> <Skeleton width={'100%'} height={'100%'}></Skeleton> </StyledTableCell>
+                              </StyledTableRow>
+                            ))}
+                        </TableBody>
+                        : 
+                        loadedData()
+                        }
+                      </Table> */}
                     </TableContainer>
 
+                    {this.state.openModalCourseInfo ?
                     <Modal isOpen={this.state.openModalCourseInfo} toggle={this.toggleModal} returnFocusAfterClose={false} backdrop={true} data-keyboard="false">
                         <ModalHeader toggle={this.toggleModal}><h4>Course Information</h4></ModalHeader>
                         
                         <ModalBody>
-                          <h4>{this.state.courseCode}</h4>
-                          <h5>{this.state.courseName}</h5>
+                          <h4>{this.state.courseInfo[this.state.courseCode]['course_code']}</h4>
+                          <h5>{this.state.courseInfo[this.state.courseCode]['course_name']}</h5>
                           <br/>
 
                           <u><h5>Description</h5></u>
-                          <p>{this.state.courseDesc}</p>
+                          <p>{this.state.courseInfo[this.state.courseCode]['course_desc']}</p>
                           <br/>
 
                           <u><h5>Pre-requisite/s</h5></u>
-                          <p>{this.state.coursePre}</p>
+                          <p>{this.state.courseInfo[this.state.courseCode]['prerequisite_to'].toString()}</p>
+                          <p>{this.state.courseInfo[this.state.courseCode]['soft_prerequisite_to'].toString()}</p>
                           <br/>
 
                           <u><h5>Co-requisite/s</h5></u>
-                          <p>{this.state.courseCo}</p>
+                          <p>{this.state.courseInfo[this.state.courseCode]['co_requisite'].toString()}</p>
                           <br/>
 
-                          <u><h5>Course Equivalent</h5></u>
+                          {/* <u><h5>Course Equivalent</h5></u>
                           <p>{this.state.courseEq}</p>
-                          <br/>
+                          <br/> */}
 
                           <u><h5>Number of Units</h5></u>
-                          <p>{this.state.courseUnits}</p>
+                          <p>{this.state.courseInfo[this.state.courseCode]['units']}</p>
                         </ModalBody>
                         
                     </Modal> 
+                    : null}
                   </div>                  
                 
                 <div className={"noContent"} style={this.state.showPlaceholder ? {} : {display: "none"}}>
-                    <center><img style={{width:"30%"}} src={searchIMG}/></center>
+                  <center><img style={{width:"30%"}} src={searchIMG}/></center>
                 </div>
 
             </div>

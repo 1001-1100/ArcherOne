@@ -93,7 +93,7 @@ class Menu extends React.Component{
         }
 
         return(
-            <Navbar sticky="top" collapseOnSelect expand="lg" className="color-nav" variant="dark">
+            <Navbar id="navbarStep" sticky="top" collapseOnSelect expand="lg" className="color-nav" variant="dark">
             <Navbar.Brand href="/">
             <img
                 alt=""

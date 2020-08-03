@@ -44,14 +44,6 @@ function createData(name) {
     return { name };
 }
 
-const rows = [
-    createData('Frozen yoghurt'),
-    createData('Ice cream sandwich'),
-    createData('Eclair'),
-    createData('Cupcake'),
-    createData('Gingerbread'),
-];
-
 const styles = theme => ({
     pencilIcon:{ 
         marginLeft: "10px",
@@ -81,6 +73,8 @@ class GenSchedInfo extends Component {
             tableContent: props.tableContent,
             conflictsContent: props.conflictsContent,
             prefContent: props.prefContent,
+            rowsPref: props.prefContent,
+            rowsConflict: props.conflictsContent,
             id: props.id,
             schedTitle: props.titleName,
             earliest: props.earliest,
@@ -97,6 +91,8 @@ class GenSchedInfo extends Component {
             tableContent: props.tableContent,
             conflictsContent: props.conflictsContent,
             prefContent: props.prefContent,
+            rowsPref: props.prefContent,
+            rowsConflict: props.conflictsContent,
             id: props.id,
             schedTitle: props.titleName,
             earliest: props.earliest,
@@ -141,6 +137,10 @@ class GenSchedInfo extends Component {
 
     render() { 
         const { classes } = this.props;
+
+        console.log(this.state.rowsPref)
+        console.log(this.state.rowsConflict)
+
         return (
             <Column>
                 <Row verticle = 'center' className = "RowSchedInfoContainer">
@@ -170,24 +170,30 @@ class GenSchedInfo extends Component {
                         </Row> */}
                         <Row horizontal = 'center'>
                             <Column horizontal = 'center' style={{marginLeft: "10px"}}>
-                                Preferences
-                                
-                                <BoxInfo content={this.state.prefContent } id={1+this.state.id}/>
+                                {/* Preferences
+                                <BoxInfo content={this.state.prefContent } id={1+this.state.id}/> */}
     
-                                <TableContainer component={Paper}>
+                                <TableContainer component={Paper} className="boxinfoContainer" style={{width: 250}}>
                                     <Table className={classes.table} aria-label="customized table">
                                         <TableHead>
                                             <TableRow>
-                                                <StyledTableCell>Preferences</StyledTableCell>
+                                                <StyledTableCell><center>Preferences</center></StyledTableCell>
                                             </TableRow>
                                         </TableHead>
                                         
                                         <TableBody>
-                                            {rows.map((row) => (
-                                                <StyledTableRow key={row.name}>
-                                                <StyledTableCell component="th" scope="row">
-                                                    {row.name}
+                                            {this.state.rowsPref.length == 0 ?
+                                            <StyledTableRow key={'empty'}>
+                                                <StyledTableCell rowSpan={3}>
+                                                    All preferences were met.
                                                 </StyledTableCell>
+                                            </StyledTableRow>
+                                            : null }
+                                            {this.state.rowsPref.map((row) => (
+                                                <StyledTableRow key={row}>
+                                                    <StyledTableCell component="th" scope="row">
+                                                        {row}
+                                                    </StyledTableCell>
                                                 </StyledTableRow>
                                             ))}
                                         </TableBody>
@@ -195,9 +201,38 @@ class GenSchedInfo extends Component {
                                 </TableContainer>
 
                             </Column>
+
                             <Column horizontal = 'center' style={{marginLeft: "20px"}}>
-                                Course Conflict
-                                <BoxInfo content={this.state.conflictsContent} id={2+this.state.id}/>
+                                {/* Course Conflict
+                                <BoxInfo content={this.state.conflictsContent} id={2+this.state.id}/> */}
+
+                                <TableContainer component={Paper} className="boxinfoContainer" style={{width: 250}}>
+                                    <Table className={classes.table} aria-label="customized table">
+                                        <TableHead>
+                                            <TableRow>
+                                                <StyledTableCell><center>Course Conflict</center></StyledTableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        
+                                        <TableBody>
+                                            {this.state.rowsConflict.length == 0 ?
+                                            <StyledTableRow key={'empty'}>
+                                                <StyledTableCell rowSpan={3}>
+                                                    No course conflicts.
+                                                </StyledTableCell>
+                                            </StyledTableRow>
+                                            : null}
+                                            {this.state.rowsConflict.map((row) => (
+                                                <StyledTableRow key={row}>
+                                                    <StyledTableCell component="th" scope="row">
+                                                        {row}
+                                                    </StyledTableCell>
+                                                </StyledTableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+
                             </Column>
                         </Row>
                             

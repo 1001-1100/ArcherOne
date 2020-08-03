@@ -6,6 +6,7 @@ import axios from 'axios';
 import ResetPassword from "./ResetPassword.jsx";
 import EditableLabel from 'react-inline-editing';
 
+import TextField from '@material-ui/core/TextField';
 
 import EditIcon from '@material-ui/icons/Edit';
 import DoneIcon from '@material-ui/icons/Done';
@@ -339,6 +340,70 @@ class Profile extends Component {
                 </div>
             </div>
             
+            <div className="profile-category" >
+                <h2>Password Settings</h2>
+                    
+                <div className="profile-category-content" >
+                    <b>Current Password</b>
+                    <br/>
+                    <Row horizontal= 'start'>
+                        <EditableLabel
+                            // ref={this.editFirstName}
+                            // text={this.state.first_name}
+                            text='●●●●●●●●'
+                            inputWidth='150px'
+                            inputHeight='25px'
+                            inputMaxLength='30'
+                            // onFocus={(text)=>this._handleFocus(text, 'firstNameBool')}
+                            // onFocusOut={(text)=>this._handleFocusOut(text, 'firstNameBool')}
+                        />
+                        {/* {this.state.fieldsBool['firstNameBool'] ? <DoneIcon fontSize="medium" className={classes.checkIcon} onClick={()=>this.editButtonPress('firstNameBool',this.editFirstName)}/> : <EditIcon fontSize= "small" className={classes.pencilIcon} onClick={()=>this.editButtonPress('firstNameBool',this.editFirstName)}/>} */}
+                    </Row>
+                    <a href="/password_reset" style={{fontSize: 13}}>Forgot your password?</a>
+
+                    <br/>
+                    <br/>
+
+                    <b>New Password</b>
+                    <br/>
+                    <Row horizontal= 'start'>
+                        <EditableLabel
+                            // ref={this.editFirstName}
+                            // text={this.state.first_name}
+                            text='●●●●●●●●'
+                            inputWidth='150px'
+                            inputHeight='25px'
+                            inputMaxLength='30'
+                            // onFocus={(text)=>this._handleFocus(text, 'firstNameBool')}
+                            // onFocusOut={(text)=>this._handleFocusOut(text, 'firstNameBool')}
+                        />
+                        {/* {this.state.fieldsBool['firstNameBool'] ? <DoneIcon fontSize="medium" className={classes.checkIcon} onClick={()=>this.editButtonPress('firstNameBool',this.editFirstName)}/> : <EditIcon fontSize= "small" className={classes.pencilIcon} onClick={()=>this.editButtonPress('firstNameBool',this.editFirstName)}/>} */}
+                    </Row>
+
+                    <br/>
+
+                    <b>Confirm Password</b>
+                    <br/>
+                    <Row horizontal= 'start'>
+                        <EditableLabel
+                            // ref={this.editFirstName}
+                            // text={this.state.first_name}
+                            text='●●●●●●●●'
+                            inputWidth='150px'
+                            inputHeight='25px'
+                            inputMaxLength='30'
+                            // onFocus={(text)=>this._handleFocus(text, 'firstNameBool')}
+                            // onFocusOut={(text)=>this._handleFocusOut(text, 'firstNameBool')}
+                        />
+                        {/* {this.state.fieldsBool['firstNameBool'] ? <DoneIcon fontSize="medium" className={classes.checkIcon} onClick={()=>this.editButtonPress('firstNameBool',this.editFirstName)}/> : <EditIcon fontSize= "small" className={classes.pencilIcon} onClick={()=>this.editButtonPress('firstNameBool',this.editFirstName)}/>} */}
+                    </Row>
+
+                    <center>
+                        <input class="btn btn-success submit-form" type="submit" value="Save"/>
+                    </center>
+
+                </div>
+            </div>
             
             <div className="profile-category" >
                 <h2>Notification Settings</h2>

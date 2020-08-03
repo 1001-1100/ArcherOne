@@ -155,6 +155,7 @@ class FriendPage extends Component {
             schedules: [],
             profList: [],
             dropdownOpen: false,
+            friendList: [],
 
             daysList:[
                 {   id: 1,
@@ -469,9 +470,12 @@ class FriendPage extends Component {
         axios.get('https://archerone-backend.herokuapp.com/api/friendlist/'+localStorage.getItem('user_id')+'/')
         .then(res => {
             const requests = []
+            const friendList = []
             res.data.map(friend => {
                 requests.push(this.createRequests(friend.first_name, friend.last_name, "accept", friend.id, friend.college, friend.degree, friend.id_num))
+                friendList.push(friend.id)
             })
+            this.setState({friendList})
             this.setState({requests}, () => {
                 if(this.props.location.state != undefined){
                     let selectedFriendId = this.props.location.state.selectedFriendId;
@@ -537,6 +541,22 @@ class FriendPage extends Component {
     filterSearchFriends = (val) => {
         this.setState({searchQuery: val})
     }
+
+    deleteFriend = () => {
+        const friendList = []
+        this.state.friendList.map(friend => {
+            if(friend != this.state.selectedFriendId){
+                friendList.push(friend)
+            }
+        })
+        axios.patch('https://archerone-backend.herokuapp.com/api/users/'+localStorage.getItem('user_id')+'/',{
+            friends: friendList 
+        }).catch(err => {
+            console.log(err.response)
+        })
+        window.location.reload()
+        this.setState({openAlert: false});
+    }
        
     render() {
         const friendList = [];
@@ -546,7 +566,6 @@ class FriendPage extends Component {
             if(this.state.requests[i].status == "accept"){
                 var f = this.state.requests[i];
                 if(f.firstName.toLowerCase().includes(this.state.searchQuery.toLowerCase()) || f.lastName.toLowerCase().includes(this.state.searchQuery.toLowerCase())){
-                    console.log(this.state.requests[i]);
                     friendList.push(this.state.requests[i]);
                 }
             }
@@ -661,7 +680,7 @@ class FriendPage extends Component {
                                 <Button onClick={this.handleCloseAlert} color="primary">
                                     Cancel
                                 </Button>
-                                <Button onClick={this.deleteSchedule} color="primary" autoFocus>
+                                <Button onClick={this.deleteFriend} color="primary" autoFocus>
                                     Unfriend
                                 </Button>
                                 </DialogActions>
