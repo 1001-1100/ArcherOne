@@ -179,6 +179,7 @@ class ScheduleView extends Component {
         matched = props.matched
       }
 
+      var counter = 0;
       this.state = {  
         classes: props.content,
         latest: latest,
@@ -188,6 +189,8 @@ class ScheduleView extends Component {
         palIndex: 0,
         dataReceived: false,
         matched: matched,
+        matchPalette: ['#ee4035', '#f37736', '#7bc043', '#0392cf', '#d11141', '#00b159', '#00aedb', '#f37735', '#ffc425'],
+        matchPalCount: 0,
       }
       console.log("reach schedview")
       console.log(props.matched)
@@ -222,26 +225,35 @@ class ScheduleView extends Component {
     
     CustomAppointment = ({ style, ...restProps }) => {
       // console.log(restProps);
-      var coloredClasses = [...this.state.coloredClasses];;
+      var counter = 0;
+      var coloredClasses = [...this.state.coloredClasses];
       var changeColor = <Appointments.Appointment {...restProps} style={{ ...style, backgroundColor: this.state.palette[1]}}data={restProps.data.title}/>;
       // console.log(coloredClasses)
       coloredClasses.map(data=>{
+        
         if(data.title == restProps.data.title){
-          console.log(data.color);
+          // if(this.state.matched.includes(data.title)){
+          //   counter = counter + 1;
+          // }
+          
+          // console.log(data.color);
+          // console.log(this.state.matched.findIndex(course => course === data.title));
           changeColor = <Appointments.Appointment
               {...restProps}
-              style={this.state.matched.includes(data.title) ? { ...style, backgroundColor: data.color, whiteSpace: 'normal', border: 'dashed #65656f'} : { ...style, backgroundColor: data.color, whiteSpace: 'normal'}}
+              style={this.state.matched.includes(data.title) ? { ...style, backgroundColor: this.state.matchPalette[this.state.matched.findIndex(course => course === data.title)], whiteSpace: 'normal', border: 'dashed #65656f'} : { ...style, backgroundColor: data.color, whiteSpace: 'normal'}}
               // className="CLASS_ROOM1"
               data={restProps.data.title}
             />
+            
           return (
             <Appointments.Appointment
               {...restProps}
-              style={data.title in this.state.matched ? { ...style, backgroundColor: data.color, whiteSpace: 'normal', border: 'dashed #65656f'} : { ...style, backgroundColor: data.color, whiteSpace: 'normal'}}
+              style={data.title in this.state.matched ? { ...style, backgroundColor:this.state.matchPalette[this.state.matched.findIndex(course => course === data.title)], whiteSpace: 'normal', border: 'dashed #65656f'} : { ...style, backgroundColor: data.color, whiteSpace: 'normal'}}
               // className="CLASS_ROOM1"
               data={restProps.data.title}
             />
           )
+          
         }
       })
 

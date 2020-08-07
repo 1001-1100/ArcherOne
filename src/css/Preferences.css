@@ -98,6 +98,19 @@ body {
     margin-bottom: 3%; */
 }
 
+.survey-category {
+    width: 60%;
+    margin: 0 auto;
+    /* margin-top: 3%;
+    margin-bottom: 3%; */
+}
+
+.scale{
+    /* width: 50%; */
+    margin: auto;
+    /* margin-top: 3%;
+    margin-bottom: 3%; */
+}
 /* .preference-category-content {
     border-color: #007453;
     border-style: solid;
@@ -180,4 +193,8 @@ body {
 
 .timePreferences {
     margin-top: 40px;
+}
+
+.survey-statements{
+    font-weight: bold;
 }

@@ -21,6 +21,7 @@ import SearchCoursesPage from "./pages/SearchCourses.jsx";
 import SearchCoursesSimplePage from "./pages/SearchCoursesSimple.jsx";
 import SearchCoursesGuestPage from "./pages/SearchCoursesGuest.jsx";
 import ViewFriendsPage from "./pages/FriendPage.jsx";
+import SurveyPage from "./pages/Survey.jsx";
 import Menu from "./components/Menu.jsx";
 import CompareSchedulePage from "./pages/CompareSchedule.jsx";
 
@@ -318,12 +319,22 @@ class App extends Component {
     )
   }
 
+  surveyPage = (props) => {
+    return (
+      <SurveyPage
+        menu={this.menu}
+        params={props.match.params}
+      />
+    )
+  }
+
   render() {
 
     return (
       <Router>
         <Switch>
           <Route exact path="/" render={this.mainPage} />
+          <Route exact path="/survey" render={this.surveyPage} />
           {!this.state.logged_in &&
           <Route exact path="/login" component={this.loginPage}/>
           }

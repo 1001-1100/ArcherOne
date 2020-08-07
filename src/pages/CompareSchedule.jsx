@@ -70,7 +70,9 @@ class CompareSchedule extends Component {
             schedulesFriend: [],
             dataReceived: false,
             friendName: "",
-            matched: []
+            matched: [],
+            matchPalette: ['#ee4035', '#f37736', '#fdf498', '#7bc043', '#0392cf', '#d11141', '#00b159', '#00aedb', '#f37735', '#ffc425'],
+            matchPalCount: 0,
         }
     }
 
@@ -128,9 +130,9 @@ class CompareSchedule extends Component {
         }
         console.log(newMatched);
         this.setState({matched: newMatched});
-        this.state.currentContentUser.props = newMatched;
-        this.state.currentContentFriend.props = newMatched;
-        console.log(this.state.matched);
+        // this.state.currentContentUser.props = newMatched;
+        // this.state.currentContentFriend.props = newMatched;
+        // console.log(this.state.matched);
     }
 
     componentDidMount(){

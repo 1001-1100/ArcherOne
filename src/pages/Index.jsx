@@ -804,7 +804,7 @@ class Index extends Component {
 
 
             <Steps
-              enabled={localStorage.getItem('steps') == 'true' && this.state.generatedContents.length <= 0}
+              enabled={localStorage.getItem('steps') == 'true' && this.state.generatedContents.length <= 0 && this.props.logged_in}
               steps={steps}
               initialStep={0}
               onExit={this.tutorialDone}
