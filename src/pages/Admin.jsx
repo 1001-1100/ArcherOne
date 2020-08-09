@@ -42,7 +42,7 @@ class Admin extends Component {
                     var data = res.data[0][0]
                     if(data != undefined){
                         rows.push(this.createData(data.course, data.section, data.classnumber, cart.idnum, data.current_enrolled, data.max_enrolled))
-                        this.setState({rows, dataReceived: true})
+                        this.setState({rows})
                     }
                 })
             })
@@ -54,6 +54,7 @@ class Admin extends Component {
                 this.setState({enlists})
             })
         })
+        this.setState({dataReceived: true})
     }
 
     handleSimul = () => {
