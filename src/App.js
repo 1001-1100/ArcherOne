@@ -26,6 +26,7 @@ import AdminPage from "./pages/Admin.jsx";
 import Menu from "./components/Menu.jsx";
 import CompareSchedulePage from "./pages/CompareSchedule.jsx";
 import EmailVerificationCompletePage from "./pages/EmailVerificationComplete.jsx";
+import SurveyThanksPage from "./pages/SurveyThanks.jsx";
 
 import axios from 'axios';
 
@@ -330,6 +331,15 @@ class App extends Component {
     )
   }
 
+  surveyThanksPage = (props) => {
+    return (
+      <SurveyThanksPage
+        menu={this.menu}
+        params={props.match.params}
+      />
+    )
+  }
+
   adminPage = (props) => {
     return (
       <AdminPage
@@ -351,6 +361,7 @@ class App extends Component {
         <Switch>
           <Route exact path="/" render={this.mainPage} />
           <Route exact path="/survey" render={this.surveyPage} />
+          <Route exact path="/surveythanks" render={this.surveyThanksPage} />
           <Route exact path="/admin" render={this.adminPage} />
           {!this.state.logged_in &&
           <Route exact path="/login" component={this.loginPage}/>

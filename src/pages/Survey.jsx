@@ -43,6 +43,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import _ from 'underscore';
+import { Redirect } from "react-router";
 
 const GreenRadio = withStyles({
     root: {
@@ -161,7 +162,7 @@ class Survey extends Component {
             susResult: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,] /*[{question: "I think I would like to use this system frequently", value: "4"}]*/,
             ueqResult: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,] /*[{question: "annoying/enjoyable", value:"3"}]*/,
             nasaResult: [0, 0, 0, 0, 0, 0,] /*[{question: "demand", value:"3"}]*/,
-            smeqResult: 30,
+            smeqResult: 0,
             panasResult: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,] /*[{question: "interested", value: "2"}]*/,
             stressResult: [0,0,0,0,0,0,0,] /*[{question: "I find creating schedules for myself to be stressful", value: "1"}]*/,
             wordResult: []/*[{word: "Accessible", value: "5"}, {word: "Appealing", value: "1"}]*/,
@@ -176,7 +177,8 @@ class Survey extends Component {
             name: "",
             groupno: "",
             method: "",
-
+            snackBar: false,
+            redirect: false
         }
     }
 
@@ -581,16 +583,19 @@ class Survey extends Component {
 
  
     handleRadioChange = (event, type, index) => {
-        console.log(event.target.value);
-        console.log(type);
-        console.log(index);
-        var score = event.target.value;
+        // console.log(event.target.value);
+        // console.log(type);
+        // console.log(index);
+        if(type == "smeq"){
+            this.state.smeqResult = event;
+        }else{
+            var score = event.target.value;
+        }
         if(type == "sus"){
             var susResult = this.state.susResult;
             susResult.splice(index, 1, score);
             console.log(susResult);
             console.log(this.state.susResult);
-            // this.setState({susResult});
         }else if(type == "ueq"){
             var ueqResult = this.state.ueqResult;
             ueqResult.splice(index, 1, score);
@@ -606,10 +611,6 @@ class Survey extends Component {
             panasResult.splice(index, 1, score);
             console.log(panasResult);
             console.log(this.state.panasResult);
-        }else if (type == "smeq"){
-            this.setState({smeqResult: score});
-            console.log(score);
-            console.log(this.state.smeqResult);
         }else if (type == "cognitive"){
             var cognitiveResult = this.state.cognitiveResult;
             cognitiveResult.splice(index, 1, score);
@@ -620,7 +621,6 @@ class Survey extends Component {
             decisionResult.splice(index, 1, score);
             console.log(decisionResult);
             console.log(this.state.decisionResult);
-            
         }else if (type == "group"){
             var groupResult = this.state.groupResult;
             groupResult.splice(index, 1, score);
@@ -641,13 +641,14 @@ class Survey extends Component {
     handleFieldChange = (event, type) => {
         var explanation = event.target.value;
         if(type == "name"){
-            this.name = explanation;
+            this.state.name = explanation;
+            console.log(this.state.name)
             // this.setState({name: explanation});
         }else if (type == "groupno"){
-            this.groupno = explanation;
+            this.state.groupno = explanation;
             // this.setState({groupno: explanation});
         }else if(type == "method"){
-            this.method = explanation;
+            this.state.method = explanation;
             // this.setState({method: explanation});
         }else if (type == "cogntive"){
             // var cognitiveExplanation = this.state.cognitiveExplanation;
@@ -668,13 +669,38 @@ class Survey extends Component {
             // console.log(this.state.groupExplanation);
 
         }else if (type == "comments"){
-            // this.setState({comments: event.target.value});
+            this.state.comments = explanation;
 
         }
     }
     handleSubmit = (event) => {
         event.preventDefault();
         console.log("submit pressed")
+        var results = {
+            susResult: this.state.susResult,
+            ueqResult: this.state.ueqResult,
+            nasaResult: this.state.nasaResult,
+            smeqResult: this.state.smeqResult,
+            panasResult: this.state.panasResult,
+            stressResult: this.state.stressResult,
+            cognitiveResult: this.state.cognitiveResult,
+            decisionResult: this.state.decisionResult,
+            groupResult: this.state.groupResult,
+            comments: this.state.comments,
+            name: this.state.name,
+            groupno: this.state.groupno,
+            method: this.state.method
+        }
+        console.log(JSON.stringify(results).length)
+        axios.post('https://archerone-backend.herokuapp.com/api/surveys/',{
+            data: JSON.stringify(results)
+        })
+        .then(res => {
+            this.setState({redirect: true})
+        }).catch(err => {
+            console.log(err.response)
+            this.setState({snackBar: true})
+        })
         // if (value === 'best') {
         //   setHelperText('You got it!');
         //   setError(false);
@@ -688,6 +714,9 @@ class Survey extends Component {
         
       };
 
+      handleCloseSnackBar = () => {
+          this.setState({snackBar: false})
+      }
 
 
     render() {
@@ -830,7 +859,7 @@ class Survey extends Component {
             ['impractical', 'practical', true],
             ['organized', 'cluttered', false],
             ['attractive', 'unattractive', false],
-            ['friendly', 'friendly', false],
+            ['friendly', 'unfriendly', false],
             ['conservative', 'innovative', true]
         ]
 
@@ -860,6 +889,9 @@ class Survey extends Component {
                 {this.state.dataReceived ? 
                 <div className="survey-category">
                    <div>
+                    {this.state.redirect ?
+                    <Redirect to="/surveythanks"></Redirect>
+                    : null}
                    <form onSubmit={this.handleSubmit}>
                     <h1 style={{marginTop: "20px"}}>Survey</h1>
                     <span>Please make sure to answer all the questions in the questionnaires below, you're not allowed to skip any questions. All of these questions are related to the method you used for the experiment and your experience with it. Thank you!</span>
@@ -954,7 +986,7 @@ class Survey extends Component {
                                 aria-labelledby="vertical-slider"
                                 marks={marks}
                                 max={150}
-                                onChange={(event)=>this.handleRadioChange(event, "smeq", "none")}
+                                onChange={(event, value)=>this.handleRadioChange(value , "smeq", "none")}
                                 />
                                 </div>
                                 </Row>
@@ -980,18 +1012,7 @@ class Survey extends Component {
                                     {stressStatements.map(statement => 
                                         this.stressScale(statement)
                                     )}
-                                     <div>
-                                        <h5>Please include any other insights you had about stress and your explanation for how you answered the questions above.</h5>
-                                        <TextField
-                                        id="standard-full-width"
-                                        label="Explain your answers above here including the thought process you had related to it"
-                                        style={{ margin: 8 }}
-                                        placeholder="Answer here"
-                                        fullWidth
-                                        margin="normal"
-                                        onChange={(event)=>this.handleField(event, "stress")}
-                                        />
-                                    </div>
+                                     
                                 </div>
                             </div>
 
@@ -1077,31 +1098,29 @@ class Survey extends Component {
                             
                           
                             <div className="cognitive-survey">
-                                <h2>Cognitive Load
+                                <h2>Cognitive Load & Decision-making
                                 </h2>
                                 <p>
-                                We want to understand which specific parts of the process makes you feel overwhelmed with cogntive load. Please answer the scale and explain your answer so we may understand what your logic and thought process was behind it.
+                                We want to understand which specific parts of the process makes you feel overwhelmed (cognitive load) and your thoughts on decision-making. 
                                 </p>
                                 <div className="preference-category-content">
                                     {cognitiveStatements.map((statement, index )=> 
                                         this.basicScale(statement, index, "cognitive")
                                     )}
-                                    <div>
-                                    <h5>Please include any other insights you had about cognitive load and your explanation for how you answered the questions above.</h5>
-                                        <TextField
-                                        id="standard-full-width"
-                                        label="Explain your answer above here including the thought process you had related to it"
-                                        style={{ margin: 8 }}
-                                        placeholder="Answer here"
-                                        fullWidth
-                                        margin="normal"
-                                        onChange={(event)=>this.handleField(event, "cognitive")}
-                                        />
-                                    </div>
+                                   
+                                    {decisionStatements.map((statement, index )=> 
+                                        this.basicScale(statement, index, "decision")
+                                    )}
+                                 
+                                    {collabStatements.map((statement, index) => 
+                                        this.basicScale(statement, index, "group")
+                                    )}
+                             
                                 </div>
+                                     
                             </div>
 
-                            <div className="decision-survey">
+                            {/* <div className="decision-survey">
                                 <h2>Decision-Making
                                 </h2>
                                 <p>
@@ -1150,7 +1169,7 @@ class Survey extends Component {
                                         />
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                             
                             <div className="comments-survey">
                                 <h2>Comments
@@ -1164,6 +1183,7 @@ class Survey extends Component {
                                     placeholder="Answer here"
                                     fullWidth
                                     margin="normal"
+                                    onChange={(event) => this.handleField(event, "comments")}
                                     // InputLabelProps={{
                                     //     shrink: true,
                                     // }}
@@ -1181,6 +1201,11 @@ class Survey extends Component {
                             </Button></center>
                     </form>
                     </div>             
+                              <Snackbar open={this.state.snackBar} autoHideDuration={4000} onClose={this.handleCloseSnackBar}>
+                                <Alert onClose={this.handleCloseSnackBar} severity="error">
+                                  {"Error in submitting form."}
+                                </Alert>
+                              </Snackbar>
                 </div>
                 : 
                 <div style={{display: "flex", justifyContent: "center", alignItems: "center", minHeight: "90vh"}}>
