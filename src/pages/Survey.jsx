@@ -165,14 +165,14 @@ class Survey extends Component {
             panasResult: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,] /*[{question: "interested", value: "2"}]*/,
             stressResult: [0,0,0,0,0,0,0,] /*[{question: "I find creating schedules for myself to be stressful", value: "1"}]*/,
             wordResult: []/*[{word: "Accessible", value: "5"}, {word: "Appealing", value: "1"}]*/,
-            cognitiveResult: [0,0,0,0,0,0,0,],
-            decisionResult: [0,0,0,0,],
-            groupResult: [0,0,0,],
+            cognitiveResult: [0,0,0,0,0,0,0,0,0,0,0,0,0,],
+            decisionResult: [0,0,0,0,0,0,],
+            groupResult: [0,0,0,0,0,0,0,0,0,],
             comments: "",
-            stressExplanation: [0,0,0,0,0,0,0,],
-            cognitiveExplanation: [0,0,0,0,0,0,0,],
-            decisionExplanation: [0,0,0,0,],
-            groupExplanation: [0,0,0,],
+            stressComments: "",
+            cognitiveComments: "",
+            decisionComments: "",
+            groupComments: "",
             name: "",
             groupno: "",
             method: "",
@@ -290,19 +290,6 @@ class Survey extends Component {
                     />
                 <span>Strongly Agree</span>
                 </RadioGroup>
-                <div>
-                <TextField
-                id="standard-full-width"
-                label="Explain your answer above here including the thought process you had related to it"
-                style={{ margin: 8 }}
-                placeholder="Answer here"
-                fullWidth
-                margin="normal"
-                // InputLabelProps={{
-                //     shrink: true,
-                // }}
-                />
-                </div>
             </div>
             )
         }
@@ -470,20 +457,7 @@ class Survey extends Component {
                     />
                 <span>Very Easy</span>
                 </RadioGroup>
-                <div>
-                <TextField
-                id="standard-full-width"
-                label="Explain your answer above here including the thought process you had related to it"
-                style={{ margin: 8 }}
-                placeholder="Answer here"
-                fullWidth
-                margin="normal"
-                onChange={(event)=>this.handleField(event, "type", id)}
-                // InputLabelProps={{
-                //     shrink: true,
-                // }}
-                />
-                </div>
+                
             </div>
             )
         }
@@ -634,6 +608,8 @@ class Survey extends Component {
             console.log(this.state.panasResult);
         }else if (type == "smeq"){
             this.setState({smeqResult: score});
+            console.log(score);
+            console.log(this.state.smeqResult);
         }else if (type == "cognitive"){
             var cognitiveResult = this.state.cognitiveResult;
             cognitiveResult.splice(index, 1, score);
@@ -658,11 +634,11 @@ class Survey extends Component {
     handleName=(event)=>{
         this.setState({name: event.target.value});
     }
-    handleField=(event, type, index)=>{
+    handleField=(event, type)=>{
         var explanation = event.target.value;
-        this.handleFieldChange(event, type, index)
+        this.handleFieldChange(event, type)
     }
-    handleFieldChange = (event, type, index) => {
+    handleFieldChange = (event, type) => {
         var explanation = event.target.value;
         if(type == "name"){
             this.name = explanation;
@@ -770,25 +746,39 @@ class Survey extends Component {
 
         const cognitiveStatements = [
             'Overall, the task of creating a schedule for yourself was?',
-            'Keeping track of the classes I like.',
-            'Keeping track of the classes I dislike.',
-            'Resolving course conflicts.',
-            'Keeping track of the schedule I want.',
-            'Adjusting my schedule based on changes.',
-            'Keeping track of all the necessary information I need to know for my schedule',
-            'Determining which are the similar classes I have with my friends'
+            'Keeping track of the classes I like was?',
+            'Keeping track of the classes I dislike was?',
+            'Keeping track of all the necessary information I need to create my schedule was?',
+            "Keeping track of the classes I can't get (full or unavailable) was?",
+            "Keeping track of what I want in a schedule was?",
+            "Organizing my choices and options was?",
+            "Visualizing my schedule was?",
+            'Resolving course conflicts was?',
+            'Creating different schedule possibilities was?',
+            "Keeping track of the different schedule possibilities was?",
+            "Keeping track of the schedule I want was?",
+            'Adjusting my schedule based on changes was?',
+           
         ]
 
         const decisionStatements = [
-            'Efficiently weighing my options and decisions.',
-            'Picking my classes.',
-            'Picking a final schedule.',
-            'Prioritizing my preferences.',
+            'Overall, making decisions while creating a schedule was?',
+            'Efficiently weighing my choices and options was?',
+            'Picking my classes was?',
+            'Picking a final schedule was?',
+            'Picking between equally good choices was?',
+            'Picking between equally bad choices was?',
         ]
 
         const collabStatements = [
-            'Coordinating with my friends to create a schedule',
-            'Coordinating with my friends with the similar classes we need',
+            'Overall, the task of creating a schedule with your friends was?',
+            'Coordinating with my friends to create a schedule was?',
+            'Coordinating possible similar classes with all of my friends was?',
+            "Factoring in my friends' preferences in my schedule was?",
+            "Keeping track and resolving possible conflicts between our schedules was?",
+            "Creating multiple possible schedules with my friends was?",
+            "Adjusting my schedule due to sudden changes with my friends was?",
+            "Comparing my schedule with my friends' schedule was?",
             'Picking a schedule my friends and I are happy with',
         ]
 
@@ -877,10 +867,10 @@ class Survey extends Component {
                     <br></br>
                     
                     <h3>Participant Details</h3>
-                    <TextField id="outlined-basic" label="Last Name, First Name"  name="fullName" placeholder="Velasco, John" style={{marginRight: "25", width: "750"}} onChange={(event)=>this.handleField(event, "name", "none")}></TextField>
+                    <TextField id="outlined-basic" label="Last Name, First Name"  name="fullName" placeholder="Velasco, John" style={{marginRight: "25", width: "750"}} onChange={(event)=>this.handleField(event, "name")}></TextField>
                     <br></br>
                     <br></br>
-                    <TextField id="outlined-basic" label="Group Number"  name="Group Number" placeholder="A1" style={{marginRight: "25", width: "750"}} onChange={(event)=>this.handleField(event, "groupno", "none")}></TextField>
+                    <TextField id="outlined-basic" label="Group Number"  name="Group Number" placeholder="A1" style={{marginRight: "25", width: "750"}} onChange={(event)=>this.handleField(event, "groupno")}></TextField>
                     <br></br>
                     <br></br>
                     <FormControl className={classes.formControl}>
@@ -889,7 +879,7 @@ class Survey extends Component {
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         style={{width: "230px"}}
-                        onChange={(event)=>this.handleField(event, "method", "none")}
+                        onChange={(event)=>this.handleField(event, "method")}
                         >
                         <MenuItem value={"Traditional Method"}>Your own usual method</MenuItem>
                         <MenuItem value={"AnimoSched Method"}>AnimoSched method</MenuItem>
@@ -964,6 +954,7 @@ class Survey extends Component {
                                 aria-labelledby="vertical-slider"
                                 marks={marks}
                                 max={150}
+                                onChange={(event)=>this.handleRadioChange(event, "smeq", "none")}
                                 />
                                 </div>
                                 </Row>
@@ -989,6 +980,18 @@ class Survey extends Component {
                                     {stressStatements.map(statement => 
                                         this.stressScale(statement)
                                     )}
+                                     <div>
+                                        <h5>Please include any other insights you had about stress and your explanation for how you answered the questions above.</h5>
+                                        <TextField
+                                        id="standard-full-width"
+                                        label="Explain your answers above here including the thought process you had related to it"
+                                        style={{ margin: 8 }}
+                                        placeholder="Answer here"
+                                        fullWidth
+                                        margin="normal"
+                                        onChange={(event)=>this.handleField(event, "stress")}
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
@@ -1083,6 +1086,18 @@ class Survey extends Component {
                                     {cognitiveStatements.map((statement, index )=> 
                                         this.basicScale(statement, index, "cognitive")
                                     )}
+                                    <div>
+                                    <h5>Please include any other insights you had about cognitive load and your explanation for how you answered the questions above.</h5>
+                                        <TextField
+                                        id="standard-full-width"
+                                        label="Explain your answer above here including the thought process you had related to it"
+                                        style={{ margin: 8 }}
+                                        placeholder="Answer here"
+                                        fullWidth
+                                        margin="normal"
+                                        onChange={(event)=>this.handleField(event, "cognitive")}
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
@@ -1096,6 +1111,18 @@ class Survey extends Component {
                                     {decisionStatements.map((statement, index )=> 
                                         this.basicScale(statement, index, "decision")
                                     )}
+                                     <div>
+                                     <h5>Please include any other insights you had about decision-making and your explanation for how you answered the questions above.</h5>
+                                        <TextField
+                                        id="standard-full-width"
+                                        label="Explain your answer above here including the thought process you had related to it"
+                                        style={{ margin: 8 }}
+                                        placeholder="Answer here"
+                                        fullWidth
+                                        margin="normal"
+                                        onChange={(event)=>this.handleField(event, "decision")}
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
@@ -1110,6 +1137,18 @@ class Survey extends Component {
                                     {collabStatements.map((statement, index) => 
                                         this.basicScale(statement, index, "group")
                                     )}
+                                     <div>
+                                     <h5>Please include any other insights you had about group schedule coordination and your explanation for how you answered the questions above.</h5>
+                                        <TextField
+                                        id="standard-full-width"
+                                        label="Explain your answer above here including the thought process you had related to it"
+                                        style={{ margin: 8 }}
+                                        placeholder="Answer here"
+                                        fullWidth
+                                        margin="normal"
+                                        onChange={(event)=>this.handleField(event, "group")}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                             
