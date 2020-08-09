@@ -24,8 +24,8 @@ class Admin extends Component {
         }
     }
 
-    createData(course, section, classnumber, idnum, enrolled, capacity) {
-        return { course, section, classnumber, idnum, enrolled, capacity};
+    createData(course, section, classnumber, idnum, name, enrolled, capacity) {
+        return { course, section, classnumber, idnum, name, enrolled, capacity};
     }
 
     createEnlistData(id, idnum, allowed){
@@ -41,7 +41,7 @@ class Admin extends Component {
                 axios.get('https://archerone-backend.herokuapp.com/api/getclass/'+cart.classnumber).then(res => {
                     var data = res.data[0][0]
                     if(data != undefined){
-                        rows.push(this.createData(data.course, data.section, data.classnumber, cart.idnum, data.current_enrolled, data.max_enrolled))
+                        rows.push(this.createData(data.course, data.section, data.classnumber, cart.idnum, cart.name, data.current_enrolled, data.max_enrolled))
                         this.setState({rows})
                     }
                 })
