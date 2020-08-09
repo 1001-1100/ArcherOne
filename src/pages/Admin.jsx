@@ -126,6 +126,7 @@ class Admin extends Component {
                     <TableCell>Course</TableCell>
                     <TableCell align="right">Classnumber</TableCell>
                     <TableCell align="right">ID Number</TableCell>
+                    <TableCell align="right">Name</TableCell>
                     <TableCell align="right">Enrolled</TableCell>
                     <TableCell align="right">Capacity</TableCell>
                 </TableRow>
@@ -141,6 +142,7 @@ class Admin extends Component {
                     </TableCell>
                     <TableCell align="right">{row.classnumber}</TableCell>
                     <TableCell align="right">{row.idnum}</TableCell>
+                    <TableCell align="right">{row.name}</TableCell>
                     <TableCell align="right">{row.enrolled}</TableCell>
                     <TableCell align="right">{row.capacity}</TableCell>
                     </TableRow>
