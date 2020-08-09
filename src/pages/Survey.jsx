@@ -42,6 +42,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import _ from 'underscore';
 
 const GreenRadio = withStyles({
     root: {
@@ -147,7 +148,7 @@ function Alert(props) {
 
 
 
-class Preferences extends Component {
+class Survey extends Component {
     constructor(props){
         super(props)
         this.state = {
@@ -156,7 +157,26 @@ class Preferences extends Component {
             dataReceived: true,
             currentWords: [],
             words: ['Accessible', 'Effortless', 'Ordinary', 'Advanced', 'Empowering', 'Organised', 'Ambiguous', 'Energetic', 'Overwhelming', 'Annoying', 'Engaging', 'Patronising', 'Appealing', 'Entertaining', 'Poor quality', 'Approachable', 'Exciting', 'Powerful', 'Attractive', 'Expected', 'Predictable', 'Awkward', 'Familiar', 'Professional', 'Boring', 'Fast', 'Relevant', 'Bright', 'Faulty', 'Reliable', 'Business-like', 'Flexible', 'Responsive', 'Busy', 'Fresh', 'Rigid', 'Clean', 'Friendly', 'Satisfying', 'Clear', 'Frustrating', 'Secure', 'Cluttered', 'Fun', 'Simple', 'Compelling', 'Hard to Use', 'Simplistic', 'Complex', 'High quality', 'Slow', 'Comprehensive', 'Illogical', 'Sophisticated', 'Confusing', 'Impressive', 'Stable', 'Consistent', 'Inadequate', 'Stimulating', 'Contradictory', 'Incomprehensible', 'Straightforward', 'Controllable', 'Inconsistent', 'Stressful', 'Convenient', 'Ineffective', 'System-oriented', 'Counter-intuitive', 'Innovative', 'Time-consuming', 'Creative', 'Insecure', 'Time-saving', 'Credible', 'Intimidating', 'Too technical', 'Cutting edge', 'Intuitive', 'Trustworthy', 'Dated', 'Irrelevant', 'Unattractive', 'Desirable', 'Meaningful', 'Unconventional', 'Difficult', 'Misleading', 'Understandable', 'Distracting', 'Motivating', 'Unpredictable', 'Dull', 'New', 'Unrefined', 'Easy to use', 'Non-standard', 'Usable', 'Effective', 'Obscure', 'Useful', 'Efficient', 'Old', 'Vague'],
-            wordList : []
+            wordList : [],
+            susResult: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,] /*[{question: "I think I would like to use this system frequently", value: "4"}]*/,
+            ueqResult: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,] /*[{question: "annoying/enjoyable", value:"3"}]*/,
+            nasaResult: [0, 0, 0, 0, 0, 0,] /*[{question: "demand", value:"3"}]*/,
+            smeqResult: 30,
+            panasResult: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,] /*[{question: "interested", value: "2"}]*/,
+            stressResult: [0,0,0,0,0,0,0,] /*[{question: "I find creating schedules for myself to be stressful", value: "1"}]*/,
+            wordResult: []/*[{word: "Accessible", value: "5"}, {word: "Appealing", value: "1"}]*/,
+            cognitiveResult: [0,0,0,0,0,0,0,],
+            decisionResult: [0,0,0,0,],
+            groupResult: [0,0,0,],
+            comments: "",
+            stressExplanation: [0,0,0,0,0,0,0,],
+            cognitiveExplanation: [0,0,0,0,0,0,0,],
+            decisionExplanation: [0,0,0,0,],
+            groupExplanation: [0,0,0,],
+            name: "",
+            groupno: "",
+            method: "",
+
         }
     }
 
@@ -178,31 +198,29 @@ class Preferences extends Component {
 
     handleChange = (e) => {
         this.setState({selectedValue: e.target.value})
-
-
     }
 
-    handleWordChange = (event) => {
-      var newWordList = this.state.wordList;
-      var newCurrentWords = [];
-      newWordList[event.target.id - 1].checked = event.target.checked;
-      if(event.target.checked){
-        newCurrentWords = this.state.currentWords;
-        newCurrentWords.push(newWordList[event.target.id - 1]);
-      }else{
-        this.state.currentWords.map(word => {
-            if(event.target.id != word.id){
-                newCurrentWords.push(word)
-            }
-        })
-      }
-      this.setState({wordList: newWordList, currentWords: newCurrentWords});
-   };
-        susScale = (statement) => {
+//     handleWordChange = (event) => {
+//       var newWordList = this.state.wordList;
+//       var newCurrentWords = [];
+//       newWordList[event.target.id - 1].checked = event.target.checked;
+//       if(event.target.checked){
+//         newCurrentWords = this.state.currentWords;
+//         newCurrentWords.push(newWordList[event.target.id - 1]);
+//       }else{
+//         this.state.currentWords.map(word => {
+//             if(event.target.id != word.id){
+//                 newCurrentWords.push(word)
+//             }
+//         })
+//       }
+//       this.setState({wordList: newWordList, currentWords: newCurrentWords});
+//    };
+        susScale = (statement, id) => {
             return (
             <div className="scale">
                 <span className={"survey-statements"}>{statement}</span>
-                <RadioGroup row aria-label="position" name="position" >
+                <RadioGroup row aria-label="position" name={"sus"+id}  onChange={(event)=>this.handleRadioChange(event, "sus", id)}>
                     <span >Strongly Disagree</span>
                     <FormControlLabel
                     value="1"
@@ -289,12 +307,12 @@ class Preferences extends Component {
             )
         }
 
-        ueqScale = (left, right, type) => {
+        ueqScale = (left, right, type, id) => {
             if(type){
                 return (
                 // <Row horizontal = 'center' style={{justifyContent: "center"}}>
                 <div className="scale" style={{placeItems: "center", justify: "center"}}>
-                    <RadioGroup row aria-label="position" name="position" >
+                    <RadioGroup row aria-label="position" name={"ueq"+id}  onChange={(event)=>this.handleRadioChange(event, "ueq", id)}>
                         <Grid container spacing={1}>
                                             
                             <Grid item xs={2}>
@@ -357,7 +375,7 @@ class Preferences extends Component {
                 return (
                 // <Row horizontal = 'center' style={{justifyContent: "center"}}>
                 <div className="scale">
-                    <RadioGroup row aria-label="position" name="position" >
+                    <RadioGroup row aria-label="position" name={"ueq"+id}  onChange={(event)=>this.handleRadioChange(event, "ueq", id)}>
                     <Grid container spacing={1}>
                                             
                         <Grid item xs={2}>
@@ -390,7 +408,7 @@ class Preferences extends Component {
                         labelPlacement="top"
                         />
                         <FormControlLabel
-                        value="-1"
+             word           value="-1"
                         control={<GreenRadio/>}
                         label="5"
                         labelPlacement="top"
@@ -420,11 +438,11 @@ class Preferences extends Component {
 
         }
 
-        basicScale = (statement) => {
+        basicScale = (statement, id, type) => {
             return (
             <div className="scale">
                 <span className={"survey-statements"}>{statement}</span>
-                <RadioGroup row aria-label="position" name="position" >
+                <RadioGroup row aria-label="position" name={type+id}  onChange={(event)=>this.handleRadioChange(event, type, id)}>
                     <span >Very Difficult</span>
                     <FormControlLabel
                     value="1"
@@ -460,6 +478,7 @@ class Preferences extends Component {
                 placeholder="Answer here"
                 fullWidth
                 margin="normal"
+                onChange={(event)=>this.handleField(event, "type", id)}
                 // InputLabelProps={{
                 //     shrink: true,
                 // }}
@@ -469,11 +488,11 @@ class Preferences extends Component {
             )
         }
 
-        panasScale = (statement) => {
+        panasScale = (statement, id) => {
             return (
             <div className="scale">
                 <span className={"survey-statements"}>{statement}</span>
-                <RadioGroup row aria-label="position" name="position" >
+                <RadioGroup row aria-label="position" name={"panas"+id}  onChange={(event)=>this.handleRadioChange(event, "panas", id)}>
                     <span >Very slightly or not at all</span>
                     <FormControlLabel
                     value="1"
@@ -512,12 +531,12 @@ class Preferences extends Component {
             )
         }
 
-        nasaScale = (type, statement) => {
+        nasaScale = (type, statement, id) => {
             return (
             <div className="scale">
                  <h5>{type}</h5>
                 <span className={"survey-statements"}>{statement}</span>
-                <RadioGroup row aria-label="position" name="position" >
+                <RadioGroup row aria-label="position" name={"nasa"+id}  onChange={(event)=>this.handleRadioChange(event, "nasa", id)}>
                    
                     <span >Very Low</span>
                     <FormControlLabel
@@ -586,6 +605,113 @@ class Preferences extends Component {
             )
         }
 
+ 
+    handleRadioChange = (event, type, index) => {
+        console.log(event.target.value);
+        console.log(type);
+        console.log(index);
+        var score = event.target.value;
+        if(type == "sus"){
+            var susResult = this.state.susResult;
+            susResult.splice(index, 1, score);
+            console.log(susResult);
+            console.log(this.state.susResult);
+            // this.setState({susResult});
+        }else if(type == "ueq"){
+            var ueqResult = this.state.ueqResult;
+            ueqResult.splice(index, 1, score);
+            console.log(ueqResult);
+            console.log(this.state.ueqResult);
+        }else if (type == "nasa"){
+            var nasaResult = this.state.nasaResult;
+            nasaResult.splice(index, 1, score);
+            console.log(nasaResult);
+            console.log(this.state.nasaResult);
+        }else if (type == "panas"){
+            var panasResult = this.state.panasResult;
+            panasResult.splice(index, 1, score);
+            console.log(panasResult);
+            console.log(this.state.panasResult);
+        }else if (type == "smeq"){
+            this.setState({smeqResult: score});
+        }else if (type == "cognitive"){
+            var cognitiveResult = this.state.cognitiveResult;
+            cognitiveResult.splice(index, 1, score);
+            console.log(cognitiveResult);
+            console.log(this.state.cognitiveResult);
+        }else if (type == "decision"){
+            var decisionResult = this.state.decisionResult;
+            decisionResult.splice(index, 1, score);
+            console.log(decisionResult);
+            console.log(this.state.decisionResult);
+            
+        }else if (type == "group"){
+            var groupResult = this.state.groupResult;
+            groupResult.splice(index, 1, score);
+            console.log(groupResult);
+            console.log(this.state.groupResult);
+        }
+
+        
+        }
+    
+    handleName=(event)=>{
+        this.setState({name: event.target.value});
+    }
+    handleField=(event, type, index)=>{
+        var explanation = event.target.value;
+        this.handleFieldChange(event, type, index)
+    }
+    handleFieldChange = (event, type, index) => {
+        var explanation = event.target.value;
+        if(type == "name"){
+            this.name = explanation;
+            // this.setState({name: explanation});
+        }else if (type == "groupno"){
+            this.groupno = explanation;
+            // this.setState({groupno: explanation});
+        }else if(type == "method"){
+            this.method = explanation;
+            // this.setState({method: explanation});
+        }else if (type == "cogntive"){
+            // var cognitiveExplanation = this.state.cognitiveExplanation;
+            // cognitiveExplanation.splice(index, 1, explanation);
+            // console.log(cognitiveExplanation);
+            // console.log(this.state.cognitiveExplanation);
+
+        }else if (type == "decision"){
+            // var decisionExplanation = this.state.decisionExplanation;
+            // decisionExplanation.splice(index, 1, explanation);
+            // console.log(decisionExplanation);
+            // console.log(this.state.decisionExplanation);
+
+        }else if (type == "group"){
+            // var groupExplanation = this.state.groupExplanation;
+            // groupExplanation.splice(index, 1, explanation);
+            // console.log(groupExplanation);
+            // console.log(this.state.groupExplanation);
+
+        }else if (type == "comments"){
+            // this.setState({comments: event.target.value});
+
+        }
+    }
+    handleSubmit = (event) => {
+        event.preventDefault();
+        console.log("submit pressed")
+        // if (value === 'best') {
+        //   setHelperText('You got it!');
+        //   setError(false);
+        // } else if (value === 'worst') {
+        //   setHelperText('Sorry, wrong answer!');
+        //   setError(true);
+        // } else {
+        //   setHelperText('Please select an option.');
+        //   setError(true);
+        // }
+        
+      };
+
 
 
     render() {
@@ -649,7 +775,8 @@ class Preferences extends Component {
             'Resolving course conflicts.',
             'Keeping track of the schedule I want.',
             'Adjusting my schedule based on changes.',
-            'Keeping track of all the necessary information I need to know for my schedule'
+            'Keeping track of all the necessary information I need to know for my schedule',
+            'Determining which are the similar classes I have with my friends'
         ]
 
         const decisionStatements = [
@@ -666,24 +793,24 @@ class Preferences extends Component {
         ]
 
         const panasStatements =[
-            'Interested',
-            'Distressed',
-            'Excited',
+            // 'Interested',
+            // 'Distressed',
+            // 'Excited',
             'Upset',
-            'Strong',
-            'Guilty',
-            'Scared',
+            // 'Strong',
+            // 'Guilty',
+            // 'Scared',
             'Hostile',
-            'Enthusiastic',
-            'Proud',
-            'Irritable',
+            // 'Enthusiastic',
+            // 'Proud',
+            // 'Irritable',
             'Alert',
             'Ashamed',
             'Inspired',
             'Nervous',
             'Determined',
             'Attentive',
-            'Jittery',
+            // 'Jittery',
             'Active', 
             'Afraid'
         ]
@@ -742,15 +869,18 @@ class Preferences extends Component {
 
                 {this.state.dataReceived ? 
                 <div className="survey-category">
-                  <h1 style={{marginTop: "20px"}}>Survey</h1>
-                  <span>Please make sure to answer all the questions in the questionnaires below, you're not allowed to skip any questions. All of these questions are related to the method you used for the experiment and your experience with it. Thank you!</span>
+                   <div>
+                   <form onSubmit={this.handleSubmit}>
+                    <h1 style={{marginTop: "20px"}}>Survey</h1>
+                    <span>Please make sure to answer all the questions in the questionnaires below, you're not allowed to skip any questions. All of these questions are related to the method you used for the experiment and your experience with it. Thank you!</span>
                     <div>
                     <br></br>
+                    
                     <h3>Participant Details</h3>
-                    <TextField id="outlined-basic" label="Last Name, First Name"  name="fullName" placeholder="Velasco, John" style={{marginRight: "25", width: "750"}}></TextField>
+                    <TextField id="outlined-basic" label="Last Name, First Name"  name="fullName" placeholder="Velasco, John" style={{marginRight: "25", width: "750"}} onChange={(event)=>this.handleField(event, "name", "none")}></TextField>
                     <br></br>
                     <br></br>
-                    <TextField id="outlined-basic" label="Group Number"  name="Group Number" placeholder="A1" style={{marginRight: "25", width: "750"}}></TextField>
+                    <TextField id="outlined-basic" label="Group Number"  name="Group Number" placeholder="A1" style={{marginRight: "25", width: "750"}} onChange={(event)=>this.handleField(event, "groupno", "none")}></TextField>
                     <br></br>
                     <br></br>
                     <FormControl className={classes.formControl}>
@@ -759,7 +889,7 @@ class Preferences extends Component {
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         style={{width: "230px"}}
-                      
+                        onChange={(event)=>this.handleField(event, "method", "none")}
                         >
                         <MenuItem value={"Traditional Method"}>Your own usual method</MenuItem>
                         <MenuItem value={"AnimoSched Method"}>AnimoSched method</MenuItem>
@@ -776,8 +906,8 @@ class Preferences extends Component {
                                 <p>*note: System refers to the method or process you use to create a schedule in this experiment.</p>
                                 
                                 <div className="preference-category-content">
-                                    {susStatements.map(statement => 
-                                        this.susScale(statement)
+                                    {susStatements.map((statement, index)=> 
+                                        this.susScale(statement, index)
                                     )}
                                 </div>
                             </div>
@@ -800,8 +930,8 @@ class Preferences extends Component {
                                 <div className="preference-category-content">
                                 <Row horizontal = 'center' style={{justifyContent: "center"}}>
                                     <div style={{placeItems: "center"}}>
-                                        {ueqStatements.map(statement => 
-                                        this.ueqScale(statement[0], statement[1], statement[2])
+                                        {ueqStatements.map((statement, index )=> 
+                                        this.ueqScale(statement[0], statement[1], statement[2], index)
                                     )}</div>
                                 </Row>
                                 </div>
@@ -812,8 +942,8 @@ class Preferences extends Component {
                                 </h2>
                                 <span>This questionnaire assesses the work load you've experienced with the tasks.</span>
                                 <div className="preference-category-content">
-                                        {nasaStatements.map(statement => 
-                                        this.nasaScale(statement[0], statement[1])
+                                        {nasaStatements.map((statement, index )=> 
+                                        this.nasaScale(statement[0], statement[1], index)
                                     )}
                                 </div>
                             </div>
@@ -821,7 +951,7 @@ class Preferences extends Component {
                             <div className="workloadPreferences">
                                 <h2>Subjective Mental Effort Questionnaire (SMEQ)
                                 </h2>
-                                <span>To assess mental effort you exerted in the tasks, use the slider that goes from 0-150 to specify the difficulty. The levels of difficulty is also found in the slider.</span>
+                                <span>To assess mental effort you exerted in the tasks, use the slider that goes from 0-150 to specify the difficulty. The levels of difficulty are also found in the slider.</span>
                                 <div className="preference-category-content" >
                                 
                                 <Row horizontal = 'center' style={{justifyContent: "center"}}>
@@ -843,10 +973,10 @@ class Preferences extends Component {
                             <div className="panas-survey">
                                 <h2>PANAS
                                 </h2>
-                                <span>This questionnaire contains 20-items of emotions. Please answer them based on all the emotions you've felt throughout the tasks.</span>
+                                <span>This questionnaire contains 10-items of emotions. Please answer them based on all the emotions you've felt throughout the tasks.</span>
                                 <div className="preference-category-content">
-                                        {panasStatements.map(statement => 
-                                        this.panasScale(statement)
+                                        {panasStatements.map((statement, index) => 
+                                        this.panasScale(statement, index)
                                     )}
                                 </div>
                             </div>
@@ -862,7 +992,7 @@ class Preferences extends Component {
                                 </div>
                             </div>
 
-                            <div className="classDetails">
+                            {/* <div className="classDetails">
                                 <h2>Word List</h2>
                                 
                                 <div className="preference-category-content">
@@ -871,8 +1001,8 @@ class Preferences extends Component {
                                         <div className={'subheader'}>Word List</div>
                                         <p>Step 1: Read over the following list of words. Considering the method you have just used, tick those
                                         words that best describe your experience with it. You can choose as many words as you wish. </p>
-                                        <Grid container spacing={1}>
-                                            {/* <Grid item xs={12}> */}
+                                        <Grid container spacing={1}> */}
+                                            {/* <Grid item xs={12}>
                                             <Grid item xs={4}>
                                             
                                             <FormGroup>
@@ -896,14 +1026,14 @@ class Preferences extends Component {
                                                 control = {<GreenCheckbox checked={this.state.wordList[2].checked} onChange={this.handleWordChange} id={this.state.wordList[2].id} color="primary"/>}label={this.state.wordList[2].word}/>
                                                 <FormControlLabel
                                                 control = {<GreenCheckbox checked={this.state.wordList[3].checked} onChange={this.handleWordChange} id={this.state.wordList[3].id} color="primary"/>}label={this.state.wordList[3].word} /> */}
-                                            </FormGroup>
+                                            {/* </FormGroup>
                                             </Grid>
 
                                             <Grid item xs={4}>
                                             <FormGroup>
                                                 {this.state.wordList.filter(word => word.id > 70 && word.id <= 105).map((filteredWord)=>{
                                                   return <FormControlLabel control = {<GreenCheckbox checked={filteredWord.checked} onChange={this.handleWordChange} id={filteredWord.id}  color="primary"/>}label={filteredWord.word} />;
-                                                })}
+                                                })} */}
                                                 {/* <FormControlLabel
                                                 control = {<GreenCheckbox checked={this.state.wordList[0].checked} onChange={this.handleWordChange} id={this.state.wordList[0].id}  color="primary"/>}label={this.state.wordList[0].word} />
                                                 <FormControlLabel
@@ -912,7 +1042,7 @@ class Preferences extends Component {
                                                 control = {<GreenCheckbox checked={this.state.wordList[2].checked} onChange={this.handleWordChange} id={this.state.wordList[2].id} color="primary"/>}label={this.state.wordList[2].word}/>
                                                 <FormControlLabel
                                                 control = {<GreenCheckbox checked={this.state.wordList[3].checked} onChange={this.handleWordChange} id={this.state.wordList[3].id} color="primary"/>}label={this.state.wordList[3].word} /> */}
-                                            </FormGroup>
+                                            {/* </FormGroup>
                                             </Grid>
                                         </Grid>
 
@@ -933,12 +1063,12 @@ class Preferences extends Component {
                                                 label=""
                                                 // placeholder=""
                                             />
-                                            )}
-                                        />
+                                            )} */}
+                                        {/* /> */}
                                         {/* </Grid> */}
-                                    </div>
+                                    {/*</div>
                                   </div>
-                                </div>
+                                </div> */}
 
 
                             
@@ -950,8 +1080,8 @@ class Preferences extends Component {
                                 We want to understand which specific parts of the process makes you feel overwhelmed with cogntive load. Please answer the scale and explain your answer so we may understand what your logic and thought process was behind it.
                                 </p>
                                 <div className="preference-category-content">
-                                    {cognitiveStatements.map(statement => 
-                                        this.basicScale(statement)
+                                    {cognitiveStatements.map((statement, index )=> 
+                                        this.basicScale(statement, index, "cognitive")
                                     )}
                                 </div>
                             </div>
@@ -963,8 +1093,8 @@ class Preferences extends Component {
                                 We want to understand your thoughts in decision-making when creating schedules with the given method or process. Please answer the scale and explain your answer so we may understand what your logic and thought process was behind it.
                                 </p>
                                 <div className="preference-category-content">
-                                    {decisionStatements.map(statement => 
-                                        this.basicScale(statement)
+                                    {decisionStatements.map((statement, index )=> 
+                                        this.basicScale(statement, index, "decision")
                                     )}
                                 </div>
                             </div>
@@ -977,8 +1107,8 @@ class Preferences extends Component {
                                 We want to understand your thoughts in coordinating with your friends when creating schedules with the given method or process. Please answer the scale and explain your answer so we may understand what your logic and thought process was behind it.
                                 </p>
                                 <div className="preference-category-content">
-                                    {collabStatements.map(statement => 
-                                        this.basicScale(statement)
+                                    {collabStatements.map((statement, index) => 
+                                        this.basicScale(statement, index, "group")
                                     )}
                                 </div>
                             </div>
@@ -1006,10 +1136,12 @@ class Preferences extends Component {
                                 variant="contained"
                                 className={classes.buttonStyle}
                                 onClick={this.handleSave}
+                                type="submit"
                                 >
                                 SUBMIT
                             </Button></center>
-
+                    </form>
+                    </div>             
                 </div>
                 : 
                 <div style={{display: "flex", justifyContent: "center", alignItems: "center", minHeight: "90vh"}}>
@@ -1022,7 +1154,7 @@ class Preferences extends Component {
     }
   }
 
-  Preferences.propTypes={
+  Survey.propTypes={
     classes: PropTypes.object.isRequired,
   };
-export default withStyles(styles)(Preferences);
+export default withStyles(styles)(Survey);

@@ -22,8 +22,10 @@ import SearchCoursesSimplePage from "./pages/SearchCoursesSimple.jsx";
 import SearchCoursesGuestPage from "./pages/SearchCoursesGuest.jsx";
 import ViewFriendsPage from "./pages/FriendPage.jsx";
 import SurveyPage from "./pages/Survey.jsx";
+import AdminPage from "./pages/Admin.jsx";
 import Menu from "./components/Menu.jsx";
 import CompareSchedulePage from "./pages/CompareSchedule.jsx";
+import EmailVerificationCompletePage from "./pages/EmailVerificationComplete.jsx";
 
 import axios from 'axios';
 
@@ -328,6 +330,20 @@ class App extends Component {
     )
   }
 
+  adminPage = (props) => {
+    return (
+      <AdminPage
+        params={props.match.params}
+      />
+    )
+  }
+
+  emailVerificationCompletePage = () => {
+    return (
+      <EmailVerificationCompletePage/>
+    );
+  }
+
   render() {
 
     return (
@@ -335,6 +351,7 @@ class App extends Component {
         <Switch>
           <Route exact path="/" render={this.mainPage} />
           <Route exact path="/survey" render={this.surveyPage} />
+          <Route exact path="/admin" render={this.adminPage} />
           {!this.state.logged_in &&
           <Route exact path="/login" component={this.loginPage}/>
           }
@@ -346,6 +363,7 @@ class App extends Component {
           }
           <Route exact path="/search_courses" component={this.searchCoursesPage} />
           <Route exact path="/register" component={this.registerPage} />
+          <Route exact path="/email_verified" component={this.emailVerificationCompletePage} />
           <Route exact path="/password_reset" component={this.resetPasswordPage} />
           <Route exact path="/password_reset_done" component={this.resetPasswordDonePage} />
           <Route path="/reset/:uidb64/:token" component={this.resetPasswordConfirmPage} />
