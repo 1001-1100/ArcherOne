@@ -177,6 +177,7 @@ class Survey extends Component {
             name: "",
             groupno: "",
             method: "",
+            snackBarText: "",
             snackBar: false,
             redirect: false
         }
@@ -196,6 +197,46 @@ class Survey extends Component {
             id += 1
         })
         this.setState({wordList})
+    }
+
+    checkEmptyFields = () => {
+        if(this.state.smeqResult == 0 || this.state.name.trim() == "" || this.state.groupno.trim() == "" || this.state.method.trim() == ""){
+            return false
+        }
+        this.state.susResult.map(n => {
+            if(n === 0)
+                return false
+        })
+        this.state.ueqResult.map(n => {
+            if(n === 0)
+                return false
+        })
+        this.state.nasaResult.map(n => {
+            if(n === 0)
+                return false
+        })
+        this.state.panasResult.map(n => {
+            if(n === 0)
+                return false
+        })
+        this.state.stressResult.map(n => {
+            if(n === 0)
+                return false
+        })
+        this.state.cognitiveResult.map(n => {
+            if(n === 0)
+                return false
+        })
+        this.state.decisionResult.map(n => {
+            if(n === 0)
+                return false
+        })
+        this.state.groupResult.map(n => {
+            if(n === 0)
+                return false
+        })
+        return true
+
     }
 
     handleChange = (e) => {
@@ -676,31 +717,35 @@ class Survey extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         console.log("submit pressed")
-        var results = {
-            susResult: this.state.susResult,
-            ueqResult: this.state.ueqResult,
-            nasaResult: this.state.nasaResult,
-            smeqResult: this.state.smeqResult,
-            panasResult: this.state.panasResult,
-            stressResult: this.state.stressResult,
-            cognitiveResult: this.state.cognitiveResult,
-            decisionResult: this.state.decisionResult,
-            groupResult: this.state.groupResult,
-            comments: this.state.comments,
-            name: this.state.name,
-            groupno: this.state.groupno,
-            method: this.state.method
+        if(this.checkEmptyFields()){
+            var results = {
+                susResult: this.state.susResult,
+                ueqResult: this.state.ueqResult,
+                nasaResult: this.state.nasaResult,
+                smeqResult: this.state.smeqResult,
+                panasResult: this.state.panasResult,
+                stressResult: this.state.stressResult,
+                cognitiveResult: this.state.cognitiveResult,
+                decisionResult: this.state.decisionResult,
+                groupResult: this.state.groupResult,
+                comments: this.state.comments,
+                name: this.state.name,
+                groupno: this.state.groupno,
+                method: this.state.method
+            }
+            console.log(JSON.stringify(results).length)
+            axios.post('https://archerone-backend.herokuapp.com/api/surveys/',{
+                data: JSON.stringify(results)
+            })
+            .then(res => {
+                this.setState({redirect: true})
+            }).catch(err => {
+                this.setState({snackBarText: "Error in submitting form.", snackBar: true})
+            })
+        }else{
+            this.setState({snackBarText: "You have unanswered questions.", snackBar: true})
         }
-        console.log(JSON.stringify(results).length)
-        axios.post('https://archerone-backend.herokuapp.com/api/surveys/',{
-            data: JSON.stringify(results)
-        })
-        .then(res => {
-            this.setState({redirect: true})
-        }).catch(err => {
-            console.log(err.response)
-            this.setState({snackBar: true})
-        })
+
         // if (value === 'best') {
         //   setHelperText('You got it!');
         //   setError(false);
@@ -1203,7 +1248,7 @@ class Survey extends Component {
                     </div>             
                               <Snackbar open={this.state.snackBar} autoHideDuration={4000} onClose={this.handleCloseSnackBar}>
                                 <Alert onClose={this.handleCloseSnackBar} severity="error">
-                                  {"Error in submitting form."}
+                                  {this.state.snackBarText}
                                 </Alert>
                               </Snackbar>
                 </div>
