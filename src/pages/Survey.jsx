@@ -164,7 +164,7 @@ class Survey extends Component {
             nasaResult: [0, 0, 0, 0, 0, 0,] /*[{question: "demand", value:"3"}]*/,
             smeqResult: 0,
             panasResult: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,] /*[{question: "interested", value: "2"}]*/,
-            stressResult: [0,0,0,0,0,0,0,] /*[{question: "I find creating schedules for myself to be stressful", value: "1"}]*/,
+            stressResult: [0,0,0,0,0] /*[{question: "I find creating schedules for myself to be stressful", value: "1"}]*/,
             wordResult: []/*[{word: "Accessible", value: "5"}, {word: "Appealing", value: "1"}]*/,
             cognitiveResult: [0,0,0,0,0,0,0,0,0,0,0,0,0,],
             decisionResult: [0,0,0,0,0,0,],
@@ -301,11 +301,11 @@ class Survey extends Component {
             )
         }
 
-        stressScale = (statement) => {
+        stressScale = (statement, id) => {
             return (
             <div className="scale">
                 <span className={"survey-statements"}>{statement}</span>
-                <RadioGroup row aria-label="position" name="position" >
+                <RadioGroup row aria-label="position" name="position" onChange={(event)=>this.handleRadioChange(event, "stress", id)}>
                     <span >Strongly Disagree</span>
                     <FormControlLabel
                     value="1"
@@ -625,7 +625,7 @@ class Survey extends Component {
  
     handleRadioChange = (event, type, index) => {
         // console.log(event.target.value);
-        // console.log(type);
+        console.log(type);
         // console.log(index);
         if(type == "smeq"){
             this.state.smeqResult = event;
@@ -652,6 +652,11 @@ class Survey extends Component {
             panasResult.splice(index, 1, score);
             console.log(panasResult);
             console.log(this.state.panasResult);
+        }else if (type == "stress"){
+            var stressResult = this.state.stressResult;
+            stressResult.splice(index, 1, score);
+            console.log(stressResult);
+            console.log(this.state.stressResult);
         }else if (type == "cognitive"){
             var cognitiveResult = this.state.cognitiveResult;
             cognitiveResult.splice(index, 1, score);
@@ -1054,8 +1059,8 @@ class Survey extends Component {
                                 </h2>
                                 <p>We want to understand which specific parts of the process makes you feel stressed. Please answer the scale and explain your answer so we may understand what your logic and thought process was behind it.</p>
                                 <div className="preference-category-content">
-                                    {stressStatements.map(statement => 
-                                        this.stressScale(statement)
+                                    {stressStatements.map((statement, index) => 
+                                        this.stressScale(statement, index)
                                     )}
                                      
                                 </div>
