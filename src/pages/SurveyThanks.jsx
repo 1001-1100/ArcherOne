@@ -43,6 +43,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import _ from 'underscore';
+import personIMG from '../assets/following_the_idea.png';
 
 const GreenRadio = withStyles({
     root: {
@@ -163,7 +164,12 @@ class Survey extends Component {
 
                 {this.state.dataReceived ? 
                 <div className="survey-category">
-                    <h1 style={{marginTop: "20px"}}>Thank you for participating!</h1>
+                    <br></br>
+                    <br></br>
+                    <center><h1 style={{marginTop: "20px"}}>Thank you for participating!</h1></center>
+                    <center><h3>Thank you so much for you time. You and your friends are officially part of the raffle!</h3></center>
+                    <br></br>
+                    <center><img style={{width:"30%"}} src={personIMG}/></center>
                 </div>
                 : 
                 <div style={{display: "flex", justifyContent: "center", alignItems: "center", minHeight: "90vh"}}>

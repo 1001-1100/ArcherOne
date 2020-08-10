@@ -914,7 +914,7 @@ class Survey extends Component {
             ['Temporal Demand', 'How hurried or rushed was the pace of the task?'],
             ['Performance', 'How successful were you in accomplishing what you were asked to do?'],
             ['Effort', 'How hard did you have to work to accomplish your level of performance?'],
-            ['Frustration', 'How insecure, discourages, irritated, stressed, and annoyed were you?'],
+            ['Frustration', 'How insecure, discouraged, irritated, stressed, and annoyed were you?'],
         ]
 
         const stressStatements = [
