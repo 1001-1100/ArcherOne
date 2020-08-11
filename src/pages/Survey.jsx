@@ -203,38 +203,30 @@ class Survey extends Component {
         if(this.state.smeqResult == 0 || this.state.name.trim() == "" || this.state.groupno.trim() == "" || this.state.method.trim() == ""){
             return false
         }
-        this.state.susResult.map(n => {
-            if(n === 0)
-                return false
-        })
-        this.state.ueqResult.map(n => {
-            if(n === 0)
-                return false
-        })
-        this.state.nasaResult.map(n => {
-            if(n === 0)
-                return false
-        })
-        this.state.panasResult.map(n => {
-            if(n === 0)
-                return false
-        })
-        this.state.stressResult.map(n => {
-            if(n === 0)
-                return false
-        })
-        this.state.cognitiveResult.map(n => {
-            if(n === 0)
-                return false
-        })
-        this.state.decisionResult.map(n => {
-            if(n === 0)
-                return false
-        })
-        this.state.groupResult.map(n => {
-            if(n === 0)
-                return false
-        })
+        if(this.state.susResult.includes(0)){
+            return false
+        }
+        if(this.state.ueqResult.includes(0)){
+            return false
+        }
+        if(this.state.nasaResult.includes(0)){
+            return false
+        }
+        if(this.state.panasResult.includes(0)){
+            return false
+        }
+        if(this.state.stressResult.includes(0)){
+            return false
+        }
+        if(this.state.cognitiveResult.includes(0)){
+            return false
+        }
+        if(this.state.decisionResult.includes(0)){
+            return false
+        }
+        if(this.state.groupResult.includes(0)){
+            return false
+        }
         return true
 
     }
