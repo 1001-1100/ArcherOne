@@ -430,7 +430,7 @@ class Survey extends Component {
                         labelPlacement="top"
                         />
                         <FormControlLabel
-             word           value="-1"
+                       value="-1"
                         control={<GreenRadio/>}
                         label="5"
                         labelPlacement="top"
