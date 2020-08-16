@@ -119,6 +119,7 @@ class SchedViewHome extends Component {
       allowEdit: props.allowEdit,
       matched: props.matched,
     });
+    this.setState({})
     console.log(props.palette);
   }
 
@@ -185,7 +186,7 @@ class SchedViewHome extends Component {
                   </Row>
                 }
                     <center>
-                      <ScheduleView height='300px' content={this.state.scheduleContent} earliest={this.state.earliest} latest={this.state.latest} palette={this.state.palette} matched={this.props.matched}/>
+                      <ScheduleView content={this.state.scheduleContent} earliest={this.state.earliest} latest={this.state.latest} palette={this.state.palette} matched={this.props.matched}/>
                     </center>
                   
                   <Row horizontal='center' flexShrink={1}>
@@ -207,7 +208,7 @@ class SchedViewHome extends Component {
                           </TableHead>
                           <TableBody>
                             {this.state.tableContent.map(row => (
-                              <StyledTableRow style={row.compareMatch ? {backgroundColor: "#b8d4cd"} : {}} key={row.classNmbr}>
+                              <StyledTableRow style={row.compareMatch ? {backgroundColor: "#b8d4cd"} : {backgroundColor: "0099CC"}} key={row.classNmbr}>
                                 <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {}}> {row.classNmbr} </StyledTableCell>
                                 <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {}}> {row.course} </StyledTableCell>
                                 <StyledTableCell style={(row.capacity <= row.enrolled) ? {color: "#0099CC"} : {}}> {row.section} </StyledTableCell>

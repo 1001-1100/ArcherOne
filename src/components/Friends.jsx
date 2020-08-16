@@ -392,7 +392,7 @@ class Friends extends React.Component{
 
                         {friendList.length != 0 &&
                             <DropdownItem header style={{ position: "sticky", bottom: "0", backgroundColor: "white", padding: "5px", marginLeft: "10px", marginTop: "10px"}}> 
-                                <div><Link to={{pathname: "/view_friends", state:{selectedFriendId: -1}}} id="dropdownFooter">More Details</Link></div>
+                                <div><Link to={{pathname: "/view_friends", state:{selectedFriendId: -1}}} id="dropdownFooter">Friends Page</Link></div>
                             </DropdownItem>
                         }
 

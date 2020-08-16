@@ -51,9 +51,21 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import { withRouter } from "react-router";
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import CompareIcon from '@material-ui/icons/Compare';
+import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+
+import {Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import {BrowserRouter as Router,Route,
+    Redirect,Switch} from 'react-router-dom';
 
 import _ from 'underscore';
 
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const styles = theme => ({
     pencilIcon:{ 
         marginLeft: "10px",
@@ -96,9 +108,9 @@ const styles = theme => ({
     buttonStyle:{
         textTransform: "none",
         textDecoration: "none",
-        width: "25%",
+        width: "60%",
         fontSize: "95%",
-        borderRadius: "25px",
+        borderRadius: "10px",
         padding: "10px",
         paddingLeft: "10px",
         paddingRight: "10px",
@@ -156,6 +168,15 @@ class FriendPage extends Component {
             profList: [],
             dropdownOpen: false,
             friendList: [],
+            openModalCompare: false,
+            friendListCompare: [],
+            openModalSuggest: false,
+            friendListSuggest: [],
+            copyBar: false,
+
+            compareList: [],
+            generateList: [],
+            doGenerate: false,
 
             daysList:[
                 {   id: 1,
@@ -240,6 +261,9 @@ class FriendPage extends Component {
             firstName: '',
             lastName: '',
             searchQuery: '',
+
+            highList: [],
+            lowList: [],
 
         }
 
@@ -471,11 +495,14 @@ class FriendPage extends Component {
         .then(res => {
             const requests = []
             const friendList = []
+            const friendListCompare = []
             res.data.map(friend => {
                 requests.push(this.createRequests(friend.first_name, friend.last_name, "accept", friend.id, friend.college, friend.degree, friend.id_num))
                 friendList.push(friend.id)
+                // friendListCompare.push({id: friend.id, checked: false})
             })
             this.setState({friendList})
+            // this.setState({friendListCompare})
             this.setState({requests}, () => {
                 if(this.props.location.state != undefined){
                     let selectedFriendId = this.props.location.state.selectedFriendId;
@@ -538,6 +565,10 @@ class FriendPage extends Component {
         this.filterSearchFriendsThrottled(e.target.value)
     }
 
+    handleSearchCompare = (e) => {
+        this.filterSearchFriendsThrottled(e.target.value)
+    }
+
     filterSearchFriends = (val) => {
         this.setState({searchQuery: val})
     }
@@ -557,10 +588,103 @@ class FriendPage extends Component {
         window.location.reload()
         this.setState({openAlert: false});
     }
-       
+
+    toggleModalCompare = () => {
+        var openModalVar = this.state.openModalCompare;
+        this.setState({openModalCompare: !openModalVar});
+      }
+    
+    handleCompareChange = (event) => {
+        var friendListCompare = [...this.state.friendListCompare];
+        friendListCompare.map(value=>{
+            if(value.id === Number(event.target.id)){
+                value.checked = event.target.checked;
+            }
+        })
+        this.setState({friendListCompare});
+        // this.setState({[event.target.name]: event.target.checked });
+    };
+
+    toggleModalSuggest = () => {
+        var openModalVar = this.state.openModalSuggest;
+        this.setState({openModalSuggest: !openModalVar});
+      }
+    
+    handleSuggestChange = (event) => {
+        var friendListSuggest = [...this.state.friendListSuggest];
+        friendListSuggest.map(value=>{
+            if(value.id === Number(event.target.id)){
+                value.checked = event.target.checked;
+            }
+        })
+        this.setState({friendListSuggest});
+        // this.setState({[event.target.name]: event.target.checked });
+    };
+
+    handleCopy = () => {
+        const courseOfferings = []
+        this.state.currentContent.props.offerings.map(o => {
+            courseOfferings.push(o.id)
+        })
+        axios.post('https://archerone-backend.herokuapp.com/api/schedules/',{
+            title: this.state.currentContent.props.titleName + ' ('+ this.state.firstName+')',
+            courseOfferings: courseOfferings,
+            user: localStorage.getItem('user_id') 
+        }).then(res => {
+            console.log(res.data)
+            this.setState({copyBar: true});
+            // axios.get('https://archerone-backend.herokuapp.com/api/users/'+user_id+'/')
+            // .then(res => {
+            //     const schedules = res.data.schedules;
+            //     schedules.push(sched_id);
+            //     axios.patch('https://archerone-backend.herokuapp.com/api/users/'+user_id+'/',{
+            //         schedules: schedules
+            //     }).then(res => {
+            //         console.log(res)
+                    
+            //     }).catch(err => {
+            //         console.log(err.response)
+            //     })
+            // })
+        }).catch(err => {
+            console.log(err.response)
+        })
+    }
+    
+    handleCloseCopyBar = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        this.setState({copyBar: false});
+    }
+
+    compareOnChange = (e, val) => {
+        const friends = []
+        val.map(f => {
+            friends.push(f.id)
+        })
+        this.setState({compareList: friends})
+        console.log(val)
+    }
+
+    generateOnChange = (e, val) => {
+        const friends = []
+        val.map(f => {
+            friends.push(f.id)
+        })
+        this.setState({generateList: friends})
+        console.log(val)
+    }
+
+    startGenerate = () => {
+        this.setState({doGenerate: true})
+    }
+
     render() {
         const friendList = [];
         const { classes } = this.props;
+        const friendListCompare = [];
 
         for(var i=0; i < this.state.requests.length; i++){
             if(this.state.requests[i].status == "accept"){
@@ -590,6 +714,13 @@ class FriendPage extends Component {
                 {this.props.menu()}
                 {this.state.dataReceived ? 
                 <div>
+                {this.state.doGenerate &&
+                <Redirect to={{
+                            pathname: '/coordinate_schedule',
+                            state: {friends: this.state.generateList}
+                        }}
+                />
+                }
                     <div class="friendMenu">
                         <div class="titleRow">
                             <center>
@@ -805,6 +936,24 @@ class FriendPage extends Component {
                                                         </td>
 
                                                     </tr>
+                                                   <tr>
+                                                        <th scope="row">High Priority Courses</th>
+                                                        <td>
+                                                        {this.state.highList.map(c => (
+                                                            <Chip label={c}></Chip>
+                                                        ))}
+                                                        </td>
+
+                                                    </tr>
+                                                   <tr>
+                                                        <th scope="row">Low Priority Courses</th>
+                                                        <td>
+                                                        {this.state.lowList.map(c => (
+                                                            <Chip label={c}></Chip>
+                                                        ))}
+                                                        </td>
+
+                                                    </tr>
                                                 </tbody>
                                             </Table>
                                             </div>
@@ -825,19 +974,129 @@ class FriendPage extends Component {
                                                 SECOND TRIMESTER, AY 2019 - 2020
                                                 </Typography>
                                         </Grid>
+
+                                        <Grid item xs={4} justify="center" alignItems="center" justifyContent="center" alignContent="center">
+                                            <center>
+                                          
+                                            <Button
+                                            variant="contained"
+                                            className={classes.buttonStyle}
+                                            startIcon={<FileCopyIcon/>}
+                                            onClick={this.handleCopy}
+                                            >
+                                                Copy Schedule
+                                            </Button>
+                                           
+                                            </center>
+                                        </Grid>
+                                        <Snackbar open={this.state.copyBar} autoHideDuration={4000} onClose={this.handleCloseCopyBar}>
+                                            <Alert onClose={this.handleCloseCopyBar} severity="success">
+                                            New schedule has been copied and saved! <a href="/" style={{color:"#D3D3D3"}}>View in homepage</a>
+                                            </Alert>
+                                        </Snackbar>
                                         
-                                        <Grid item xs={12} justify="center" alignItems="center" justifyContent="center" alignContent="center">
+                                        <Grid item xs={4} justify="center" alignItems="center" justifyContent="center" alignContent="center">
                                             <center>
                                             <Link to={'/compare_schedule/'+this.state.selectedFriendId}>
                                                     <Button
                                                     variant="contained"
                                                     className={classes.buttonStyle}
+                                                    startIcon={<CompareIcon/>}
+                                                    onClick={this.toggleModalCompare}
                                                     >
                                                         Compare Schedules
                                                     </Button>
-                                                </Link>
+                                            </Link>
                                             </center>
+                                            <Modal isOpen={this.state.openModalCompare} toggle={this.toggleModalCompare} returnFocusAfterClose={false} backdrop={true} data-keyboard="false" >
+                                                <ModalHeader toggle={this.toggleModalCompare}><h4>Compare Multiple Schedules</h4></ModalHeader>
+                                                <ModalBody>
+                                                    <h5>Who do you want to compare schedules with?</h5>
+                                                    <p>Maximum of 4 friends</p>
+                                                    <div style={{justifyContent:"center", justify: "center", justifyItems: "center", margin: "auto 10px"}}>
+                                                        <Autocomplete
+                                                            multiple
+                                                            id="checkboxes-tags-demo"
+                                                            options={friendList}
+                                                            disableCloseOnSelect
+                                                            getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
+                                                            renderOption={(option, { selected }) => (
+                                                                <React.Fragment>
+                                                                <Checkbox
+                                                                    icon={icon}
+                                                                    checkedIcon={checkedIcon}
+                                                                    style={{ marginRight: 8 }}
+                                                                    checked={selected}
+                                                                />
+                                                                {option.firstName + ' ' + option.lastName}
+                                                                </React.Fragment>
+                                                            )}
+                                                            // style={{ width: 500 }}
+                                                            renderInput={(params) => (
+                                                                <TextField {...params} variant="outlined" label="Checkboxes" placeholder="Favorites" />
+                                                            )}
+                                                            onChange={this.compareOnChange}
+                                                        />
+                                                    </div>
+                                                </ModalBody>
+                                                <ModalFooter>
+                                                    <Button color="primary">Done</Button>
+                                                    <Button style={{color: "gray"}} onClick={this.toggleModalCompare}>Cancel</Button>
+                                                </ModalFooter>
+                                            </Modal>  
                                         </Grid>
+
+                                        <Grid item xs={4} justify="center" alignItems="center" justifyContent="center" alignContent="center">
+                                            <center>
+    
+                                                    <Button
+                                                    variant="contained"
+                                                    className={classes.buttonStyle}
+                                                    startIcon={<EventAvailableIcon/>}
+                                                    onClick={this.toggleModalSuggest}
+                                                    >
+                                                        Coordinate Schedules
+                                                    </Button>
+                                            </center>
+                                            <Modal isOpen={this.state.openModalSuggest} toggle={this.toggleModalSuggest} returnFocusAfterClose={false} backdrop={true} data-keyboard="false" >
+                                                <ModalHeader toggle={this.toggleModalSuggest}><h4>Generate Suggested Friend Schedules</h4></ModalHeader>
+                                                <ModalBody>
+                                                    <h5>Generate possible schedules you can share with your friends. Who do you want to create a schedule with?</h5>
+                                                    <p>Maximum of 4 friends</p>
+                                                    <div style={{justifyContent:"center", justify: "center", justifyItems: "center", margin: "auto 10px"}}>
+                                                        <Autocomplete
+                                                            multiple
+                                                            id="checkboxes-tags-demo"
+                                                            options={friendList}
+                                                            disableCloseOnSelect
+                                                            getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
+                                                            renderOption={(option, { selected }) => (
+                                                                <React.Fragment>
+                                                                <Checkbox
+                                                                    icon={icon}
+                                                                    checkedIcon={checkedIcon}
+                                                                    style={{ marginRight: 8 }}
+                                                                    checked={selected}
+                                                                />
+                                                                {option.firstName + ' ' + option.lastName}
+                                                                </React.Fragment>
+                                                            )}
+                                                            // style={{ width: 500 }}
+                                                            renderInput={(params) => (
+                                                                <TextField {...params} variant="outlined" label="Checkboxes" placeholder="Favorites" />
+                                                            )}
+                                                            onChange={this.generateOnChange}
+                                                        />
+                                                    </div>
+                                                </ModalBody>
+                                                <ModalFooter>
+                                                    <Button onClick={this.startGenerate} color="primary">Done</Button>
+                                                    <Button style={{color: "gray"}} onClick={this.toggleModalSuggest}>Cancel</Button>
+                                                </ModalFooter>
+                                            </Modal>  
+                                        </Grid>
+
+                                        
 
                                         <Grid item xs={12} className={'gridSavedContent'}>
                                             <div id='savedContent' className='savedContent' style={{height: "80em", color:"black"}}>

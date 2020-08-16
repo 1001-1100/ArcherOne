@@ -16,6 +16,7 @@ import ResetPasswordCompletePage from "./pages/ResetPasswordComplete.jsx";
 import ProfilePage from "./pages/Profile.jsx";
 import FlowchartPage from "./pages/Flowchart.jsx";
 import GenerateSchedulePage from "./pages/GenerateSchedule.jsx";
+import GenerateScheduleFriendsPage from "./pages/GenerateScheduleFriends.jsx";
 import PreferencesPage from "./pages/Preferences.jsx";
 import SearchCoursesPage from "./pages/SearchCourses.jsx";
 import SearchCoursesSimplePage from "./pages/SearchCoursesSimple.jsx";
@@ -322,6 +323,16 @@ class App extends Component {
     )
   }
 
+  generateScheduleFriendsPage = (props) => {
+    console.log(props)
+    return (
+      <GenerateScheduleFriendsPage
+        menu={this.menu}
+        props={props}
+      />
+    )
+  }
+
   surveyPage = (props) => {
     return (
       <SurveyPage
@@ -396,6 +407,9 @@ class App extends Component {
           }
           {this.state.logged_in && 
           <Route exact path="/compare_schedule/:id/" component={this.compareSchedulePage} />
+          }
+          {this.state.logged_in && 
+          <Route exact path="/coordinate_schedule/" component={this.generateScheduleFriendsPage} />
           }
           <Route exact path="/logout" component={this.handle_logout} />
           {/* <Route exact path="/404" component={MainPage} /> change to 404 page */}

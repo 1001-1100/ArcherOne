@@ -197,11 +197,11 @@ class ScheduleView extends Component {
     }
 
     componentWillReceiveProps(props){
-      var earliest = 9;
+      var earliest = 7;
       if(props.earliest != undefined){
         earliest = props.earliest;
       }
-      var latest = 17;
+      var latest = 19;
       if(props.latest != undefined){
         latest = props.latest;
       }
@@ -240,7 +240,8 @@ class ScheduleView extends Component {
           // console.log(this.state.matched.findIndex(course => course === data.title));
           changeColor = <Appointments.Appointment
               {...restProps}
-              style={this.state.matched.includes(data.title) ? { ...style, backgroundColor: this.state.matchPalette[this.state.matched.findIndex(course => course === data.title)], whiteSpace: 'normal', border: 'dashed #65656f'} : { ...style, backgroundColor: data.color, whiteSpace: 'normal'}}
+              // style={this.state.matched.includes(data.title) ? { ...style, backgroundColor: this.state.matchPalette[this.state.matched.findIndex(course => course === data.title)], whiteSpace: 'normal', border: 'dashed #65656f'} : { ...style, backgroundColor: data.color, whiteSpace: 'normal'}}
+              style={this.state.matched.includes(data.title) ? { ...style, backgroundColor: data.color, whiteSpace: 'normal', border: 'dashed #65656f'} : { ...style, backgroundColor: data.color, whiteSpace: 'normal'}}
               // className="CLASS_ROOM1"
               data={restProps.data.title}
             />
@@ -248,7 +249,8 @@ class ScheduleView extends Component {
           return (
             <Appointments.Appointment
               {...restProps}
-              style={data.title in this.state.matched ? { ...style, backgroundColor:this.state.matchPalette[this.state.matched.findIndex(course => course === data.title)], whiteSpace: 'normal', border: 'dashed #65656f'} : { ...style, backgroundColor: data.color, whiteSpace: 'normal'}}
+              // style={data.title in this.state.matched ? { ...style, backgroundColor:this.state.matchPalette[this.state.matched.findIndex(course => course === data.title)], whiteSpace: 'normal', border: 'dashed #65656f'} : { ...style, backgroundColor: data.color, whiteSpace: 'normal'}}
+              style={data.title in this.state.matched ? { ...style, backgroundColor:data.color, whiteSpace: 'normal', border: 'dashed #65656f'} : { ...style, backgroundColor: data.color, whiteSpace: 'normal'}}
               // className="CLASS_ROOM1"
               data={restProps.data.title}
             />
@@ -276,7 +278,7 @@ class ScheduleView extends Component {
 
           coloredClasses.push({title: data.title, color: this.state.palette[palIndex]});
           palIndex = palIndex + 1;
-          if(palIndex == coloredClasses.length + 1){
+          if(palIndex == coloredClasses.length + 1 || palIndex == this.state.palette.length){
             palIndex = 0;
           }
         }

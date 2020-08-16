@@ -78,15 +78,11 @@ import './fonts/VarelaRound-Regular.ttf'
 }
 
 .viewCourses{
-    width: 65%;
     margin-top: 20px;
-    position: absolute;
 }
 
 .viewCoursesHomepage{
-    width: 65%;
     margin-top: 20px;
-    position: absolute;
 }
 
 .savedSchedContent{
@@ -165,7 +161,7 @@ import './fonts/VarelaRound-Regular.ttf'
 }
 
 .savedContent{
-    height: 85em;
+    /* height: 85em; */
     /* width: 100vh;
     margin-right: 20px;
     margin-left: 20px;

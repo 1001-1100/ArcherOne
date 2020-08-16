@@ -294,8 +294,16 @@ class Index extends Component {
       }, () => {
         const currentClasses = [];
         const offerings = this.state.currentContent.props.offerings
-        for(var i = 0 ; i < offerings.length ; i += 2){
-          currentClasses.push({title: offerings[i].course + ' ' + offerings[i].section, classnumber: offerings[i].classnumber, course: offerings[i].course_id})
+        for(var i = 0 ; i < offerings.length ; i += 1){
+          var alreadyAdded = false;
+          for(var j = 0 ; j < currentClasses.length ; j += 1){
+            if(offerings[i].classnumber == currentClasses[j].classnumber){
+              alreadyAdded = true
+            }
+          }
+          if(!alreadyAdded){
+            currentClasses.push({title: offerings[i].course + ' ' + offerings[i].section, classnumber: offerings[i].classnumber, course: offerings[i].course_id})
+          }
         }
         this.setState({currentClasses})
       });
@@ -454,7 +462,7 @@ class Index extends Component {
 
   setSchedInfo = () => {
     console.log(this.state.schedules)
-    if(this.state.schedules.length > 0){      
+    if(this.state.schedules.length > 0){ 
       const palette = JSON.parse(localStorage.getItem('palette'))
       var generatedContents = this.state.schedules.map((item, index) =>
           <SchedViewHome key={item.id} id={item.id} offerings={item.offerings} tableContent={item.tableContent} scheduleContent={item.scheduleContent} titleName={item.title} earliest={item.earliest} latest={item.latest} updateSchedTitle={this.updateSchedTitle} palette={palette} allowEdit={this.state.allowEdit}/>
@@ -466,8 +474,16 @@ class Index extends Component {
       this.setState({currentContent: generatedContents[0]},() => {
         const currentClasses = [];
         const offerings = this.state.currentContent.props.offerings
-        for(var i = 0 ; i < offerings.length ; i += 2){
-          currentClasses.push({title: offerings[i].course + ' ' + offerings[i].section, classnumber: offerings[i].classnumber, course: offerings[i].course_id})
+        for(var i = 0 ; i < offerings.length ; i += 1){
+          var alreadyAdded = false;
+          for(var j = 0 ; j < currentClasses.length ; j += 1){
+            if(offerings[i].classnumber == currentClasses[j].classnumber){
+              alreadyAdded = true
+            }
+          }
+          if(!alreadyAdded){
+            currentClasses.push({title: offerings[i].course + ' ' + offerings[i].section, classnumber: offerings[i].classnumber, course: offerings[i].course_id})
+          }
         }
         this.setState({currentClasses, scheduleChanged: true})
       })
@@ -480,23 +496,23 @@ class Index extends Component {
     // var index = newArray.findIndex(this.state.currentContent);
     axios.patch('https://archerone-backend.herokuapp.com/api/schedules/'+currentContent.props.id+'/',{
       title: text
+    }).then(res => {
+      const newContent = <SchedViewHome key={currentContent.props.id} id={currentContent.props.id} scheduleContent={currentContent.props.scheduleContent} tableContent={currentContent.props.tableContent} earliest={currentContent.props.earliest} latest={currentContent.props.latest} titleName={text} updateSchedTitle={this.updateSchedTitle} allowEdit={this.state.allowEdit} palette={currentContent.props.palette}/>
+
+      this.state.generatedContents.map(value=>{
+          if(value.key == this.state.currentContent.key){
+              newArray.push(newContent)
+          }else{
+              newArray.push(value)
+          }
+      })
+
+      this.setState({generatedContents: newArray});
+      this.setState({currentContent: newContent});
+      window.location.reload();
     }).catch(err => {
       console.log(err.response)
     })
-
-    const newContent = <SchedViewHome key={currentContent.props.id} id={currentContent.props.id} scheduleContent={currentContent.props.scheduleContent} tableContent={currentContent.props.tableContent} earliest={currentContent.props.earliest} latest={currentContent.props.latest} titleName={text} updateSchedTitle={this.updateSchedTitle} allowEdit={this.state.allowEdit} palette={currentContent.props.palette}/>
-
-    this.state.generatedContents.map(value=>{
-        if(value.key == this.state.currentContent.key){
-            newArray.push(newContent)
-        }else{
-            newArray.push(value)
-        }
-    })
-
-    this.setState({generatedContents: newArray});
-    this.setState({currentContent: newContent});
-    window.location.reload();
   }
 
  deleteSchedule=()=>{
@@ -724,8 +740,9 @@ class Index extends Component {
       snackBarVariables[0].snackBarSuccess = true;
       // snackBarVariables[1].snackBarFailed = true;
       this.setState({snackBarVariables});
+      
       console.log(snackBarVariables);
-      // window.location.reload();
+      window.location.reload();
     }).catch(err => {
       console.log(err.response)
     })
@@ -760,6 +777,32 @@ class Index extends Component {
 
   tutorialDone = () => {
     localStorage.setItem('steps',false)
+  }
+
+  pagination = () => {
+    return(
+      <div id="viewCoursesHome" className = "paginationContainer" style={(this.state.generatedContents != null) ? {} : {display: "none"}}>
+            <Pagination aria-label="Page navigation example" style={{justifyContent: "center"}}>
+                <PaginationItem disabled={this.state.currentPage <= 0}>
+                    <PaginationLink onClick={e => this.handlePageChange(e, this.state.currentPage - 1)}
+                        previous/>
+                </PaginationItem>
+                {[...Array(this.state.pagesCount)].map((page, i) => 
+                    <PaginationItem active={i === this.state.currentPage} key={i} className={'paginationItemStyle'}>
+                        <PaginationLink onClick={e => this.handlePageChange(e, i)} className={'paginationLinkStyle'}>
+                        {i + 1}
+                        </PaginationLink>
+                    </PaginationItem>
+                    )}
+                <PaginationItem disabled={this.state.currentPage >= this.state.generatedContents.length - 1}>
+                    <PaginationLink
+                        onClick={e => this.handlePageChange(e, this.state.currentPage + 1)}
+                        next
+                    />
+                    </PaginationItem>
+            </Pagination>
+      </div>
+    )
   }
 
     render() {
@@ -831,6 +874,7 @@ class Index extends Component {
                   </div>
                   }
                 </div>
+                {this.pagination()}
               </Grid>
 
               {/* <Grid item xs={1}>
@@ -1000,28 +1044,7 @@ class Index extends Component {
               </Grid>
 
               <Grid item xs={12} justify="center" alignItems="center">
-                <div id="viewCoursesHome" className = "paginationContainer" style={(this.state.generatedContents != null) ? {} : {display: "none"}}>
-                      <Pagination aria-label="Page navigation example" style={{justifyContent: "center"}}>
-                          <PaginationItem disabled={this.state.currentPage <= 0}>
-                              <PaginationLink onClick={e => this.handlePageChange(e, this.state.currentPage - 1)}
-                                  previous/>
-                          </PaginationItem>
-                          {[...Array(this.state.pagesCount)].map((page, i) => 
-                              <PaginationItem active={i === this.state.currentPage} key={i} className={'paginationItemStyle'}>
-                                  <PaginationLink onClick={e => this.handlePageChange(e, i)} className={'paginationLinkStyle'}>
-                                  {i + 1}
-                                  </PaginationLink>
-                              </PaginationItem>
-                              )}
-                          <PaginationItem disabled={this.state.currentPage >= this.state.generatedContents.length - 1}>
-                              <PaginationLink
-                                  onClick={e => this.handlePageChange(e, this.state.currentPage + 1)}
-                                  next
-                              />
-                              
-                              </PaginationItem>
-                      </Pagination>
-                </div>
+
               </Grid>
 
             </Grid>

@@ -1193,7 +1193,7 @@ class GenerateSchedule extends Component {
                                         </div>
                                         <Snackbar open={this.state.snackBar} autoHideDuration={4000} onClose={this.handleCloseSnackBar}>
                                             <Alert onClose={this.handleCloseSnackBar} severity="success">
-                                                Your schedule have been successfully saved! View in <a href="/" style={{color:"#D3D3D3"}}>homepage</a>
+                                                Your schedule have been successfully saved! <a href="/" style={{color:"#D3D3D3"}}>View in homepage</a>
                                             </Alert>
                                         </Snackbar>
                                     </div>

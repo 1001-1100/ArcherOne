@@ -812,7 +812,7 @@ class Survey extends Component {
             'I would imagine that most people will learn to use this system very quickly',
             'I found the system very cumbersome (difficult/awkward) to use the system very quickly',
             'I felt very confident using the system',
-            'I needed to learn a lot of things before I could get going with this system confident using the system',
+            'I needed to learn a lot of things before I could get going with this system',
         ]
 
         const cognitiveStatements = [

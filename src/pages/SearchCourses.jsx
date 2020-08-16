@@ -324,9 +324,8 @@ class SearchCourses extends Component {
     }
 
     handleSearch = (e, val) =>{
-      this.setState({selectedCourses: val}, () => {
-        localStorage.setItem('selectedCourses', JSON.stringify(val))
-      })
+      this.state.selectedCourses = val;
+      localStorage.setItem('selectedCourses', JSON.stringify(val))
     }
     
     handleSearchPress = (e) => {

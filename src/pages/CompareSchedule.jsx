@@ -205,7 +205,7 @@ class CompareSchedule extends Component {
 
                     count += 1;
                 })
-                schedules.push({
+                schedules.unshift({
                     id: newSchedule.id,
                     title: newSchedule.title,
                     scheduleContent: scheduleContent,
@@ -286,7 +286,7 @@ class CompareSchedule extends Component {
 
                         count += 1;
                     })
-                    schedules.push({
+                    schedules.unshift({
                         id: newSchedule.id,
                         title: newSchedule.title,
                         scheduleContent: scheduleContent,
@@ -318,35 +318,158 @@ class CompareSchedule extends Component {
         })
 
       }
+
+      const friends = []
+      friends.push(this.props.params.id)
+      axios.post('https://archerone-backend.herokuapp.com/api/generateschedulefriends/',{
+        user_id: localStorage.getItem('user_id'),
+        filterFull: true,
+        friends: friends
+      }).then(res => {
+        console.log(res.data)
+      }).catch(err => {
+        console.log(err.response)
+      })
     }
     
     handlePageChange = (e,index, type) => {
+        this.setState({dataReceived: false}, () => {
+          if(type == "user"){
+              var user = this.state.generatedContentsUser[index];
+              var friend = this.state.currentContentFriend;
+              var userContent = user.props.tableContent
+              var friendContent = friend.props.tableContent
+              user.props.matched.length = 0;
+              friend.props.matched.length = 0; 
+              for(var k = 0 ; k < userContent.length ; k++){
+                for(var l = 0 ; l < friendContent.length ; l++){
+                  user.props.tableContent[k].compareMatch = false
+                  friend.props.tableContent[l].compareMatch = false 
+                }
+              }
+              for(var k = 0 ; k < userContent.length ; k++){
+                for(var l = 0 ; l < friendContent.length ; l++){
+                  if(userContent[k].classNmbr == friendContent[l].classNmbr){
+                    user.props.tableContent[k].compareMatch = true
+                    friend.props.tableContent[l].compareMatch = true
+                    // user[i].props.matched
+                    // friend[j].props.matched
+                    user.props.matched.push(userContent[k].course + ' ' + userContent[k].section);
+                    friend.props.matched.push(userContent[k].course + ' ' + userContent[k].section);
+                  }else{
+                
+                    // console.log("no hit")
+                  }
+                }
+              }
+              this.setState({currentContentUser: user})
+              this.setState({currentContentFriend: friend})
+              this.setState({currentPageUser: index})
+              this.setState({currentPageFriend: this.state.currentPageFriend})
+              this.setState({dataReceived: true})
+              console.log("pressed page " + index);
+          }else if (type == "friend"){
+              var user = this.state.currentContentUser;
+              var friend = this.state.generatedContentsFriend[index];
+              var userContent = user.props.tableContent
+              var friendContent = friend.props.tableContent
+              user.props.matched.length = 0;
+              friend.props.matched.length = 0;
+              for(var k = 0 ; k < userContent.length ; k++){
+                for(var l = 0 ; l < friendContent.length ; l++){
+                  user.props.tableContent[k].compareMatch = false
+                  friend.props.tableContent[l].compareMatch = false 
+                }
+              }
+              for(var k = 0 ; k < userContent.length ; k++){
+                for(var l = 0 ; l < friendContent.length ; l++){
+                  if(userContent[k].classNmbr == friendContent[l].classNmbr){
+                    user.props.tableContent[k].compareMatch = true
+                    friend.props.tableContent[l].compareMatch = true
+                    // user[i].props.matched
+                    // friend[j].props.matched
+                    user.props.matched.push(userContent[k].course + ' ' + userContent[k].section);
+                    friend.props.matched.push(userContent[k].course + ' ' + userContent[k].section);
+                  }else{
+                
+                    // console.log("no hit")
+                  }
+                }
+              }
+              this.setState({currentContentUser: user})
+              this.setState({currentContentFriend: friend})
+              this.setState({currentPageUser: this.state.currentPageUser})
+              this.setState({currentPageFriend: index})
+              this.setState({dataReceived: true})
+              console.log("pressed page " + index);
+              
+          }
+        })
+
+
+
+        // var newMatched = [];
+        // for(var i = 0 ; i < user.length ; i++){
+        //   for(var j = 0 ; j < friend.length ; j++){
+        //     console.log(user)
+        //     console.log(friend)
+        //     var userContent = user[i].props.tableContent
+        //     var friendContent = friend[j].props.tableContent
+        //     var newMatched = [];
+        //     for(var k = 0 ; k < userContent.length ; k++){
+        //       for(var l = 0 ; l < friendContent.length ; l++){
+        //         if(userContent[k].classNmbr == friendContent[l].classNmbr){
+        //           user[i].props.tableContent[k].compareMatch = true
+        //           friend[j].props.tableContent[l].compareMatch = true
+        //           // user[i].props.matched
+        //           // friend[j].props.matched
+        //           user[i].props.matched.push(userContent[k].course + ' ' + userContent[k].section);
+        //           friend[j].props.matched.push(userContent[k].course + ' ' + userContent[k].section);
+        //           console.log(user)
+        //           console.log(friend)
+                 
+        //         }else{
+        //           // user[i].props.tableContent.compareMatch = false
+        //           // friend[i].props.tableContent.compareMatch = false
+        //           // this.setState({generatedContentsUser: user})
+        //           // this.setState({generatedContentsFriend: friend})
+        //           // console.log("no hit")
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
+        // this.setState({generatedContentsUser: user})
+        // this.setState({generatedContentsFriend: friend})
+
         
-        if(type == "user"){
-            this.setState(state =>{
-            var currentContentUser = state.generatedContentsUser[index];
-            return {currentContentUser};
-          });
+        //           console.log(user)
+        //           console.log(friend)
+        //           var userContent = user.props.tableContent
+        //           var friendContent = friend.props.tableContent
+        //           for(var k = 0 ; k < userContent.length ; k++){
+        //             for(var l = 0 ; l < friendContent.length ; l++){
+        //               if(userContent[k].classNmbr == friendContent[l].classNmbr){
+        //                 user.props.tableContent[k].compareMatch = true
+        //                 friend.props.tableContent[l].compareMatch = true
+        //                 // user[i].props.matched
+        //                 // friend[j].props.matched
+        //                 user.props.matched.push(userContent[k].course + ' ' + userContent[k].section);
+        //                 friend.props.matched.push(userContent[k].course + ' ' + userContent[k].section);
+        //                 console.log(user)
+        //                 console.log(friend)
+        //                 }else{
+                      
+        //                   // console.log("no hit")
+        //                 }
+        //               }
+        //             }
 
-          this.setState({currentPageUser: index});
-          this.setState(state =>{
-            var currentPageUser = index;
-            return {currentPageUser};
-          });
-          console.log("pressed page " + index);
-        }else if (type == "friend"){
-            this.setState(state =>{
-            var currentContentFriend = state.generatedContentsFriend[index];
-            return {currentContentFriend};
-          });
-
-          this.setState({currentPageFriend: index});
-          this.setState(state =>{
-            var currentPageFriend = index;
-            return {currentPageFriend};
-          });
-          console.log("pressed page " + index);
-        }
+        // this.setState({currentContentUser: user}, ()=>{
+        //   this.setState({currentContentFriend: friend})
+        // })
+        
+        
 
   }
     
@@ -361,73 +484,85 @@ componentWillMount(){
 
 setSchedInfo = () => {
     const palette = JSON.parse(localStorage.getItem('palette'))
+    const paletteOne = ['#1161c6','#136cdd','#1d79ec','#3587ee','#4d95f0','#64a3f2','#7cb1f4']
+    const paletteTwo = ['#c61a11','#dd1e13','#ec291d','#ee3f35','#f0554d','#f26c64','#f4827c']
     
         console.log(this.state.schedulesUser)
          var generatedContentsUser = this.state.schedulesUser.map((item, index) =>
-        <SchedViewHome key={item.id} id={item.id} offerings={item.offerings} tableContent={item.tableContent} scheduleContent={item.scheduleContent} titleName={item.title} allowEdit={this.state.allowEdit} palette={palette} matched={[]}/>
+        <SchedViewHome key={item.id} id={item.id} offerings={item.offerings} tableContent={item.tableContent} scheduleContent={item.scheduleContent} titleName={item.title} allowEdit={this.state.allowEdit} earliest={7} latest={18} palette={paletteOne} matched={[]}/>
         );
         // this.setState({hideGenContent: false});
 
         console.log(this.state.schedulesFriend)
          var generatedContentsFriend = this.state.schedulesFriend.map((item, index) =>
-        <SchedViewHome key={item.id} id={item.id} offerings={item.offerings} tableContent={item.tableContent} scheduleContent={item.scheduleContent} titleName={item.title} allowEdit={this.state.allowEdit} palette={palette} matched={[]}/>
+        <SchedViewHome key={item.id} id={item.id} offerings={item.offerings} tableContent={item.tableContent} scheduleContent={item.scheduleContent} titleName={item.title} allowEdit={this.state.allowEdit} earliest={7} latest={18} palette={paletteTwo} matched={[]}/>
         );
         // this.setState({hideGenContent: false});
         this.setState({generatedContentsFriend}, ()=>{
             this.setState({currentContentFriend: generatedContentsFriend[0]}, () => {
 //                this.setState({hasSelectedFriend: true})
               console.log(this.state.currentContentFriend)
-
+              this.setState({generatedContentsUser}, ()=>{
+                  this.setState({currentContentUser: generatedContentsUser[0]}, () => {
+      //                this.setState({hasSelectedFriend: true})
+                    console.log(this.state.currentContentUser)
+                      var user = this.state.currentContentUser;
+                      var friend = this.state.currentContentFriend;
+                      console.log(user)
+                      console.log(friend)
+                      var userContent = user.props.tableContent
+                      var friendContent = friend.props.tableContent
+                      for(var k = 0 ; k < userContent.length ; k++){
+                        for(var l = 0 ; l < friendContent.length ; l++){
+                          if(userContent[k].classNmbr == friendContent[l].classNmbr){
+                            user.props.tableContent[k].compareMatch = true
+                            friend.props.tableContent[l].compareMatch = true
+                            // user[i].props.matched
+                            // friend[j].props.matched
+                            user.props.matched.push(userContent[k].course + ' ' + userContent[k].section);
+                            friend.props.matched.push(userContent[k].course + ' ' + userContent[k].section);
+                            console.log(user)
+                            console.log(friend)
+                          }else{
+                        
+                            // console.log("no hit")
+                          }
+                        }
+                      }
+                      this.setState({currentContentUser: user})
+                      this.setState({currentContentFriend: friend})
+                  })
+                  this.setState({pagesCountUser: generatedContentsUser.length});
+                  this.setState({currentPageUser: 0})
+              });
             })
             this.setState({pagesCountFriend: generatedContentsFriend.length});
             this.setState({currentPageFriend: 0})
          });
-        this.setState({generatedContentsUser}, ()=>{
-            this.setState({currentContentUser: generatedContentsUser[0]}, () => {
-//                this.setState({hasSelectedFriend: true})
-              console.log(this.state.currentContentUser)
+        // var user = this.state.generatedContentsUser;
+        // var friend = this.state.generatedContentsFriend;
+        // var newMatched = [];
+        // for(var i = 0 ; i < user.length ; i++){
+        //   for(var j = 0 ; j < friend.length ; j++){
+        //     console.log(user)
+        //     console.log(friend)
+        //     var userContent = user[i].props.tableContent
+        //     var friendContent = friend[j].props.tableContent
+        //     var newMatched = [];
+        //     for(var k = 0 ; k < userContent.length ; k++){
+        //       for(var l = 0 ; l < friendContent.length ; l++){
+        //         if(userContent[k].classNmbr == friendContent[l].classNmbr){
+        //           user[i].props.tableContent[k].compareMatch = true
+        //           friend[j].props.tableContent[l].compareMatch = true
+        //           // user[i].props.matched
+        //           // friend[j].props.matched
+        //           user[i].props.matched.push(userContent[k].course + ' ' + userContent[k].section);
+        //           friend[j].props.matched.push(userContent[k].course + ' ' + userContent[k].section);
+        //           console.log(user)
+        //           console.log(friend)
+         
 
-            })
-            this.setState({pagesCountUser: generatedContentsUser.length});
-            this.setState({currentPageUser: 0})
-        });
 
-        var user = this.state.generatedContentsUser;
-        var friend = this.state.generatedContentsFriend;
-        var newMatched = [];
-        for(var i = 0 ; i < user.length ; i++){
-          for(var j = 0 ; j < friend.length ; j++){
-            console.log(user)
-            console.log(friend)
-            var userContent = user[i].props.tableContent
-            var friendContent = friend[j].props.tableContent
-            var newMatched = [];
-            for(var k = 0 ; k < userContent.length ; k++){
-              for(var l = 0 ; l < friendContent.length ; l++){
-                if(userContent[k].classNmbr == friendContent[l].classNmbr){
-                  user[i].props.tableContent[k].compareMatch = true
-                  friend[j].props.tableContent[l].compareMatch = true
-                  // user[i].props.matched
-                  // friend[j].props.matched
-                  user[i].props.matched.push(userContent[k].course + ' ' + userContent[k].section);
-                  friend[i].props.matched.push(userContent[k].course + ' ' + userContent[k].section);
-                  console.log(user)
-                  console.log(friend)
-                 
-                }else{
-                  // user[i].props.tableContent.compareMatch = false
-                  // friend[i].props.tableContent.compareMatch = false
-                  // this.setState({generatedContentsUser: user})
-                  // this.setState({generatedContentsFriend: friend})
-                  // console.log("no hit")
-                }
-              }
-            }
-          }
-        }
-        this.setState({generatedContentsUser: user})
-        this.setState({generatedContentsFriend: friend})
-        console.log(newMatched);
 
   }
     
@@ -451,66 +586,128 @@ setSchedInfo = () => {
                 {this.state.dataReceived ?
                 <div>
                      <Grid container style={{marginTop: "30px"}}>
+                     <Grid item xs={12} justify="center" alignItems="center" justifyContent="center" alignContent="center">
+                        {/* <center>
+
+                                <Button
+                                variant="contained"
+                                className={classes.buttonStyle}
+                                startIcon={<EventAvailableIcon/>}
+                                onClick={this.toggleModalSuggest}
+                                >
+                                    Coordinate Schedules
+                                </Button>
+                        </center>
+                              <Modal isOpen={this.state.openModalSuggest} toggle={this.toggleModalSuggest} returnFocusAfterClose={false} backdrop={true} data-keyboard="false" >
+                                  <ModalHeader toggle={this.toggleModalSuggest}><h4>Generate Suggested Friend Schedules</h4></ModalHeader>
+                                  <ModalBody>
+                                      <h5>Generate possible schedules you can share with your friends. Who do you want to create a schedule with?</h5>
+                                      <p>Maximum of 4 friends</p>
+                                      <div style={{justifyContent:"center", justify: "center", justifyItems: "center", margin: "auto 10px"}}>
+                                          <TextField
+                                              key={"friendPage_searchFriends"}
+                                              id="friendPage_searchFriends"
+                                              variant= "outlined"
+                                              
+                                              style={{ width: "95%", marginBottom: "10%", justifyContent: "center" }}
+                                              filterSelectedOptions
+                                              label="Search Friends" 
+                                              onChange={this.handleSearchChange}
+                                             
+                                              />
+                                             
+                                      </div>
+
+                                      <ListGroup flush style={{height: "50%", overflowX: "hidden"}}>
+                                          
+                                          {friendList.map((friend, index) => (
+                                              <ListGroupItem action>
+                                                  <Row>
+                            
+                                                      <Col xs={12} md={8}>
+                                                      <FormControlLabel
+                                                          control = {<GreenCheckbox checked={this.state.friendListSuggest[index].checked} onChange={this.handleSuggestChange} id={index} color="primary"/>}label={friend.firstName + " " + friend.lastName} />
+                                                         
+                                                      </Col>
+
+                                                      
+                                                  </Row>            
+                                              </ListGroupItem>
+                                          ))}
+
+                                          {friendList.length == 0 &&
+                                              <ListGroupItem>
+                                                  <center>No Friends</center>
+                                              </ListGroupItem>
+                                          }
+                                      </ListGroup>
+                                  </ModalBody>
+                                  <ModalFooter>
+                                      <Link to={'/compare_schedule/'+this.state.selectedFriendId}> 
+                                      <Button color="primary">Done</Button>
+                                      </Link>
+                                      <Button style={{color: "gray"}} onClick={this.toggleModalSuggest}>Cancel</Button>
+                                  </ModalFooter>
+                              </Modal>   */}
+                          </Grid>
                           <Grid item xs={6}>
 
                            <center><h6>Your Schedule</h6></center>
                             <div className={"scheduleContent"}>
                                   <center><span>{this.state.currentContentUser}</span></center>
-                            </div>
-                         
-                              <div className = "paginationContainer" style={(this.state.generatedContentsUser != null) ? {} : {display: "none"}}>
-                                  <Pagination aria-label="Page navigation example" style={{justifyContent: "center"}}>
-                                      <PaginationItem disabled={this.state.currentPageUser <= 0}>
-                                          <PaginationLink onClick={e => this.handlePageChange(e, this.state.currentPageUser - 1, "user")}
-                                              previous/>
-                                      </PaginationItem>
-                                      {[...Array(this.state.pagesCountUser)].map((page, i) => 
-                                          <PaginationItem active={i === this.state.currentPageUser} key={i} className={'paginationItemStyle'}>
-                                              <PaginationLink onClick={e => this.handlePageChange(e, i, "user")} className={'paginationLinkStyle'}>
-                                              {i + 1}
-                                              </PaginationLink>
+                                  <div className = "paginationContainer" style={(this.state.generatedContentsUser != null) ? {} : {display: "none"}}>
+                                      <Pagination aria-label="Page navigation example" style={{justifyContent: "center"}}>
+                                          <PaginationItem disabled={this.state.currentPageUser <= 0}>
+                                              <PaginationLink onClick={e => this.handlePageChange(e, this.state.currentPageUser - 1, "user")}
+                                                  previous/>
                                           </PaginationItem>
-                                          )}
-                                      <PaginationItem disabled={this.state.currentPageUser >= this.state.generatedContentsUser.length - 1}>
-                                          <PaginationLink
-                                              onClick={e => this.handlePageChange(e, this.state.currentPageUser + 1, "user")}
-                                              next
-                                          />
+                                          {[...Array(this.state.pagesCountUser)].map((page, i) => 
+                                              <PaginationItem active={i === this.state.currentPageUser} key={i} className={'paginationItemStyle'}>
+                                                  <PaginationLink onClick={e => this.handlePageChange(e, i, "user")} className={'paginationLinkStyle'}>
+                                                  {i + 1}
+                                                  </PaginationLink>
+                                              </PaginationItem>
+                                              )}
+                                          <PaginationItem disabled={this.state.currentPageUser >= this.state.generatedContentsUser.length - 1}>
+                                              <PaginationLink
+                                                  onClick={e => this.handlePageChange(e, this.state.currentPageUser + 1, "user")}
+                                                  next
+                                              />
 
-                                          </PaginationItem>
-                                  </Pagination>
+                                              </PaginationItem>
+                                      </Pagination>
+                                  </div>
                             </div>
+
                           </Grid>
                           <Grid item xs={6}>
   
                             <center><h6>{this.state.friendName}'s Schedule</h6></center>
                             <div className={"scheduleContent"}>
                                 <center><span>{this.state.currentContentFriend}</span></center>
-                            </div>
-                            
-                            <div className = "paginationContainer" style={(this.state.generatedContentsFriend != null) ? {} : {display: "none"}}>
-                              <Pagination aria-label="Page navigation example" style={{justifyContent: "center"}}>
-                                  <PaginationItem disabled={this.state.currentPageFriend <= 0}>
-                                      <PaginationLink onClick={e => this.handlePageChange(e, this.state.currentPageFriend - 1, "friend")}
-                                          previous/>
-                                  </PaginationItem>
-                                  {[...Array(this.state.pagesCountFriend)].map((page, i) => 
-                                      <PaginationItem active={i === this.state.currentPageFriend} key={i} className={'paginationItemStyle'}>
-                                          <PaginationLink onClick={e => this.handlePageChange(e, i, "friend")} className={'paginationLinkStyle'}>
-                                          {i + 1}
-                                          </PaginationLink>
+                                <div className = "paginationContainer" style={(this.state.generatedContentsFriend != null) ? {} : {display: "none"}}>
+                                  <Pagination aria-label="Page navigation example" style={{justifyContent: "center"}}>
+                                      <PaginationItem disabled={this.state.currentPageFriend <= 0}>
+                                          <PaginationLink onClick={e => this.handlePageChange(e, this.state.currentPageFriend - 1, "friend")}
+                                              previous/>
                                       </PaginationItem>
-                                      )}
-                                  <PaginationItem disabled={this.state.currentPageFriend >= this.state.generatedContentsFriend.length - 1}>
-                                      <PaginationLink
-                                          onClick={e => this.handlePageChange(e, this.state.currentPageFriend + 1, "friend")}
-                                          next
-                                      />
+                                      {[...Array(this.state.pagesCountFriend)].map((page, i) => 
+                                          <PaginationItem active={i === this.state.currentPageFriend} key={i} className={'paginationItemStyle'}>
+                                              <PaginationLink onClick={e => this.handlePageChange(e, i, "friend")} className={'paginationLinkStyle'}>
+                                              {i + 1}
+                                              </PaginationLink>
+                                          </PaginationItem>
+                                          )}
+                                      <PaginationItem disabled={this.state.currentPageFriend >= this.state.generatedContentsFriend.length - 1}>
+                                          <PaginationLink
+                                              onClick={e => this.handlePageChange(e, this.state.currentPageFriend + 1, "friend")}
+                                              next
+                                          />
 
-                                      </PaginationItem>
-                              </Pagination>
+                                          </PaginationItem>
+                                  </Pagination>
+                                </div>
                             </div>
-                      
                           </Grid>
                       </Grid>
                 </div>
