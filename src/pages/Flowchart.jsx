@@ -218,6 +218,7 @@ class Flowchart extends Component {
           this.state.terms[tempTerm].courses.push(this.state.courses[k]);
         }
         console.log(this.state.terms);
+        console.log(this.state.courses);
 
         this.setFlowchartTables();
         this.setState({currentPage: 0})

@@ -520,8 +520,9 @@ class Index extends Component {
   var currentPage = this.state.currentPage;
   var index = currentPage;
 
-  axios.delete('https://archerone-backend.herokuapp.com/api/schedules/'+this.state.currentContent.props.id+'/')
-  .catch(err => {
+  axios.delete('https://archerone-backend.herokuapp.com/api/schedules/'+this.state.currentContent.props.id+'/').then(res => {
+    window.location.reload()
+  }).catch(err => {
     console.log(err.response)
   })
   
