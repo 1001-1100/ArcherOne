@@ -303,8 +303,7 @@ class Index extends Component {
           }
           if(!alreadyAdded){
             currentClasses.push({title: offerings[i].course + ' ' + offerings[i].section, classnumber: offerings[i].classnumber, course: offerings[i].course_id})
-          }
-        }
+        }}
         this.setState({currentClasses})
       });
 
@@ -462,7 +461,7 @@ class Index extends Component {
 
   setSchedInfo = () => {
     console.log(this.state.schedules)
-    if(this.state.schedules.length > 0){ 
+    if(this.state.schedules.length > 0){      
       const palette = JSON.parse(localStorage.getItem('palette'))
       var generatedContents = this.state.schedules.map((item, index) =>
           <SchedViewHome key={item.id} id={item.id} offerings={item.offerings} tableContent={item.tableContent} scheduleContent={item.scheduleContent} titleName={item.title} earliest={item.earliest} latest={item.latest} updateSchedTitle={this.updateSchedTitle} palette={palette} allowEdit={this.state.allowEdit}/>
@@ -525,7 +524,6 @@ class Index extends Component {
   }).catch(err => {
     console.log(err.response)
   })
-  
   if(index !== -1){
     newSchedule.splice(index, 1);
   }
@@ -741,7 +739,6 @@ class Index extends Component {
       snackBarVariables[0].snackBarSuccess = true;
       // snackBarVariables[1].snackBarFailed = true;
       this.setState({snackBarVariables});
-      
       console.log(snackBarVariables);
       window.location.reload();
     }).catch(err => {
@@ -825,11 +822,11 @@ class Index extends Component {
           },
           {
             element: '#preferencesStep',
-            intro: 'Setting your preferences allows us to generate the schedules that suit you best!',
+            intro: 'Set your preferences to help generate the schedules that suit you best!',
           },
           {
             element: '#genschedStep',
-            intro: 'Automatically generate and save a schedule!',
+            intro: 'Generate and save a schedule easily!',
           },
           {
             // element: '',
