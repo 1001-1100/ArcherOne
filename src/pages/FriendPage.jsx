@@ -1083,11 +1083,15 @@ class FriendPage extends Component {
                                                             )}
                                                             // style={{ width: 500 }}
                                                             renderInput={(params) => (
-                                                                <TextField {...params} variant="outlined" label="Checkboxes" placeholder="Favorites" />
+                                                                <TextField {...params} variant="outlined" label="Friends" />
                                                             )}
                                                             onChange={this.generateOnChange}
                                                         />
                                                     </div>
+                                                    <Row horizontal='center' style={{margin: "20px"}}>
+                                                        <FormControlLabel
+                                                        control = {<GreenCheckbox disabled={this.state.loading} checked={true} onChange={this.handleFilterFull} color="primary"/>}label="Filter out closed classes" />
+                                                    </Row>
                                                 </ModalBody>
                                                 <ModalFooter>
                                                     <Button onClick={this.startGenerate} color="primary">Done</Button>
