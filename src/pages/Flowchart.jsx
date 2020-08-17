@@ -444,7 +444,7 @@ class Flowchart extends Component {
                   <center><h2 style={{width: "80%"}}>YOUR FLOWCHART</h2></center>
                   <center><h3>CCS 116 CS</h3></center>
 
-                  <Tabs defaultActiveKey="visual" id="uncontrolled-tab-example">
+                  <Tabs defaultActiveKey="table" id="uncontrolled-tab-example">
                     <Tab eventKey="visual" title="Visual">
                       <div class="tabArea">
                         <center>

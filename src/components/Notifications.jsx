@@ -157,11 +157,13 @@ class Notifications extends React.Component{
 
             // SPECIFY BACKGROUND COLOR
             if(!list[i].seen){
-                list[i].bgColor = "#E5E5E5";
+                list[i].bgColor = "white";
+                list[i].fWeight = "bold";
                 // #D3D3D3
             }
             else {
                 list[i].bgColor = "white";
+                list[i].fWeight = "normal";
             }
 
             options.push(list[i]);
@@ -186,7 +188,7 @@ class Notifications extends React.Component{
 
                     {options.map(option => (
                         <Link className="friendItem" to={option.category=="Friend" ? {pathname: "/view_friends", state:{selectedFriendId: -1}} : "/#viewCoursesHome"} >
-                        <DropdownItem disabled className="notifItem" style={{backgroundColor: option.bgColor}}>
+                        <DropdownItem disabled className="notifItem" style={{backgroundColor: option.bgColor, fontWeight: option.fWeight}}>
                             <DropdownItem divider />
                             <this.specifyIcon category={option.category} />
                             <span id="notifDate"> {option.date} </span>

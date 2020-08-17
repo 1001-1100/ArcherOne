@@ -119,7 +119,6 @@ class SchedViewHome extends Component {
       allowEdit: props.allowEdit,
       matched: props.matched,
     });
-    this.setState({})
     console.log(props.palette);
   }
 

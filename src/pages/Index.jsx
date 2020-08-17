@@ -828,12 +828,12 @@ class Index extends Component {
           },
           {
             element: '#genschedStep',
-            intro: 'Generate and save a schedule!',
+            intro: 'Automatically generate and save a schedule!',
           },
           {
             // element: '',
             // position: 'bottom-right-aligned',
-            intro: 'Explore the site!',
+            intro: 'Explore the site! You can also compare schedules and generate schedules together with your friends!',
           },
         ];
 

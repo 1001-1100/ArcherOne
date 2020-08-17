@@ -228,52 +228,44 @@ class Preferences extends Component {
             
             breakOptions: [
                 {
-                    option: "15 Minutes",
+                    option: "08:00 - 09:00",
                     value: 15
                 },
                 {
-                    option: "30 Minutes",
+                    option: "09:00 - 10:00",
                     value: 30
                 },
                 {
-                    option: "45 Minutes",
+                    option: "10:00 - 11:00",
                     value: 45
                 },
                 {
-                    option: "1 Hour",
+                    option: "11:00 - 12:00",
                     value: 60
                 },
                 {
-                    option: "2 Hour",
+                    option: "12:00 - 13:00",
                     value: 120
                 },
                 {
-                    option: "3 Hour",
+                    option: "13:00 - 14:00",
+                    value: 160
+                },
+                {
+                    option: "14:00 - 15:00",
                     value: 180
                 },
                 {
-                    option: "4 Hour",
+                    option: "15:00 - 16:00",
                     value: 240
                 },
                 {
-                    option: "5 Hour",
+                    option: "16:00 - 17:00",
                     value: 300
                 },
                 {
-                    option: "6 Hour",
+                    option: "17:00 - 18:00",
                     value: 360
-                },
-                {
-                    option: "7 Hour",
-                    value: 420
-                },
-                {
-                    option: "8 Hour",
-                    value: 480
-                },
-                {
-                    option: "9 Hour",
-                    value: 540
                 },
             ]
 
@@ -747,10 +739,10 @@ class Preferences extends Component {
                                         <TextField
                                             id="outlined-select-break"
                                             select
-                                            label="Break Length"
+                                            label="Preferred Break Time"
                                             onChange={this.handleBreakChange}
-                                            value = {this.state.break_length == null ? 15 : this.state.break_length}
-                                            helperText="Please select your preferred break length"
+                                            value = {this.state.break_length == null ? 120 : this.state.break_length}
+                                            helperText="Please select your preferred break time"
                                             variant="outlined"
                                             autoWidth= {true}
                                             >
