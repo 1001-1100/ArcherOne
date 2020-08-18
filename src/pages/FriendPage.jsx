@@ -1115,11 +1115,11 @@ class FriendPage extends Component {
                                                     <Row horizontal='center' style={{margin: "20px"}}>
                                                         <FormGroup>
                                                             <FormControlLabel
-                                                                control = {<GreenCheckbox disabled={this.state.filterConfig} checked={true} onChange={(e)=>this.handleConfigChanges(e, "filter")} color="primary"/>}label="Filter out closed classes" />
+                                                                control = {<GreenCheckbox disabled checked={true} onChange={(e)=>this.handleConfigChanges(e, "filter")} color="primary"/>}label="Filter out closed classes" />
                                                             <FormControlLabel
-                                                                control = {<GreenCheckbox checked={this.state.savedConfig} onChange={(e)=>this.handleConfigChanges(e, "saved")} id={"savedconfig"} color="primary"/>}label="Generate based on your saved schedules and classes" />
+                                                                control = {<GreenCheckbox disabled checked={true} onChange={(e)=>this.handleConfigChanges(e, "saved")} id={"savedconfig"} color="primary"/>}label="Generate based on your saved schedules and classes" />
                                                             <FormControlLabel
-                                                                control = {<GreenCheckbox checked={this.state.prefConfig} onChange={(e)=>this.handleConfigChanges(e, "pref")} id={"prefconfig"} color="primary"/>}label="Generate based on your preferences" />
+                                                                control = {<GreenCheckbox disabled checked={true} onChange={(e)=>this.handleConfigChanges(e, "pref")} id={"prefconfig"} color="primary"/>}label="Generate based on your preferences" />
                                     
                                                         </FormGroup>
                                                     </Row>

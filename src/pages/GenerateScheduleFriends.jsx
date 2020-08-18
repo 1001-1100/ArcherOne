@@ -45,6 +45,7 @@ import 'intro.js/introjs.css';
 import '../css/introjs-modern.css';
 
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import Link from '@material-ui/core/Link';
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -768,6 +769,7 @@ class GenerateSchedule extends Component {
               },
             },
           }))(TableRow);
+        const linkShare = "https://animosched.herokuapp.com/coordinate_schedule/"+this.state.shareCode+"/"
 
         return (
             <div>
@@ -784,7 +786,7 @@ class GenerateSchedule extends Component {
                 {this.state.dataReceived ?
                 <div>
                     <Column flexGrow={1} style={{margin: "40px"}}>
-                        <center><h4>{this.state.shareCode}</h4></center>
+                        <center><h5>Share this link to your friends so they can can view: <Link href={linkShare}> {this.state.shareCode} </Link></h5></center>
                         <div className = "genSchedInfoContainer" style={this.state.hideGenContent ? {display: "none"} :  {margin: "40px"}}>
                             <span>{this.state.currentContent}</span>
                         
