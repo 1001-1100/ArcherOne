@@ -47,6 +47,37 @@ class App extends Component {
   // this.state.logged_in --> indicates if user is logged in or not
 
   componentWillMount(){
+
+    // if(this.state.logged_in){
+    //   axios.get('https://archerone-backend.herokuapp.com/api/auth/user/',
+    //   {
+    //     headers: {
+    //       Authorization: `JWT ${localStorage.getItem('token')}` 
+    //     },
+    //     withCredentials: true
+    //   })
+    //   .then(res => {
+    //     this.setState({
+    //       logged_in: true,
+    //       first_name: res.data.first_name,
+    //       last_name: res.data.last_name,
+    //       id_num: ''
+    //     })
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //   })
+    // }
+  }
+
+  componentWillMount(){
+    var checkDate = '08/18/20-3'
+    var integrityCheck = localStorage.getItem('integrity_check')
+    if(integrityCheck != checkDate){
+      this.wipe_logout()
+      localStorage.setItem('integrity_check', checkDate)
+    }
+
     // if(this.state.logged_in){
     //   axios.get('https://archerone-backend.herokuapp.com/api/auth/user/',
     //   {
@@ -155,6 +186,19 @@ class App extends Component {
         console.log(error.response)
         _callback(false);
     });
+  }
+
+  wipe_logout = () => {
+    localStorage.clear();
+    this.setState({
+      logged_in: false,
+      first_name: '',
+      last_name: '',
+      id_num: '',
+    });
+    return (
+      <Redirect to="/login" />
+    );
   }
 
   handle_logout = () => {
@@ -329,6 +373,7 @@ class App extends Component {
       <GenerateScheduleFriendsPage
         menu={this.menu}
         props={props}
+        params={props.match.params}
       />
     )
   }
@@ -410,6 +455,9 @@ class App extends Component {
           }
           {this.state.logged_in && 
           <Route exact path="/coordinate_schedule/" component={this.generateScheduleFriendsPage} />
+          }
+          {this.state.logged_in && 
+          <Route exact path="/coordinate_schedule/:id/" component={this.generateScheduleFriendsPage} />
           }
           <Route exact path="/logout" component={this.handle_logout} />
           {/* <Route exact path="/404" component={MainPage} /> change to 404 page */}

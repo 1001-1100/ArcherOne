@@ -169,6 +169,9 @@ class GenerateSchedule extends Component {
      
             skeletons: [...Array(8).keys()],
 
+            undesirableClass: {},
+            tempUndesirableClass: {},
+
             openModalWait: false,
         };
 
@@ -224,16 +227,12 @@ class GenerateSchedule extends Component {
                         days.map(day_code => {
                             day += day_code;
                         })
-                        var checked = localStorage.getItem(classnumber)
-                        if(checked == null){
+                        var checked = this.state.undesirableClass[classnumber]
+                        if(checked == null || checked){
                             checked = true;
-                            localStorage.setItem(classnumber, true);
-                        }else if(checked == 'true'){
-                            checked = true;
-                        }else if(checked == 'false'){
+                        }else{
                             checked = false;
                         }
-                        console.log(checked)
                         const offering = this.createData(classnumber, course, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled, checked);
                         offeringList.push(offering);
                         }
@@ -299,16 +298,12 @@ class GenerateSchedule extends Component {
                         days.map(day_code => {
                             day += day_code;
                         })
-                        var checked = localStorage.getItem(classnumber)
-                        if(checked == null){
+                        var checked = this.state.undesirableClass[classnumber]
+                        if(checked == null || checked){
                             checked = true;
-                            localStorage.setItem(classnumber, true);
-                        }else if(checked == 'true'){
-                            checked = true;
-                        }else if(checked == 'false'){
+                        }else{
                             checked = false;
                         }
-                        console.log(checked)
                         const offering = this.createData(classnumber, course, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled, checked);
                         offeringList.push(offering);
                         }
@@ -374,13 +369,10 @@ class GenerateSchedule extends Component {
                         days.map(day_code => {
                             day += day_code;
                         })
-                        var checked = localStorage.getItem(classnumber)
-                        if(checked == null){
+                        var checked = this.state.undesirableClass[classnumber]
+                        if(checked == null || checked){
                             checked = true;
-                            localStorage.setItem(classnumber, true);
-                        }else if(checked == 'true'){
-                            checked = true;
-                        }else if(checked == 'false'){
+                        }else{
                             checked = false;
                         }
                         const offering = this.createData(classnumber, course, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled, checked);
@@ -434,13 +426,12 @@ class GenerateSchedule extends Component {
                             if(priority){
                                 this.getCourseOfferings(id, course, this.state.highCourses, () => {
                                     done += 1;
-                                    if(total <= done){
-                                        this.setState({dataReceived: true})
-                                    }
+                                    this.setState({dataReceived: true})
                                 })
                             }else{
                                 this.getLowCourseOfferings(id, course, this.state.lowCourses, () => {
                                     done += 1;
+                                    console.log('test 2')
                                     if(total <= done){
                                         this.setState({dataReceived: true})
                                     }
@@ -459,6 +450,13 @@ class GenerateSchedule extends Component {
                 console.log(this.state.lowCourses.length)
                 console.log(this.state.loading || this.state.highCourses.length + this.state.lowCourses.length <= 0);
             });
+        })
+        axios.get('https://archerone-backend.herokuapp.com/api/undesirableclasslist/'+id+'/').then(res => {
+            res.data.map(c => {
+                const undesirableClass = this.state.undesirableClass
+                undesirableClass[c.undesirable_classes] = false
+                this.setState({undesirableClass})
+            })
         })
     }
 
@@ -851,7 +849,6 @@ class GenerateSchedule extends Component {
                 // })
             }).catch(err => {
                 console.log(err.response)
-
             })
             this.setState(state=>{
                 const savedScheds = state.savedScheds.concat(state.currentContent.key);
@@ -863,15 +860,12 @@ class GenerateSchedule extends Component {
             this.setState({saveButtonStyle: styleChange});
             this.setState({snackBar: true});
         }
-        
-
     }
 
     handleCloseSnackBar = (event, reason) => {
         if (reason === 'clickaway') {
           return;
         }
-    
         this.setState({snackBar: false});
       }
     
@@ -883,8 +877,9 @@ class GenerateSchedule extends Component {
         this.setState(state =>{
             const siteData  = state.siteData
             siteData[index].checked = !siteData[index].checked
-            localStorage.setItem(siteData[index].classNmbr, siteData[index].checked)
-            return{siteData};
+            const undesirableClass = state.undesirableClass
+            undesirableClass[siteData[index].classNmbr] = siteData[index].checked
+            return{siteData, undesirableClass};
         });
         console.log(this.state.siteData[index]) 
     }
@@ -892,15 +887,16 @@ class GenerateSchedule extends Component {
     handleAllCheckbox = () => {
         this.setState(state =>{
             const siteData = state.siteData
+            const undesirableClass = state.undesirableClass
             siteData.map(c => {
                 if(this.state.allCheckBox){
                     c.checked = false 
                 }else{
                     c.checked = true 
                 }
-                localStorage.setItem(c.classNmbr, c.checked)
+                undesirableClass[c.classNmbr] = c.checked
             })
-            return{siteData};
+            return{siteData, undesirableClass};
         }, () => {
             this.setState({allCheckBox: !this.state.allCheckBox})
         });
@@ -938,7 +934,24 @@ class GenerateSchedule extends Component {
     
     handleSaveCourseOfferings = () =>{
         console.log("Course Offerings changes saved");
-        this.setState({openModalCourseOfferings: false});
+        const classnumber = []
+        const delClassnumber = []
+        for (const [key, value] of Object.entries(this.state.undesirableClass)) {
+            if(!value){
+                classnumber.push((key))
+            }
+        }
+        console.log(classnumber)
+        axios.post('https://archerone-backend.herokuapp.com/api/removeundesirableclass/',{
+            user_id: localStorage.getItem('user_id')
+        }).then(res => {
+            axios.post('https://archerone-backend.herokuapp.com/api/addundesirableclass/',{
+                classnumber: classnumber,
+                user_id: localStorage.getItem('user_id')
+            }).then(res => {
+                this.setState({openModalCourseOfferings: false});
+            })
+        })
       } 
     
     toggleModalWait = () => {
@@ -1109,8 +1122,9 @@ class GenerateSchedule extends Component {
                               </ModalBody>
                                 
                                 <ModalFooter>
-                                  <Button color="primary" onClick={this.handleSaveCourseOfferings}>Save Changes</Button>{' '}
-                                  <Button style={{color: "gray"}}onClick={this.toggleModal}>Cancel</Button>
+                                    <Button style={{color: "gray"}}onClick={this.toggleModal}>Cancel</Button>
+                                    <Button color="primary" onClick={this.handleSaveCourseOfferings}>Save Changes</Button>{' '}
+                                  
                                 </ModalFooter>
 
                           </Modal> 

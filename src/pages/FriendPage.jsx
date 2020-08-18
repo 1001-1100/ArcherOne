@@ -63,6 +63,7 @@ import {BrowserRouter as Router,Route,
     Redirect,Switch} from 'react-router-dom';
 
 import _ from 'underscore';
+import HelpIcon from '@material-ui/icons/Help';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -177,6 +178,9 @@ class FriendPage extends Component {
             compareList: [],
             generateList: [],
             doGenerate: false,
+            savedConfig: true,
+            prefConfig: true,
+            filterConfig: true,
 
             daysList:[
                 {   id: 1,
@@ -681,6 +685,16 @@ class FriendPage extends Component {
         this.setState({doGenerate: true})
     }
 
+    handleConfigChanges=(event, type)=>{
+        if(type=="saved"){
+            this.setState({savedConfig: event.target.checked})
+        }else if(type=="pref"){
+            this.setState({prefConfig:event.target.checked})
+        }else if(type=="filter"){
+            this.setState({filterConfig:event.target.checked})
+        }
+    }
+
     render() {
         const friendList = [];
         const { classes } = this.props;
@@ -808,12 +822,13 @@ class FriendPage extends Component {
                                 </DialogContentText>
                                 </DialogContent>
                                 <DialogActions>
-                                <Button onClick={this.handleCloseAlert} color="primary">
-                                    Cancel
-                                </Button>
                                 <Button onClick={this.deleteFriend} color="primary" autoFocus>
                                     Unfriend
                                 </Button>
+                                <Button onClick={this.handleCloseAlert} color="primary">
+                                    Cancel
+                                </Button>
+                                
                                 </DialogActions>
                             </Dialog>
                         </div>
@@ -1040,8 +1055,9 @@ class FriendPage extends Component {
                                                     </div>
                                                 </ModalBody>
                                                 <ModalFooter>
-                                                    <Button color="primary">Done</Button>
                                                     <Button style={{color: "gray"}} onClick={this.toggleModalCompare}>Cancel</Button>
+                                                    <Button color="primary">Done</Button>
+                                                    
                                                 </ModalFooter>
                                             </Modal>  
                                         </Grid>
@@ -1061,8 +1077,13 @@ class FriendPage extends Component {
                                             <Modal isOpen={this.state.openModalSuggest} toggle={this.toggleModalSuggest} returnFocusAfterClose={false} backdrop={true} data-keyboard="false" >
                                                 <ModalHeader toggle={this.toggleModalSuggest}><h4>Generate Suggested Friend Schedules</h4></ModalHeader>
                                                 <ModalBody>
-                                                    <h5>Generate possible schedules you can share with your friends. Who do you want to create a schedule with?</h5>
-                                                    <p>Maximum of 4 friends</p>
+                                                    <h5>Generate possible schedules you can share with your friends 
+                                                        <Tooltip title="The schedules generated will try to assign everyone possible same classes and leave certain time-slots empty in the schedule for the consideration of your friends' dissimilar courses" placement="right">
+                                                            <HelpIcon />
+                                                        </Tooltip>
+                                                      
+                                                    </h5>
+                                                    <p>Who do you want to create a schedule with?</p>
                                                     <div style={{justifyContent:"center", justify: "center", justifyItems: "center", margin: "auto 10px"}}>
                                                         <Autocomplete
                                                             multiple
@@ -1088,14 +1109,25 @@ class FriendPage extends Component {
                                                             onChange={this.generateOnChange}
                                                         />
                                                     </div>
+                                                    <br></br>
+                                                    <h6>Schedule Generation Configurations</h6>
+
                                                     <Row horizontal='center' style={{margin: "20px"}}>
-                                                        <FormControlLabel
-                                                        control = {<GreenCheckbox disabled={this.state.loading} checked={true} onChange={this.handleFilterFull} color="primary"/>}label="Filter out closed classes" />
+                                                        <FormGroup>
+                                                            <FormControlLabel
+                                                                control = {<GreenCheckbox disabled={this.state.filterConfig} checked={true} onChange={(e)=>this.handleConfigChanges(e, "filter")} color="primary"/>}label="Filter out closed classes" />
+                                                            <FormControlLabel
+                                                                control = {<GreenCheckbox checked={this.state.savedConfig} onChange={(e)=>this.handleConfigChanges(e, "saved")} id={"savedconfig"} color="primary"/>}label="Generate based on your saved schedules and classes" />
+                                                            <FormControlLabel
+                                                                control = {<GreenCheckbox checked={this.state.prefConfig} onChange={(e)=>this.handleConfigChanges(e, "pref")} id={"prefconfig"} color="primary"/>}label="Generate based on your preferences" />
+                                    
+                                                        </FormGroup>
                                                     </Row>
+                                                    
                                                 </ModalBody>
                                                 <ModalFooter>
-                                                    <Button onClick={this.startGenerate} color="primary">Done</Button>
                                                     <Button style={{color: "gray"}} onClick={this.toggleModalSuggest}>Cancel</Button>
+                                                    <Button onClick={this.startGenerate} color="primary">Done</Button>
                                                 </ModalFooter>
                                             </Modal>  
                                         </Grid>

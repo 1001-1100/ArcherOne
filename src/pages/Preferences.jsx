@@ -103,50 +103,66 @@ class Preferences extends Component {
             profList: [],
             selectedSections: [],
             sectionList: [
-                // {
-                //     id: 0,
-                //     section_code: "C"
-                // },
-                // {
-                //     id: 1,
-                //     section_code: "K"
-                // },
-                // {
-                //     id: 2,
-                //     section_code: "S"
-                // },
-                // {
-                //     id: 3,
-                //     section_code: "L"
-                // },
-                // {
-                //     id: 4,
-                //     section_code: "E"
-                // },
-                // {
-                //     id: 5,
-                //     section_code: "A"
-                // },
-                // {
-                //     id: 6,
-                //     section_code: "N"
-                // },
-                // {
-                //     id: 7,
-                //     section_code: "V"
-                // },
-                // {
-                //     id: 8,
-                //     section_code: "M"
-                // },
-                // {
-                //     id: 9,
-                //     section_code: "X"
-                // },
-                // {
-                //     id: 10,
-                //     section_code: "G"
-                // },
+                {
+                    id: 0,
+                    section_code: "C",
+                    college: "College of Business",
+                },
+                {
+                    id: 1,
+                    section_code: "K",
+                    college: "College of Business",
+                },
+                {
+                    id: 2,
+                    section_code: "S",
+                    college: "College of Computer Studies",
+                },
+                {
+                    id: 3,
+                    section_code: "L",
+                    college: "College of Education",
+                },
+                {
+                    id: 4,
+                    section_code: "E",
+                    college: "College of Engineering",
+                },
+                {
+                    id: 5,
+                    section_code: "A",
+                    college: "College of Liberal Arts",
+                },
+                {
+                    id: 6,
+                    section_code: "N",
+                    college: "College of Science",
+                },
+                {
+                    id: 11,
+                    section_code: "M",
+                    college: "College of Science",
+                },
+                {
+                    id: 8,
+                    section_code: "M",
+                    college: "College of Education",
+                },
+                {
+                    id: 7,
+                    section_code: "V",
+                    college: "School of Economics",
+                },
+                {
+                    id: 9,
+                    section_code: "X",
+                    college: "STC Campus",
+                },
+                {
+                    id: 10,
+                    section_code: "G",
+                    college: "Graduate Sections",
+                },
             ],
             
             selectedDate: "",
@@ -301,21 +317,21 @@ class Preferences extends Component {
                 })
             })
         });
-        axios.get('https://archerone-backend.herokuapp.com/api/sections/')
-        .then(res => {
-            res.data.map(section => {
-                if(section.section_code.length == 1){
-                    var section = {'id': section.id, 'sectionName': section.section_code + " (All sections)"} 
-                }else{
-                    var section = {'id': section.id, 'sectionName': section.section_code} 
-                }
-                this.setState(state =>{
-                    const sectionList = state.sectionList;
-                    sectionList.push(section);
-                    return {sectionList}
-                })
-            })
-        });
+        // axios.get('https://archerone-backend.herokuapp.com/api/sections/')
+        // .then(res => {
+        //     res.data.map(section => {
+        //         if(section.section_code.length == 1){
+        //             var section = {'id': section.id, 'sectionName': section.section_code + " (All sections)"} 
+        //         }else{
+        //             var section = {'id': section.id, 'sectionName': section.section_code} 
+        //         }
+        //         this.setState(state =>{
+        //             const sectionList = state.sectionList;
+        //             sectionList.push(section);
+        //             return {sectionList}
+        //         })
+        //     })
+        // });
             axios.get('https://archerone-backend.herokuapp.com/api/preferencelist/'+id+'/')
             .then(res => {
                 console.log(res.data)
@@ -372,16 +388,14 @@ class Preferences extends Component {
                     }
                     if(preference.preferred_sections != null){
                         const selectedSections = this.state.selectedSections;
-                        var section = {'id': preference.preferred_sections.id, 'sectionName': preference.preferred_sections.section_code} 
-                        selectedSections.push(section);
-                        this.setState({selectedSections})
+                        var section = preference.preferred_sections 
                         const sectionList = [];
                         this.state.sectionList.map(section2 => {
-                            if(section2.sectionName != section.sectionName){
-                                sectionList.push(section2);
+                            if(section2.section_code == section){
+                                selectedSections.push(section2);
                             }
                         })
-                        this.setState({sectionList})
+                        this.setState({selectedSections})
                     }
                 })
                 this.setState({dataReceived: true})
@@ -534,7 +548,7 @@ class Preferences extends Component {
             });
             this.state.selectedSections.map(section =>{
                 console.log(section)
-                axios.post('https://archerone-backend.herokuapp.com/api/preferences/', {preferred_sections: section.id, user: id},
+                axios.post('https://archerone-backend.herokuapp.com/api/preferences/', {preferred_sections: section.section_code, user: id},
                 {
                     headers: {
                         'Content-Type': 'application/json'
@@ -587,7 +601,7 @@ class Preferences extends Component {
             };
           });
         const sectionOptions = this.state.sectionList.map((option) => {
-            const firstLetter = option.sectionName[0].toUpperCase();
+            const firstLetter = option.section_code.toUpperCase();
             return {
               firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
               ...option,
@@ -936,10 +950,10 @@ class Preferences extends Component {
                                             multiple
                                             id="tags-outlined"
                                             options={this.state.sectionList}
-                                            options={sectionOptions.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
+                                            // options={sectionOptions.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
                                             defaultValue={this.state.selectedSections}
-                                            groupBy={(option) => option.firstLetter}
-                                            getOptionLabel={option => option.sectionName}
+                                            groupBy={(option) => option.college}
+                                            getOptionLabel={option => option.section_code}
                                             //   style={{ width: 500 }}
                                             filterSelectedOptions
                                             renderInput={params => <TextField {...params} variant="outlined" />}

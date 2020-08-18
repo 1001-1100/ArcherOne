@@ -65,6 +65,12 @@ const styles = theme => ({
 class GenSchedInfo extends Component {
     constructor(props){
         super(props);
+        var prefTitle = "Preferences";
+        var conflictTitle = "Course Conflicts";
+        if(props.type != undefined){
+            prefTitle = "Your Preferences";
+            conflictTitle = "Your Course Conflicts"
+        }
         this._handleFocus = this._handleFocus.bind(this);
         this._handleFocusOut = this._handleFocusOut.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
@@ -81,6 +87,9 @@ class GenSchedInfo extends Component {
             latest: props.latest,
             boolEdit: false,
             defPalette: ['#9BCFB8', '#7FB174', '#689C97', '#072A24', '#D1DDDB', '#85B8CB', '#1D6A96', '#283B42','#FFB53C', '#EEB3A3', '#F3355C', '#FAA98B', '#E6AECF', '#AEE0DD', '#01ACBD','#FED770', ' #F29F8F', '#FB7552', '#076A67','#324856', '#4A746A', '#D18237', '#D66C44', '#FFA289', '#6A92CC', '#706FAB', '#50293C'],
+            prefTitle: prefTitle,
+            conflictTitle: conflictTitle,
+
         }
         this.editableLabel = React.createRef();
     }
@@ -177,7 +186,7 @@ class GenSchedInfo extends Component {
                                     <Table className={classes.table} aria-label="customized table">
                                         <TableHead>
                                             <TableRow>
-                                                <StyledTableCell><center>Preferences</center></StyledTableCell>
+                                                <StyledTableCell><center>{this.state.prefTitle}</center></StyledTableCell>
                                             </TableRow>
                                         </TableHead>
                                         
@@ -210,7 +219,7 @@ class GenSchedInfo extends Component {
                                     <Table className={classes.table} aria-label="customized table">
                                         <TableHead>
                                             <TableRow>
-                                                <StyledTableCell><center>Course Conflict</center></StyledTableCell>
+                                                <StyledTableCell><center>{this.state.conflictTitle}</center></StyledTableCell>
                                             </TableRow>
                                         </TableHead>
                                         
@@ -235,7 +244,75 @@ class GenSchedInfo extends Component {
 
                             </Column>
                         </Row>
+                        {/****************TBALES FOR FRIENDS*******************/}
+                        <br></br>
+                        <div style={this.props.type =="friend" ?  {} : {display:"none"} }>
+                        <Row horizontal = 'center'>
+                            <Column horizontal = 'center' style={{marginLeft: "10px"}}>
+                                
+    
+                                <TableContainer component={Paper} className="boxinfoContainer" style={{width: 250}}>
+                                    <Table className={classes.table} aria-label="customized table">
+                                        <TableHead>
+                                            <TableRow>
+                                                <StyledTableCell><center>Friends' Preferences</center></StyledTableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        
+                                        <TableBody>
+                                            {this.state.rowsPref.length == 0 ?
+                                            <StyledTableRow key={'empty'}>
+                                                <StyledTableCell rowSpan={3}>
+                                                    All preferences were met.
+                                                </StyledTableCell>
+                                            </StyledTableRow>
+                                            : null }
+                                            {this.state.rowsPref.map((row) => (
+                                                <StyledTableRow key={row}>
+                                                    <StyledTableCell component="th" scope="row">
+                                                        {row}
+                                                    </StyledTableCell>
+                                                </StyledTableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+
+                            </Column>
                             
+                            <Column horizontal = 'center' style={{marginLeft: "20px"}}>
+                               
+
+                                <TableContainer component={Paper} className="boxinfoContainer" style={{width: 250}}>
+                                    <Table className={classes.table} aria-label="customized table">
+                                        <TableHead>
+                                            <TableRow>
+                                                <StyledTableCell><center>Friends' Course Conflict</center></StyledTableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        
+                                        <TableBody>
+                                            {this.state.rowsConflict.length == 0 ?
+                                            <StyledTableRow key={'empty'}>
+                                                <StyledTableCell rowSpan={3}>
+                                                    No course conflicts.
+                                                </StyledTableCell>
+                                            </StyledTableRow>
+                                            : null}
+                                            {this.state.rowsConflict.map((row) => (
+                                                <StyledTableRow key={row}>
+                                                    <StyledTableCell component="th" scope="row">
+                                                        {row}
+                                                    </StyledTableCell>
+                                                </StyledTableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+
+                            </Column>
+                        </Row> 
+                        </div>   
                     </Column>
                     
                 </Row>

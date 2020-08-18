@@ -915,8 +915,9 @@ class Index extends Component {
                           </div>
                         </ModalBody>
                       <ModalFooter>
+                      <Button style={{color: "gray"}} onClick={this.toggleModalEdit}>Cancel</Button>
                         <Button color="primary" onClick={this.handleEditSave}>Save Changes</Button>{' '}
-                        <Button style={{color: "gray"}} onClick={this.toggleModalEdit}>Cancel</Button>
+                        
                       </ModalFooter>
                     </Modal>    
                   </Grid>
@@ -974,8 +975,8 @@ class Index extends Component {
                         </div>
                       </ModalBody>
                     <ModalFooter>
-                      <Button color="primary" onClick={this.handleCustomizeSave}>Save Changes</Button>{' '}
                       <Button style={{color: "gray"}}onClick={this.toggleModal}>Cancel</Button>
+                      <Button color="primary" onClick={this.handleCustomizeSave}>Save Changes</Button>{' '}
                     </ModalFooter>
                   </Modal>    
                   </Grid>
@@ -1014,12 +1015,13 @@ class Index extends Component {
                           </DialogContentText>
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={this.deleteSchedule} color="secondary" autoFocus>
-                                Delete
-                            </Button>
                             <Button onClick={this.handleCloseAlert} style={{color: "gray"}}>
                                 Cancel
                             </Button>
+                            <Button onClick={this.deleteSchedule} color="secondary" autoFocus>
+                                Delete
+                            </Button>
+                            
                           
                         </DialogActions>
                       </Dialog>
