@@ -72,6 +72,11 @@ import MuiAlert from '@material-ui/lab/Alert';
 import StarIcon from '@material-ui/icons/Star';
 import TodayIcon from '@material-ui/icons/Today';
 
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -273,7 +278,10 @@ class Index extends Component {
         allowEdit: true,
         scheduleChanged: true,
         goToSearch: false,
-        goToCreate: false
+        goToCreate: false,
+        rejected: [],
+        allNumbers: [],
+        editLoad: true
 //        this.scheduleRef = React.createRef();
         
       }
@@ -635,6 +643,9 @@ class Index extends Component {
     var openModalVar = this.state.openModalEdit;
     this.setState({openModalEdit: !openModalVar});
   }
+
+
+
   processPaletteChoices = (title, paletteArray) => {
     const colorDiv = paletteArray.map(function(palColor, index){
                         var newstyle = {backgroundColor: palColor, color: palColor, width:"50px", fontSize:"8px", padding: "1em", display: "table-cell"};
@@ -708,43 +719,89 @@ class Index extends Component {
       console.log(currentClasses)
     })
   }
-  
-  handleEditSave=()=>{
 
-    this.setState({scheduleChanged: false})
-
+  handleEditCheck=()=>{
+    this.setState({editLoad: false})
+    console.log("Schedule edit changes saved");
+    const currentClasses = this.state.currentClasses
     const classnumbers = []
+    const newclassnumbers = []
     const courses = []
+    const allNumbers = []
+    this.state.newCurrentClasses.map(offering => {
+      console.log(offering)
+      // currentClasses.push({title: offering.course + ' ' + offering.section, classnumber: offering.classNmbr, course: offering.course_id})
+      newclassnumbers.push(offering.classNmbr)
+      courses.push(offering.course_id)
+    })
+    this.setState({currentClasses, newCurrentClasses: []}, () => {
+      console.log(currentClasses)
+    })
+
     const sched_id = this.state.currentContent.props.id
     const user_id = localStorage.getItem('user_id')
 
-    this.state.currentClasses.map(offering => {
-      classnumbers.push(offering.course)
-      courses.push(offering.classnumber)
+    currentClasses.map(offering => {
+      classnumbers.push(offering.classnumber)
+      courses.push(offering.course)
     })
     console.log(classnumbers)
+    console.log(newclassnumbers)
     console.log(courses)
-
-    this.setState({openModalEdit: false});
 
     let snackBarVariables = [...this.state.snackBarVariables];
     axios.post('https://archerone-backend.herokuapp.com/api/editschedule/',{
-      classnumbers,
+      classes:classnumbers,
+      newclasses:newclassnumbers,
       courses,
       sched_id,
       user_id
     }).then(res => {
+      console.log(res)
       console.log(res.data)
-      this.setState({snackbarMsg: "Your schedule changes have been successfully saved!"});
-      snackBarVariables[0].snackBarSuccess = true;
-      // snackBarVariables[1].snackBarFailed = true;
-      this.setState({snackBarVariables});
-      console.log(snackBarVariables);
-      window.location.reload();
+      this.setState({allNumbers: res.data['classnumbers']}, () => {
+        if(res.data['rejected'].length > 0){
+          this.setState({rejected:res.data['rejected']}, ()=>{
+              this.setState({editDialog: true})
+          })
+        }else{
+          this.handleEditSave()
+        }
+      })
+      // this.setState({snackbarMsg: "Your schedule changes have been successfully saved!"});
+
+      // snackBarVariables[0].snackBarSuccess = true;
+      // // snackBarVariables[1].snackBarFailed = true;
+      // this.setState({snackBarVariables});
+      // console.log(snackBarVariables);
+      // window.location.reload();
     }).catch(err => {
       console.log(err.response)
-    })
-
+    })   
+    // this.setState({openModalEdit: false});
+  }
+  
+  
+  handleEditSave=()=>{
+    const sched_id = this.state.currentContent.props.id
+    axios.post('https://archerone-backend.herokuapp.com/api/saveeditschedule/',{
+      classnumbers:this.state.allNumbers,
+      sched_id,
+    }).then(res => {
+      window.location.reload()
+      // this.setState({snackbarMsg: "Your schedule changes have been successfully saved!"});
+      // snackBarVariables[0].snackBarSuccess = true;
+      // // snackBarVariables[1].snackBarFailed = true;
+      // this.setState({snackBarVariables});
+      // console.log(snackBarVariables);
+      // window.location.reload();
+      this.setState({editLoad: true})
+      this.setState({editDialog: false})
+    }).catch(err => {
+      this.setState({editLoad: true})
+      this.setState({editDialog: false})
+      console.log(err.response)
+    })   
   }
 
   handleDelete=(index)=>{
@@ -776,7 +833,10 @@ class Index extends Component {
   tutorialDone = () => {
     localStorage.setItem('steps',false)
   }
-
+  handleClose = () => {
+    this.setState({editLoad: true})
+    this.setState({editDialog: false})
+  }
   pagination = () => {
     return(
       <div id="viewCoursesHome" className = "paginationContainer" style={(this.state.generatedContents != null) ? {} : {display: "none"}}>
@@ -904,22 +964,63 @@ class Index extends Component {
                               </div>
                               <div style={{display: "flex", justifyContent: "center", width: "-webkit-fill-available", marginBottom: "15px"}}>
                                 <ComboBox page={"edit"} value={this.state.newCurrentClasses} onChange={this.handleEditChange}></ComboBox>
-                                  <Button
+                                  {/* <Button
                                       variant="contained"
                                       color = "Primary"
                                       style={{backgroundColor: "green", color:"white", height:"56px"}}
-                                      onClick={this.handleEditAdd}>
-                                      <AddIcon fontSize="small"/>  
-                                  </Button>
+                                      onClick={this.handleEditCheck}>
+                                      {'Edit'}
+                                  </Button> */}
                               </div>
+                              <Dialog
+                                open={this.state.editDialog}
+                                onClose={this.handleClose}
+                                aria-labelledby="alert-dialog-title"
+                                aria-describedby="alert-dialog-description"
+                              >
+                                <DialogTitle id="alert-dialog-title">{"Class Conflicts"}</DialogTitle>
+                                <DialogContent>
+                                  <DialogContentText id="alert-dialog-description">
+                                    Adding these classes will not allow you to get these courses:
+                                    <List>
+                                      <li>
+                                        <ul>
+                                          {this.state.rejected.map(r => 
+                                            <ListItem>
+                                              <ListItemText primary={r} />
+                                            </ListItem>
+                                          )}
+                                        </ul>
+                                      </li>
+                                  </List>
+
+                                  </DialogContentText>
+                                </DialogContent>
+                                <DialogActions>
+                                  <Button onClick={this.handleClose} color="primary">
+                                    Cancel
+                                  </Button>
+                                  <Button onClick={this.handleEditSave} color="primary" autoFocus>
+                                    Continue
+                                  </Button>
+                                </DialogActions>
+                              </Dialog>
                           </div>
                         </ModalBody>
                       <ModalFooter>
                       <Button style={{color: "gray"}} onClick={this.toggleModalEdit}>Cancel</Button>
-                        <Button color="primary" onClick={this.handleEditSave}>Save Changes</Button>{' '}
+                        <Button color="primary" onClick={this.handleEditCheck}>Save Changes</Button>{' '}
                         
                       </ModalFooter>
                     </Modal>    
+                    <Modal isOpen={!this.state.editLoad} returnFocusAfterClose={false} backdrop={true} data-keyboard="false" centered={true}>
+                        <ModalHeader>
+                            <center>
+                                <br></br><p>Please wait...In the process of loading your schedules</p>
+                                <ReactLoading type={'spin'} color={'#9BCFB8'} height={'10%'} width={'10%'}/>
+                            </center>
+                            </ModalHeader>
+                    </Modal> 
                   </Grid>
                   
                   <Grid item xs={1} direction="column" align="center">

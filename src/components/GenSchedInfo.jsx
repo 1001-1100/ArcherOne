@@ -67,9 +67,9 @@ class GenSchedInfo extends Component {
         super(props);
         var prefTitle = "Preferences";
         var conflictTitle = "Course Conflicts";
-        if(props.type != undefined){
-            prefTitle = "Your Preferences";
-            conflictTitle = "Your Course Conflicts"
+        if(props.type != undefined && props.owner!=undefined){
+            prefTitle = props.owner+'\'s Preferences';
+            conflictTitle = props.owner+'\'s Course Conflicts';
         }
         this._handleFocus = this._handleFocus.bind(this);
         this._handleFocusOut = this._handleFocusOut.bind(this);
@@ -80,6 +80,7 @@ class GenSchedInfo extends Component {
             conflictsContent: props.conflictsContent,
             prefContent: props.prefContent,
             rowsPref: props.prefContent,
+            rowsFriendPref: props.prefFriendContent,
             rowsConflict: props.conflictsContent,
             id: props.id,
             schedTitle: props.titleName,
@@ -101,6 +102,7 @@ class GenSchedInfo extends Component {
             conflictsContent: props.conflictsContent,
             prefContent: props.prefContent,
             rowsPref: props.prefContent,
+            rowsFriendPref: props.prefFriendContent,
             rowsConflict: props.conflictsContent,
             id: props.id,
             schedTitle: props.titleName,
@@ -183,7 +185,7 @@ class GenSchedInfo extends Component {
                                 <BoxInfo content={this.state.prefContent } id={1+this.state.id}/> */}
     
                                 <TableContainer component={Paper} className="boxinfoContainer" style={{width: 250}}>
-                                    <Table className={classes.table} aria-label="customized table">
+                                    <Table className={classes.table} aria-label="customized table" stickyHeader>
                                         <TableHead>
                                             <TableRow>
                                                 <StyledTableCell><center>{this.state.prefTitle}</center></StyledTableCell>
@@ -216,7 +218,7 @@ class GenSchedInfo extends Component {
                                 <BoxInfo content={this.state.conflictsContent} id={2+this.state.id}/> */}
 
                                 <TableContainer component={Paper} className="boxinfoContainer" style={{width: 250}}>
-                                    <Table className={classes.table} aria-label="customized table">
+                                    <Table className={classes.table} aria-label="customized table" stickyHeader>
                                         <TableHead>
                                             <TableRow>
                                                 <StyledTableCell><center>{this.state.conflictTitle}</center></StyledTableCell>
@@ -247,40 +249,42 @@ class GenSchedInfo extends Component {
                         {/****************TBALES FOR FRIENDS*******************/}
                         <br></br>
                         <div style={this.props.type =="friend" ?  {} : {display:"none"} }>
-                        <Row horizontal = 'center'>
-                            <Column horizontal = 'center' style={{marginLeft: "10px"}}>
-                                
-    
-                                <TableContainer component={Paper} className="boxinfoContainer" style={{width: 250}}>
-                                    <Table className={classes.table} aria-label="customized table">
+                        <Row horizontal>
+                            {/* <Column horizontal = 'center' style={{marginLeft: "10px"}}> */}
+                                <TableContainer component={Paper} className="boxinfoContainer" style={{width: "100%"}}>
+                                    <Table className={classes.table} aria-label="customized table" stickyHeader >
                                         <TableHead>
                                             <TableRow>
-                                                <StyledTableCell><center>Friends' Preferences</center></StyledTableCell>
+                                                <StyledTableCell><center>Friends' Preferences and Conflicts</center></StyledTableCell>
                                             </TableRow>
                                         </TableHead>
                                         
-                                        <TableBody>
-                                            {this.state.rowsPref.length == 0 ?
-                                            <StyledTableRow key={'empty'}>
-                                                <StyledTableCell rowSpan={3}>
-                                                    All preferences were met.
-                                                </StyledTableCell>
-                                            </StyledTableRow>
-                                            : null }
-                                            {this.state.rowsPref.map((row) => (
-                                                <StyledTableRow key={row}>
-                                                    <StyledTableCell component="th" scope="row">
-                                                        {row}
+                                        <TableBody style={{width: "100%"}}>
+                                            {this.state.rowsFriendPref != undefined ? 
+                                            <div>
+                                                {this.state.rowsFriendPref.length == 0 ?
+                                                <StyledTableRow key={'empty'}>
+                                                    <StyledTableCell rowSpan={3}>
+                                                        All friend's preferences were met.
                                                     </StyledTableCell>
                                                 </StyledTableRow>
-                                            ))}
+                                                : null }
+                                                {this.state.rowsFriendPref.map((row) => (
+                                                    <StyledTableRow key={row} style={{width: "100%"}}>
+                                                        <StyledTableCell component="th" scope="row" style={{width: "100%"}}>
+                                                            {row}
+                                                        </StyledTableCell>
+                                                    </StyledTableRow>
+                                                ))}
+                                            </div>
+                                            : null}
                                         </TableBody>
                                     </Table>
                                 </TableContainer>
 
-                            </Column>
+                            {/* </Column> */}
                             
-                            <Column horizontal = 'center' style={{marginLeft: "20px"}}>
+                            {/* <Column horizontal = 'center' style={{marginLeft: "20px"}}>
                                
 
                                 <TableContainer component={Paper} className="boxinfoContainer" style={{width: 250}}>
@@ -310,7 +314,7 @@ class GenSchedInfo extends Component {
                                     </Table>
                                 </TableContainer>
 
-                            </Column>
+                            </Column> */}
                         </Row> 
                         </div>   
                     </Column>

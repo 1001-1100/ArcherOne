@@ -43,6 +43,7 @@ import groupArray from 'group-array'
 import { Steps, Hints } from 'intro.js-react';
 import 'intro.js/introjs.css';
 import '../css/introjs-modern.css';
+import FriendTable from '../components/FriendTable.jsx';
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -1169,6 +1170,7 @@ class GenerateSchedule extends Component {
 
                         <div   className = "genSchedInfoContainer" style={this.state.hideGenContent ? {display: "none"} :  {margin: "40px"}}>
                             <span>{this.state.currentContent}</span>
+                            {/* <FriendTable/> */}
                         
                             <div className = "paginationContainer">
                                 <Pagination aria-label="Page navigation example" style={{justifyContent: "center"}}>
