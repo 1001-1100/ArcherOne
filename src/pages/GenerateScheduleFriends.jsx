@@ -215,6 +215,7 @@ class GenerateSchedule extends Component {
                 var schedCount = 0;
                 this.setState({shareCode: res.data[0].shareCode}) 
                 this.setState({owner: res.data[0].owner}) 
+                this.setState({friends: res.data[0].friends}) 
                 res.data.map(newSchedule =>{
                     console.log(newSchedule)
                     var count = 0;
@@ -383,7 +384,7 @@ class GenerateSchedule extends Component {
     setSchedInfo = () => {
         console.log(this.state.schedules)
         var generatedContents = this.state.schedules.map((item, index) =>
-            <GenSchedInfo key={item.id} id={item.id} offerings={item.offerings} scheduleContent={item.scheduleContent} tableContent={item.tableContent} prefFriendContent={item.prefFriendContent} prefContent={item.prefContent} conflictsContent={item.conflictsContent} titleName={item.title} earliest={item.earliest} latest={item.latest} updateSchedTitle={this.updateSchedTitle} type={"friend"}  owner={this.state.owner}/>
+            <GenSchedInfo key={item.id} id={item.id} offerings={item.offerings} scheduleContent={item.scheduleContent} tableContent={item.tableContent} prefFriendContent={item.prefFriendContent} prefContent={item.prefContent} conflictsContent={item.conflictsContent} titleName={item.title} earliest={item.earliest} latest={item.latest} updateSchedTitle={this.updateSchedTitle} type={"friend"}  friends={this.state.friends} owner={this.state.owner}/>
         );
         this.setState({currentPage: 0})
         this.setState({generatedContents});
@@ -541,7 +542,7 @@ class GenerateSchedule extends Component {
          var newArray = [];
          const currentContent = this.state.currentContent;
         // var index = newArray.findIndex(this.state.currentContent);
-        const newContent = <GenSchedInfo key={currentContent.props.id} earliest={currentContent.props.earliest} latest={currentContent.props.latest} id={currentContent.props.id} offerings={currentContent.props.offerings} scheduleContent={currentContent.props.scheduleContent} tableContent={currentContent.props.tableContent} prefContent={currentContent.props.prefContent} conflictsContent={currentContent.props.conflictsContent} titleName={text} updateSchedTitle={this.updateSchedTitle} type={"friend"} owner={this.state.owner}/>
+        const newContent = <GenSchedInfo key={currentContent.props.id} earliest={currentContent.props.earliest} latest={currentContent.props.latest} id={currentContent.props.id} offerings={currentContent.props.offerings} scheduleContent={currentContent.props.scheduleContent} tableContent={currentContent.props.tableContent} prefContent={currentContent.props.prefContent} conflictsContent={currentContent.props.conflictsContent} titleName={text} updateSchedTitle={this.updateSchedTitle} type={"friend"} friends={this.state.friends} owner={this.state.owner}/>
 
         this.state.generatedContents.map(value=>{
             if(value.key == this.state.currentContent.key){
@@ -745,7 +746,7 @@ class GenerateSchedule extends Component {
                                 <Button variant='outlined' startIcon={<FileCopyIcon/>} >{this.state.copyLabel}</Button>
                             </CopyToClipboard>
                         </h5></center>
-                        <center><h6>Coordinating with: {this.state.friends}
+                        <center><h6>Coordinating with: {this.state.friends.map(f => f)} 
                         <Tooltip title="The schedule shown is in the owner's perspective. The schedule shows the list of classes you can get to maximize the classes you and your friends can take together and fit the classes your friends need. " placement="bottom">
                             <HelpIcon />
                         </Tooltip>
