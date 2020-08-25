@@ -268,6 +268,7 @@ class FriendPage extends Component {
 
             highList: [],
             lowList: [],
+            coordinating: true,
 
         }
 
@@ -681,10 +682,6 @@ class FriendPage extends Component {
         console.log(val)
     }
 
-    startGenerate = () => {
-        this.setState({doGenerate: true})
-    }
-
     handleConfigChanges=(event, type)=>{
         if(type=="saved"){
             this.setState({savedConfig: event.target.checked})
@@ -694,6 +691,29 @@ class FriendPage extends Component {
             this.setState({filterConfig:event.target.checked})
         }
     }
+
+    handleCoordinate=()=>{
+        this.setState({coordinating: false})
+        axios.post('https://archerone-backend.herokuapp.com/api/generateschedulefriends/',
+        {
+            friends: this.state.generateList,
+            user_id: localStorage.getItem('user_id'),
+            filterFull: true
+        })
+        .then(res => {
+            // console.log(res)
+            // console.log(res.data)
+            this.setState({shareCode: res.data}, () => {
+                this.setState({doGenerate: true})
+            })
+        }).catch(error => {
+            console.log(error.response)
+            this.setState({success: false});
+            this.setState({loading: false});
+            this.toggleModalWait();
+        })
+    }
+
 
     render() {
         const friendList = [];
@@ -730,8 +750,7 @@ class FriendPage extends Component {
                 <div>
                 {this.state.doGenerate &&
                 <Redirect to={{
-                            pathname: '/coordinate_schedule',
-                            state: {friends: this.state.generateList}
+                            pathname: '/coordinate_schedule/'+this.state.shareCode+'/',
                         }}
                 />
                 }
@@ -1110,7 +1129,7 @@ class FriendPage extends Component {
                                                         />
                                                     </div>
                                                     <br></br>
-                                                    <h6>Schedule Generation Configurations</h6>
+                                                    {/* <h6>Schedule Generation Configurations</h6>
 
                                                     <Row horizontal='center' style={{margin: "20px"}}>
                                                         <FormGroup>
@@ -1122,14 +1141,30 @@ class FriendPage extends Component {
                                                                 control = {<GreenCheckbox disabled checked={true} onChange={(e)=>this.handleConfigChanges(e, "pref")} id={"prefconfig"} color="primary"/>}label="Generate based on your preferences" />
                                     
                                                         </FormGroup>
-                                                    </Row>
+                                                    </Row> */}
                                                     
                                                 </ModalBody>
                                                 <ModalFooter>
                                                     <Button style={{color: "gray"}} onClick={this.toggleModalSuggest}>Cancel</Button>
-                                                    <Button onClick={this.startGenerate} color="primary">Done</Button>
+                                                    <Button onClick={this.handleCoordinate} color="primary">Done</Button>
                                                 </ModalFooter>
                                             </Modal>  
+                                        <div className="courseInputContainer">
+                                            <Modal isOpen={!this.state.coordinating} returnFocusAfterClose={false} backdrop={true} data-keyboard="false" centered={true}>
+                                                <ModalHeader>
+                                                    <center>
+                                                        <br></br><p>Please wait...In the process of loading your schedules</p>
+                                                        <ReactLoading type={'spin'} color={'#9BCFB8'} height={'10%'} width={'10%'}/>
+                                                    </center>
+                                                    </ModalHeader>
+                                                
+                                                    <ModalFooter>
+                                                        
+                                                        <Button style={{color: "gray"}}>Cancel</Button>
+                                                    </ModalFooter>
+                                                
+                                            </Modal> 
+                                        </div>
                                         </Grid>
 
                                         

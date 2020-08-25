@@ -52,6 +52,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import HelpIcon from '@material-ui/icons/Help';
 import Tooltip from '@material-ui/core/Tooltip';
+import {Tabs, Tab } from 'react-bootstrap';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
@@ -191,129 +192,108 @@ class GenerateSchedule extends Component {
     componentDidMount(){
         const id = localStorage.getItem('user_id');
         console.log(this.props)
-        if(this.props.params['id'] == undefined){
-            axios.post('https://archerone-backend.herokuapp.com/api/generateschedulefriends/',
-            {
-              friends: this.props.props.location.state.friends,
-              user_id: localStorage.getItem('user_id'),
-              filterFull: true
-            })
-            .then(res => {
-                // console.log(res)
-                // console.log(res.data)
-                this.setState({shareCode: res.data}, () => {
-                    this.setState({redirect: true})
-                })
-            }).catch(error => {
-                console.log(error.response)
-                this.setState({success: false});
-                this.setState({loading: false});
-                this.toggleModalWait();
-            })
-        }else{
-            axios.get('https://archerone-backend.herokuapp.com/api/getsharecode/'+this.props.params['id']+'/')
-            .then(res => {
-                console.log(res)
-                // this.setState({owner: res.data[0].owner}) 
-                var friends = {}
-                var friendKeys = Object.keys(res.data)
-                friendKeys.map(key => {
-                    console.log(key)
-                    console.log(res.data[key])
-                    var schedules = []
-                    var schedCount = 0;
-                    this.setState({shareCode: res.data[key][0].shareCode}) 
-                    res.data[key].map(newSchedule => {
-                        console.log(newSchedule)
-                        var count = 0;
-                        var scheduleContent = []
-                        var tableContent = []
-                        var earliest = 9
-                        var latest = 17
+        axios.get('https://archerone-backend.herokuapp.com/api/getsharecode/'+this.props.params['id']+'/')
+        .then(res => {
+            console.log(res)
+            // this.setState({owner: res.data[0].owner}) 
+            var friends = {}
+            var friendKeys = Object.keys(res.data)
+            friendKeys.map(key => {
+                console.log(key)
+                console.log(res.data[key])
+                var schedules = []
+                var schedCount = 0;
+                res.data[key].map(newSchedule => {
+                    this.setState({shareCode: newSchedule.shareCode}) 
+                    console.log(newSchedule)
+                    var count = 0;
+                    var scheduleContent = []
+                    var tableContent = []
+                    var earliest = 9
+                    var latest = 17
 
-                        newSchedule.offerings.map(offering=>{
-                            var startTime = offering.timeslot_begin.split(':');
-                            var endTime = offering.timeslot_end.split(':');
-                            var newContent = 
-                            {
-                                id: count,
-                                title: offering.course + ' ' + offering.section,
-                                section: offering.section,
-                                startDate: this.createTimeslot(offering.day,startTime[0],startTime[1]),
-                                endDate: this.createTimeslot(offering.day,endTime[0],endTime[1]),
-                                priorityId: 3,
-                                location: offering.room,
-                                professor: offering.faculty,
-                                startTime: offering.timeslot_begin.substring(0, offering.timeslot_begin.length - 3),
-                                endTime: offering.timeslot_end.substring(0, offering.timeslot_end.length - 3),
-                                days: offering.day,
-                                classCode: offering.classnumber 
-                            }
-                            if(earliest > Number(startTime[0])){
-                                earliest = Number(startTime[0])
-                            }
-                            if(latest < Number(endTime[0]) + 1){
-                                latest = Number(endTime[0]) + 1
-                            }
-                            scheduleContent.push(newContent);
-                            var day = ''
-                            var classnumber = ''
-                            var course = ''
-                            var section = ''
-                            var faculty = ''
-                            var timeslot_begin = ''
-                            var timeslot_end = ''
-                            var room = ''
-                            var max_enrolled = ''
-                            var current_enrolled = ''
+                    newSchedule.offerings.map(offering=>{
+                        var startTime = offering.timeslot_begin.split(':');
+                        var endTime = offering.timeslot_end.split(':');
+                        var newContent = 
+                        {
+                            id: count,
+                            title: offering.course + ' ' + offering.section,
+                            section: offering.section,
+                            startDate: this.createTimeslot(offering.day,startTime[0],startTime[1]),
+                            endDate: this.createTimeslot(offering.day,endTime[0],endTime[1]),
+                            priorityId: 3,
+                            location: offering.room,
+                            professor: offering.faculty,
+                            startTime: offering.timeslot_begin.substring(0, offering.timeslot_begin.length - 3),
+                            endTime: offering.timeslot_end.substring(0, offering.timeslot_end.length - 3),
+                            days: offering.day,
+                            classCode: offering.classnumber 
+                        }
+                        if(earliest > Number(startTime[0])){
+                            earliest = Number(startTime[0])
+                        }
+                        if(latest < Number(endTime[0]) + 1){
+                            latest = Number(endTime[0]) + 1
+                        }
+                        scheduleContent.push(newContent);
+                        var day = ''
+                        var classnumber = ''
+                        var course = ''
+                        var section = ''
+                        var faculty = ''
+                        var timeslot_begin = ''
+                        var timeslot_end = ''
+                        var room = ''
+                        var max_enrolled = ''
+                        var current_enrolled = ''
 
-                            day = offering.day
-                            classnumber = offering.classnumber
-                            course = offering.course
-                            section = offering.section
-                            faculty = offering.faculty
-                            timeslot_begin = offering.timeslot_begin
-                            timeslot_end = offering.timeslot_end
-                            room = offering.room
-                            max_enrolled = offering.max_enrolled
-                            current_enrolled = offering.current_enrolled
-                            var newTableContent = this.createData(classnumber, course, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled);
-                            // tableContent.push(newTableContent)
-                            count += 1;
-                        })
-                        schedCount += 1;
-                        schedules.push({
-                            id: schedCount,
-                            title: "Schedule "+schedCount.toString(),
-                            scheduleContent: scheduleContent,
-                            tableContent: tableContent,
-                            prefContent: [],
-                            prefContent: newSchedule.preferences,
-                            prefFriendContent: newSchedule.friendPreferences,
-                            conflictsContent: newSchedule.information,
-                            earliest: earliest,
-                            latest: latest,
-                            offerings: newSchedule.offerings,
-                            key: key 
-                        });
+                        day = offering.day
+                        classnumber = offering.classnumber
+                        course = offering.course
+                        section = offering.section
+                        faculty = offering.faculty
+                        timeslot_begin = offering.timeslot_begin
+                        timeslot_end = offering.timeslot_end
+                        room = offering.room
+                        max_enrolled = offering.max_enrolled
+                        current_enrolled = offering.current_enrolled
+                        var newTableContent = this.createData(classnumber, course, section, faculty, day, timeslot_begin, timeslot_end, room, max_enrolled, current_enrolled);
+                        // tableContent.push(newTableContent)
+                        count += 1;
                     })
-                    friends[key] = this.setSchedInfo(schedules);
+                    schedCount += 1;
+                    schedules.push({
+                        id: schedCount,
+                        title: "Schedule "+schedCount.toString(),
+                        scheduleContent: scheduleContent,
+                        tableContent: tableContent,
+                        prefContent: [],
+                        prefContent: newSchedule.preferences,
+                        prefFriendContent: newSchedule.friendPreferences,
+                        conflictsContent: newSchedule.information,
+                        earliest: earliest,
+                        latest: latest,
+                        offerings: newSchedule.offerings,
+                        key: key 
+                    });
                 })
-                console.log(friends)
-                console.log(friendKeys)
-                this.setState({friends: friends, friendKeys: friendKeys, currentContent: friends[friendKeys[0]], currentFriend: friendKeys[0]}, () => {
-                    this.setState({success: true});
-                    this.setState({loading: false});
-                    this.setState({dataReceived: true});
-                })
-                this.toggleModalWait();
-            }).catch(error => {
-                console.log(error)
-                this.setState({success: false});
-                this.setState({loading: false});
-                this.toggleModalWait();
+                friends[key] = this.setSchedInfo(schedules);
             })
-        }
+            console.log(friends)
+            console.log(friendKeys)
+            this.setState({friends: friends, friendKeys: friendKeys, currentContent: friends[friendKeys[0]][0], currentFriend: friendKeys[0]}, () => {
+                this.setState({success: true});
+                this.setState({loading: false});
+                this.setState({dataReceived: true});
+            })
+            this.toggleModalWait();
+        }).catch(error => {
+            console.log(error)
+            this.setState({success: false});
+            this.setState({loading: false});
+            this.toggleModalWait();
+        })
     }
     renderRedirect = () => {
         return <Redirect to={'/coordinate_schedule/'+this.state.shareCode+'/'}/>
@@ -350,30 +330,7 @@ class GenerateSchedule extends Component {
        
     }
 
-    handlePageChange = (e,index) => {
-        this.setState(state =>{
-            var currentContent = state.generatedContents[index];
-            return {currentContent};
-        });
-        
-        this.setState({currentPage: index});
-        this.setState(state =>{
-            var currentPage = index;
-            return {currentPage};
-            });
 
-        this.handleScrollToGen();
-
-        if(this.state.savedScheds.includes(this.state.generatedContents[index].key)){
-            this.setState({saveButtonLabel: "Saved"});
-            const styleChange = {margin: "30px", backgroundColor: "white", color: "#16775D"};
-            this.setState({saveButtonStyle: styleChange});
-        }else{
-            this.setState({saveButtonLabel: "Save Schedule"});
-            const styleChange = {margin: "30px", backgroundColor: "#16775D", color: "white"};
-            this.setState({saveButtonStyle: styleChange});
-        }
-    }
 
     createTimeslot = (day, hour, minute) =>{
         if(day == 'M'){
@@ -395,12 +352,12 @@ class GenerateSchedule extends Component {
         var generatedContents = schedules.map((item, index) =>
             <GenSchedInfo key={item.id} id={item.id} offerings={item.offerings} scheduleContent={item.scheduleContent} tableContent={item.tableContent} prefFriendContent={item.prefFriendContent} prefContent={item.prefContent} conflictsContent={item.conflictsContent} titleName={item.title} earliest={item.earliest} latest={item.latest} updateSchedTitle={this.updateSchedTitle}/>
         );
-        // this.setState({currentPage: 0})
+        this.setState({currentPage: 0})
+        this.setState({pagesCount: generatedContents.length});
         // this.handleScrollToGen();
-        return generatedContents[0];
+        return generatedContents
         // this.setState({generatedContents});
         // this.setState({hideGenContent: false});
-        // this.setState({pagesCount: generatedContents.length});
         // this.setState({currentContent: generatedContents[0]})
 
     }
@@ -413,7 +370,7 @@ class GenerateSchedule extends Component {
          var newArray = [];
          const currentContent = this.state.currentContent;
         // var index = newArray.findIndex(this.state.currentContent);
-        const newContent = <GenSchedInfo key={currentContent.props.id} earliest={currentContent.props.earliest} latest={currentContent.props.latest} id={currentContent.props.id} offerings={currentContent.props.offerings} scheduleContent={currentContent.props.scheduleContent} tableContent={currentContent.props.tableContent} prefContent={currentContent.props.prefContent} conflictsContent={currentContent.props.conflictsContent} titleName={text} updateSchedTitle={this.updateSchedTitle} type={"friend"}/>
+        const newContent = <GenSchedInfo key={currentContent.props.id} earliest={currentContent.props.earliest} latest={currentContent.props.latest} id={currentContent.props.id} offerings={currentContent.props.offerings} scheduleContent={currentContent.props.scheduleContent} tableContent={currentContent.props.tableContent} prefContent={currentContent.props.prefContent} conflictsContent={currentContent.props.conflictsContent} titleName={text} updateSchedTitle={this.updateSchedTitle}/>
 
         this.state.generatedContents.map(value=>{
             if(value.key == this.state.currentContent.key){
@@ -567,11 +524,36 @@ class GenerateSchedule extends Component {
         
     }
 
+    handlePageChange = (e,index) => {
+        this.setState(state =>{
+            var currentContent = this.state.friends[this.state.currentFriend][index];
+            return {currentContent};
+        });
+        
+        this.setState({currentPage: index});
+        this.setState(state =>{
+            var currentPage = index;
+            return {currentPage};
+            });
+
+        this.handleScrollToGen();
+
+        if(this.state.savedScheds.includes(this.state.friends[this.state.currentFriend].key)){
+            this.setState({saveButtonLabel: "Saved"});
+            const styleChange = {margin: "30px", backgroundColor: "white", color: "#16775D"};
+            this.setState({saveButtonStyle: styleChange});
+        }else{
+            this.setState({saveButtonLabel: "Save Schedule"});
+            const styleChange = {margin: "30px", backgroundColor: "#16775D", color: "white"};
+            this.setState({saveButtonStyle: styleChange});
+        }
+    }
+
     handleTab = (event, value) => {
         console.log("handle tab")
         console.log(value)
         this.setState({currentFriend: value})
-        this.setState({currentContent: this.state.friends[value]})
+        this.setState({currentContent: this.state.friends[value][this.state.currentPage]})
 
     }
 
@@ -611,28 +593,26 @@ class GenerateSchedule extends Component {
                     </div>
                     {/* <img class='img-responsive' id='lower' src={SidebarIMG}/> */}
                 </div>
-                {this.state.redirect &&
-                    this.renderRedirect()
-                }
-                {this.state.redirect &&
-                    this.reload()
-                }
                 {this.state.dataReceived ?
+                
                 <div>
 
                     <div>
                         <Column flexGrow={1} style={{margin: "40px"}}>
                             <center><h5>
                                 {/* {this.state.owner+'\'s generated schedules: '}  */}
+                                Share with friends: 
                                 <CopyToClipboard text={linkShare} onCopy={this.onCopy}>
                                     <Button variant='outlined' startIcon={<FileCopyIcon/>} >{this.state.copyLabel}</Button>
                                 </CopyToClipboard>
                             </h5></center>
-                <center><h6>Coordinated schedules of: {this.state.friendKeys.map(friend => <span>{friend}</span>)} 
-                <Tooltip title="こんにちは！" placement="bottom">
+                <center><h6>Coordinated schedules of: {this.state.friendKeys.map((friend, index) => <span>{index+1 != this.state.friendKeys.length ? friend + ", " : friend}</span>)} 
+                {/* <Tooltip title="こんにちは！" placement="bottom">
                     <HelpIcon />
-                </Tooltip>
+                </Tooltip> */}
+            
                 </h6>
+                <div style={{marginTop: "30px"}}>
                 <ToggleButtonGroup
                     value={this.state.currentFriend}
                     exclusive
@@ -645,12 +625,13 @@ class GenerateSchedule extends Component {
                     </ToggleButton>
                     )}
                 </ToggleButtonGroup>
+                </div>
                 </center>
                             <div className = "genSchedInfoContainer" style={{margin: "40px"}}>
                                 <span>{this.state.currentContent}</span>
                                 {/* <FriendTable/> */}
                             
-                                {/* <div className = "paginationContainer">
+                                <div className = "paginationContainer">
                                     <Pagination aria-label="Page navigation example" style={{justifyContent: "center"}}>
                                         <PaginationItem disabled={this.state.currentPage <= 0}>
                                             <PaginationLink onClick={e => this.handlePageChange(e, this.state.currentPage - 1)}
@@ -663,7 +644,7 @@ class GenerateSchedule extends Component {
                                                 </PaginationLink>
                                             </PaginationItem>
                                             )}
-                                        <PaginationItem disabled={this.state.currentPage >= this.state.generatedContents.length - 1}>
+                                        <PaginationItem disabled={this.state.currentPage >= this.state.friends[this.state.currentFriend].length - 1}>
                                             <PaginationLink
                                                 onClick={e => this.handlePageChange(e, this.state.currentPage + 1)}
                                                 next
@@ -671,7 +652,7 @@ class GenerateSchedule extends Component {
                                             
                                             </PaginationItem>
                                     </Pagination>
-                                </div> */}
+                                </div>
                                 <Row horizontal='center'>
                                     <div className={classes.root}>
                                             <div className={classes.wrapper}> 
