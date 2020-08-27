@@ -350,6 +350,9 @@ class FriendPage extends Component {
         this.setState({contentSelected: true})
         this.setState({selectedFriendId: requests[i].id})
         this.setState({hasSelectedFriend: false});
+        this.setState({friend: requests[i]})
+        this.setState({generateList: [requests[i].id]})
+        
         axios.get('https://archerone-backend.herokuapp.com/api/schedulelist/'+requests[i].id+'/')
         .then(res => {
             const schedules = []
@@ -1054,6 +1057,7 @@ class FriendPage extends Component {
                                                             options={friendList}
                                                             disableCloseOnSelect
                                                             getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
+                                                            defaultValue={[friendList[0]]}
                                                             renderOption={(option, { selected }) => (
                                                                 <React.Fragment>
                                                                 <Checkbox
@@ -1110,6 +1114,7 @@ class FriendPage extends Component {
                                                             options={friendList}
                                                             disableCloseOnSelect
                                                             getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
+                                                            defaultValue={[this.state.friend]}
                                                             renderOption={(option, { selected }) => (
                                                                 <React.Fragment>
                                                                 <Checkbox

@@ -17,7 +17,6 @@
     "bootstrap-icons": "^1.0.0-alpha2",
     "create-react-app": "^3.4.1",
     "date-fns": "^2.11.1",
-    "express-favicon": "^2.0.1",
     "flowpoints": "^1.0.18",
     "group-array": "^1.0.0",
     "html2canvas": "^1.0.0-rc.5",
@@ -39,11 +38,12 @@
     "react-smooth-dnd": "^0.11.1",
     "react-window": "^1.8.5",
     "reactstrap": "^8.5.1",
+    "rrule": "^2.6.5",
     "simple-flexbox": "^2.3.1",
     "underscore": "^1.10.2"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

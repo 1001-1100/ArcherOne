@@ -360,12 +360,14 @@ class Index extends Component {
     var pal7 = ['#9F8189', '#F3ABB6', '#FAA7B8', '#FBEEE6', '#FFCAD4', '#FFE5D8'];
     var pal8 = ['#0191B4', '#35BBCA', '#D3DD18', '#F8D90F', '#FE7A15'];
     var pal9 = ['#47CACC', '#63BCC9', '#CDB3D4', '#E7B7C8', '#FFBE88'];
+    var pal10 = ['#C6878F', '#B79D94', '#969696', '#67697C', '#253D5B'];
     this.processPaletteChoices('Pal4', pal4);
     this.processPaletteChoices('Pal5', pal5);
     this.processPaletteChoices('Pal6', pal6);
     this.processPaletteChoices('Pal7', pal7);
     this.processPaletteChoices('Pal8', pal8);
     this.processPaletteChoices('Pal9', pal9);
+    this.processPaletteChoices('Pal10', pal10);
     if(!this.state.dataReceived){
       this.retrieveSchedInfo()
     }

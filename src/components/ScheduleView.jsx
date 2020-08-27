@@ -217,9 +217,10 @@ class ScheduleView extends Component {
         earliest: earliest,
         palette: props.palette,
         matched: matched
+      }, () => {
+        this.processColoredClasses();
       });
 
-      this.processColoredClasses();
       console.log('REACHED SCHEDULEVIEW')
     }
     
