@@ -763,16 +763,20 @@ class GenerateSchedule extends Component {
                     });
                 })
                 console.log(schedules)
-                this.setState({schedules});
-                this.setSchedInfo();
-                this.setState({success: true});
-                this.setState({loading: false});
-                this.toggleModalWait();
+                if(!this.state.cancelled){
+                    this.setState({schedules});
+                    this.setSchedInfo();
+                    this.setState({success: true});
+                    this.setState({loading: false});
+                    this.setState({openModalWait: false});
+                    this.setState({cancelled: false})
+                }
+                this.setState({cancelled: false})
             }).catch(error => {
                 console.log(error.response)
                 this.setState({success: false});
                 this.setState({loading: false});
-                this.toggleModalWait();
+                this.setState({openModalWait: false});
             })
         })
 
@@ -959,6 +963,12 @@ class GenerateSchedule extends Component {
         var openModalVar = this.state.openModalWait;
         this.setState({openModalWait: !openModalVar});
       }
+
+    onCancel = () => {
+        this.setState({openModalWait: false})
+        this.setState({loading: false})
+        this.setState({cancelled: true})
+    }
     render() { 
         let search_field = this.props.search_field;
         // const { currentPage } = this.state;
@@ -1162,7 +1172,7 @@ class GenerateSchedule extends Component {
                                 
                                     <ModalFooter>
                                         
-                                        <Button style={{color: "gray"}}>Cancel</Button>
+                                        <Button onClick={this.onCancel} style={{color: "gray"}}>Cancel</Button>
                                     </ModalFooter>
                                 
                             </Modal> 

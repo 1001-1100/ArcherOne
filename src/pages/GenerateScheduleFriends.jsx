@@ -443,7 +443,7 @@ class GenerateSchedule extends Component {
         }
     
         this.setState({snackBar: false});
-      }
+    }
     
     handleFilterFull = () => {
         this.setState({filterFull: !this.state.filterFull});

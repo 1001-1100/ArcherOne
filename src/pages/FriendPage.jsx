@@ -271,6 +271,7 @@ class FriendPage extends Component {
             coordinating: true,
             snackBar: false,
             snackBarText: '',
+            cancelled: false,
 
         }
 
@@ -709,14 +710,26 @@ class FriendPage extends Component {
             // console.log(res)
             // console.log(res.data)
             this.setState({shareCode: res.data}, () => {
-                this.setState({doGenerate: true})
+                if(!this.state.cancelled){
+                    this.setState({doGenerate: true})
+                }else{
+                    this.setState({coordinating: true})
+                    console.log("cancelled")
+                }
+                this.setState({cancelled: false})
             })
         }).catch(error => {
             console.log(error.response)
-            this.setState({coordinating: false})
+            this.setState({coordinating: true})
             this.setState({snackBarText: 'Error occured while coordinating schedule.'})
             this.setState({snackBar: true})
+            this.setState({cancelled: false})
         })
+    }
+
+    onCancel = () => {
+        this.setState({cancelled: true})
+        this.setState({coordinating: true})
     }
 
 
@@ -1167,7 +1180,7 @@ class FriendPage extends Component {
                                                 
                                                     <ModalFooter>
                                                         
-                                                        <Button style={{color: "gray"}}>Cancel</Button>
+                                                        <Button onClick={this.onCancel}style={{color: "gray"}}>Cancel</Button>
                                                     </ModalFooter>
                                                 
                                             </Modal> 
