@@ -187,7 +187,7 @@ class Notifications extends React.Component{
                     </DropdownItem>
 
                     {options.map(option => (
-                        <Link className="friendItem" to={option.category=="Friend" ? {pathname: "/view_friends", state:{selectedFriendId: -1}} : "/#viewCoursesHome"} >
+                        <Link className="friendItem" to={{pathname: "/view_friends", state:{selectedFriendId: -1}}} >
                         <DropdownItem disabled className="notifItem" style={{backgroundColor: option.bgColor, fontWeight: option.fWeight}}>
                             <DropdownItem divider />
                             <this.specifyIcon category={option.category} />

@@ -269,6 +269,8 @@ class FriendPage extends Component {
             highList: [],
             lowList: [],
             coordinating: true,
+            snackBar: false,
+            snackBarText: '',
 
         }
 
@@ -711,9 +713,9 @@ class FriendPage extends Component {
             })
         }).catch(error => {
             console.log(error.response)
-            this.setState({success: false});
-            this.setState({loading: false});
-            this.toggleModalWait();
+            this.setState({coordinating: false})
+            this.setState({snackBarText: 'Error occured while coordinating schedule.'})
+            this.setState({snackBar: true})
         })
     }
 
@@ -1218,6 +1220,11 @@ class FriendPage extends Component {
                                 </div>
                                 </Tab>
                             </Tabs>
+                              <Snackbar open={this.state.snackBar} autoHideDuration={4000} onClose={this.handleCloseSnackBar}>
+                                <Alert onClose={this.handleCloseSnackBar} severity="error">
+                                  {this.state.snackBarText}
+                                </Alert>
+                              </Snackbar>
                         </div>
                         
                         : 

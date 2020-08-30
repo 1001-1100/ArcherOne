@@ -76,6 +76,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
+import { BlockPicker, CirclePicker, SketchPicker } from 'react-color';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -91,6 +92,17 @@ const GreenCheckbox = withStyles({
 })((props) => <Checkbox color="default" {...props} />);
 
 const styles = theme => ({
+  popover: {
+    position: 'absolute',
+    zIndex: '2',
+  },
+  cover: {
+    position: 'fixed',
+    top: '0px',
+    right: '0px',
+    bottom: '0px',
+    left: '0px',
+  },
   buttonStyle:{
       textTransform: "none",
       width: "160px",
@@ -263,7 +275,7 @@ class Index extends Component {
         openModalEdit: false,
         paletteChoices: [],
         // chosenPalette: ['#9BCFB8', '#7FB174', '#689C97', '#072A24', '#D1DDDB', '#85B8CB', '#1D6A96', '#283B42','#FFB53C', '#EEB3A3', '#F3355C', '#FAA98B', '#E6AECF', '#AEE0DD', '#01ACBD','#FED770', ' #F29F8F', '#FB7552', '#076A67','#324856', '#4A746A', '#D18237', '#D66C44', '#FFA289', '#6A92CC', '#706FAB', '#50293C'],
-        chosenPalette: [],
+        chosenPalette: ['#9BCFB8', '#7FB174', '#689C97', '#072A24', '#D1DDDB'],
         classboxDetailsList: [
           {id: 1, title: "showFaculty", checked: true},
           {id: 2, title: "showTime", checked: true},
@@ -281,9 +293,9 @@ class Index extends Component {
         goToCreate: false,
         rejected: [],
         allNumbers: [],
-        editLoad: true
+        editLoad: true,
+        displayColorPicker: [false, false, false, false, false],
 //        this.scheduleRef = React.createRef();
-        
       }
       if(localStorage.getItem('palette') == undefined){
         localStorage.setItem('palette', JSON.stringify(['#9BCFB8', '#7FB174', '#689C97', '#072A24', '#D1DDDB', '#85B8CB', '#1D6A96', '#283B42','#FFB53C', '#EEB3A3', '#F3355C', '#FAA98B', '#E6AECF', '#AEE0DD', '#01ACBD','#FED770', ' #F29F8F', '#FB7552', '#076A67','#324856', '#4A746A', '#D18237', '#D66C44', '#FFA289', '#6A92CC', '#706FAB', '#50293C']))
@@ -347,30 +359,52 @@ class Index extends Component {
   }
 
   componentDidMount(){
-    var pal1 = ['#EAC9C0', '#DAB2D3', '#9EDAE3', '#65C4D8', '#FFD0D6', '#B7DDE0', '#FEE19F', '#735b69'];
-    var pal2 = ['#A9DFED', '#EBD6E8', '#84C0E9', '#37419A', '#7CCAAE', '#A299CA', '#FFb69B', '#ECEC84'];
-    var pal3 = ['#9BCFB8', '#7FB174', '#689C97', '#072A24', '#D1DDDB', '#85B8CB', '#1D6A96', '#283B42'];
-    this.processPaletteChoices('Pastel Blossoms', pal1);
-    this.processPaletteChoices('Halographic', pal2);
-    this.processPaletteChoices('Plantita', pal3);
+    // var pal1 = ['#EAC9C0', '#DAB2D3', '#9EDAE3', '#65C4D8', '#FFD0D6', '#B7DDE0', '#FEE19F', '#735b69'];
+    // var pal2 = ['#A9DFED', '#EBD6E8', '#84C0E9', '#37419A', '#7CCAAE', '#A299CA', '#FFb69B', '#ECEC84'];
+    // var pal3 = ['#9BCFB8', '#7FB174', '#689C97', '#072A24', '#D1DDDB', '#85B8CB', '#1D6A96', '#283B42'];
+    // this.processPaletteChoices('Pastel Blossoms', pal1);
+    // this.processPaletteChoices('Halographic', pal2);
+    // this.processPaletteChoices('Plantita', pal3);
 
-    var pal4 = ['#138086', '#534666', '#CD7672', '#DC8665', '#E8A49C', '#EEB462'];
+    // var pal4 = ['#138086', '#534666', '#CD7672', '#DC8665', '#E8A49C', '#EEB462'];
     var pal5 = ['#522157', '#8B4C70', '#C2649A', '#E4C7B7', '#E4DFD9'];
-    var pal6 = ['#205072', '#2C6975', '#329D9C', '#56C596', '#68B2A0', '#7BE495', '#CDE0C9', '#CFF4D2'];
-    var pal7 = ['#9F8189', '#F3ABB6', '#FAA7B8', '#FBEEE6', '#FFCAD4', '#FFE5D8'];
+    // var pal6 = ['#205072', '#2C6975', '#329D9C', '#56C596', '#68B2A0', '#7BE495', '#CDE0C9', '#CFF4D2'];
+    // var pal7 = ['#9F8189', '#F3ABB6', '#FAA7B8', '#FBEEE6', '#FFCAD4', '#FFE5D8'];
     var pal8 = ['#0191B4', '#35BBCA', '#D3DD18', '#F8D90F', '#FE7A15'];
     var pal9 = ['#47CACC', '#63BCC9', '#CDB3D4', '#E7B7C8', '#FFBE88'];
     var pal10 = ['#C6878F', '#B79D94', '#969696', '#67697C', '#253D5B'];
-    this.processPaletteChoices('Pal4', pal4);
+    // this.processPaletteChoices('Pal4', pal4);
     this.processPaletteChoices('Pal5', pal5);
-    this.processPaletteChoices('Pal6', pal6);
-    this.processPaletteChoices('Pal7', pal7);
+    // this.processPaletteChoices('Pal6', pal6);
+    // this.processPaletteChoices('Pal7', pal7);
     this.processPaletteChoices('Pal8', pal8);
     this.processPaletteChoices('Pal9', pal9);
     this.processPaletteChoices('Pal10', pal10);
     if(!this.state.dataReceived){
       this.retrieveSchedInfo()
     }
+    this.randomPalette()
+
+
+  }
+
+  randomPalette = () => {
+    function componentToHex(c) {
+      var hex = c.toString(16);
+      return hex.length == 1 ? "0" + hex : hex;
+    }
+    function rgbToHex(r, g, b) {
+      return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+    }
+    axios.get('https://archerone-backend.herokuapp.com/api/randompalette/'
+    ).then(res => {
+      const chosenPalette = []
+      console.log(res.data)
+      res.data.result.map(color => {
+        chosenPalette.push(rgbToHex(color[0], color[1], color[2]))
+      })
+      this.setState({chosenPalette})
+    })
   }
 
   retrieveSchedInfo = () => {
@@ -839,6 +873,31 @@ class Index extends Component {
     this.setState({editLoad: true})
     this.setState({editDialog: false})
   }
+
+  handleColorPicker = (index) => {
+    const displayPicker = [] 
+    this.state.displayColorPicker.map((picker, index2) => {
+      if(index == index2){
+        displayPicker.push(true)
+      }else{
+        displayPicker.push(false)
+      }
+    });
+    this.setState({displayColorPicker:displayPicker})
+  }
+  handleClosePicker = (index) => {
+    const displayPicker = [] 
+    this.state.displayColorPicker.map((picker, index2) => {
+      displayPicker.push(false)
+    });
+    this.setState({displayColorPicker:displayPicker})
+  }
+  handleChangePicker = (color,e,index) => {
+    // console.log(val)
+    const chosenPalette = this.state.chosenPalette;
+    chosenPalette[index] = color['hex'];
+    this.setState({chosenPalette})
+  } 
   pagination = () => {
     return(
       <div id="viewCoursesHome" className = "paginationContainer" style={(this.state.generatedContents != null) ? {} : {display: "none"}}>
@@ -870,7 +929,6 @@ class Index extends Component {
         this.state.currentContent = this.state.generatedContents[this.state.currentPage];
 
         const { classes } = this.props;
-        
         const steps = [
           {
             intro: 'Welcome to AnimoSched!',
@@ -1045,7 +1103,7 @@ class Index extends Component {
                             select
                             label="Color Palette"
                             onChange={this.handlePaletteChange}
-                            helperText="Choose a color palette for the class boxes in your schedule."
+                            helperText="Choose a pre-made color palette."
                             variant="outlined"
                             style={{width: "100%", marginTop: "10px", marginBottom: "25px"}}
                             value={this.state.chosenPalette}
@@ -1063,9 +1121,32 @@ class Index extends Component {
                                 </MenuItem>
                                     ))}
                         </TextField>
+                        <center>
+                          <Grid container spacing={6}>
+                            {this.state.chosenPalette.map((color, index) => 
+                              <Grid item xs={2}>
+                                <Chip onClick={() => this.handleColorPicker(index)} clickable style={{backgroundColor:color}} label={color}></Chip>
+                                { this.state.displayColorPicker[index] ? <div style={ styles.popover }>
+                                  <div style={ styles.cover } onClick={() => this.handleClosePicker(index) }/>
+                                  <SketchPicker color={color} onChange={(color, event) => this.handleChangePicker(color,event,index) } />
+                                </div> : null }
+                              </Grid>
+                            )}
+                          </Grid>
+                        </center>
+                        <center>
+                          <Button
+                            variant="contained"
+                            className={classes.buttonStyle}
+                            onClick={this.randomPalette}
+                            >
+                            Generate Random Palette
+                          </Button>
+                        </center>
+
                         </div>
                         
-                        <h5>Class Box Details</h5>
+                        {/* <h5>Class Box Details</h5>
                         <div>
                           <FormGroup>
                               <FormControlLabel
@@ -1075,7 +1156,7 @@ class Index extends Component {
                               <FormControlLabel
                               control = {<GreenCheckbox checked={this.state.classboxDetailsList[2].checked} onChange={this.handleClassBoxChange} id={this.state.classboxDetailsList[2].id} color="primary"/>}label="Show room assigned" />
                           </FormGroup>
-                        </div>
+                        </div> */}
                       </ModalBody>
                     <ModalFooter>
                       <Button style={{color: "gray"}}onClick={this.toggleModal}>Cancel</Button>
