@@ -401,6 +401,11 @@ class GenerateSchedule extends Component {
     componentDidMount(){
         const id = localStorage.getItem('user_id');
         var AutoCompleteValue = JSON.parse(localStorage.getItem('addCourses'))
+        var schedules = localStorage.getItem('schedules') 
+        var setSched = false;
+        if(schedules != undefined){
+            schedules = JSON.parse(schedules)
+        }
         if(AutoCompleteValue != null){
             this.setState({AutoCompleteValue})
             this.setState({currentCourse: AutoCompleteValue});
@@ -427,14 +432,24 @@ class GenerateSchedule extends Component {
                             if(priority){
                                 this.getCourseOfferings(id, course, this.state.highCourses, () => {
                                     done += 1;
-                                    this.setState({dataReceived: true})
+                                    this.setState({dataReceived: true}, () => {
+                                        if(!setSched){
+                                            this.setSchedInfo();
+                                            setSched = true
+                                        }
+                                    })
                                 })
                             }else{
                                 this.getLowCourseOfferings(id, course, this.state.lowCourses, () => {
                                     done += 1;
                                     console.log('test 2')
                                     if(total <= done){
-                                        this.setState({dataReceived: true})
+                                        this.setState({dataReceived: true}, () => {
+                                            if(!setSched){
+                                                this.setSchedInfo();
+                                                setSched = true
+                                            }
+                                        })
                                     }
                                 })
                             }
@@ -445,7 +460,16 @@ class GenerateSchedule extends Component {
                     this.setState({courseList:newCourseList})
                 })
                 if(total <= done){
-                    this.setState({dataReceived: true})
+                    this.setState({dataReceived: true}, () => {
+                        if(!setSched){
+                            this.setSchedInfo();
+                            setSched = true
+                        }
+                    })
+                }
+                console.log(schedules)
+                if(schedules != undefined){
+                    this.setState({schedules})
                 }
                 console.log(this.state.highCourses.length)
                 console.log(this.state.lowCourses.length)
@@ -764,6 +788,7 @@ class GenerateSchedule extends Component {
                 })
                 console.log(schedules)
                 if(!this.state.cancelled){
+                    localStorage.setItem('schedules', JSON.stringify(schedules))
                     this.setState({schedules});
                     this.setSchedInfo();
                     this.setState({success: true});
