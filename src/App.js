@@ -32,6 +32,7 @@ import SurveyThanksPage from "./pages/SurveyThanks.jsx";
 import axios from 'axios';
 import qs from 'qs';
 import queryString from 'query-string'
+import {useCookies} from 'react-cookie'
 
 class App extends Component {
   constructor(props){
