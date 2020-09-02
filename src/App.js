@@ -48,32 +48,35 @@ class App extends Component {
 
   // this.state.logged_in --> indicates if user is logged in or not
 
-  componentWillMount(){
+  componentDidMount(){
 
-    // if(this.state.logged_in){
-    //   axios.get('https://archerone-backend.herokuapp.com/api/auth/user/',
-    //   {
-    //     headers: {
-    //       Authorization: `JWT ${localStorage.getItem('token')}` 
-    //     },
-    //     withCredentials: true
-    //   })
-    //   .then(res => {
-    //     this.setState({
-    //       logged_in: true,
-    //       first_name: res.data.first_name,
-    //       last_name: res.data.last_name,
-    //       id_num: ''
-    //     })
-    //   })
-    //   .catch(error => {
-    //     console.log(error)
-    //   })
-    // }
+    var cookie = 'qi0ftcskpd1eiufxhopx8xqsx5dsqlos';
+    console.log('cookie check')
+    console.log(cookie)
+
+      axios.get('https://archerone-backend.herokuapp.com/api/auth/user/',
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      })
+      .then(res => {
+        console.log(res)
+        this.setState({
+          logged_in: true,
+          first_name: res.data.first_name,
+          last_name: res.data.last_name,
+          id_num: ''
+        })
+      })
+      .catch(error => {
+        console.log(error.response)
+      })
   }
 
   componentWillMount(){
-    var checkDate = '08/18/20-3'
+    var checkDate = '09/02/20-1'
     var integrityCheck = localStorage.getItem('integrity_check')
     if(integrityCheck != checkDate){
       this.wipe_logout()
@@ -300,9 +303,12 @@ class App extends Component {
   }
 
   redirected = (props) => {
+    const [cookies, setCookie] = useCookies(['sessionid', 'XCSRF-TOKEN'])
     var data = queryString.parse(props.location.search)
     localStorage.setItem('sessionid',data['sessionid'])
     localStorage.setItem('XCSRF-TOKEN',data['XCSRF-TOKEN'])
+    setCookie('sessionid', data['sessionid'], {path:'/'})
+    setCookie('XCSRF-TOKEN', data['XCSRF-TOKEN'], {path:'/'})
     return (
       <Redirect to="/" />
     )
