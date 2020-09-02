@@ -30,6 +30,8 @@ import EmailVerificationCompletePage from "./pages/EmailVerificationComplete.jsx
 import SurveyThanksPage from "./pages/SurveyThanks.jsx";
 
 import axios from 'axios';
+import qs from 'qs';
+import queryString from 'query-string'
 
 class App extends Component {
   constructor(props){
@@ -285,12 +287,24 @@ class App extends Component {
     )
   }
 
-  mainPage = () => {
+  mainPage = (props) => {
+    console.log(props.location.search)
+    var data = qs.parse(props.location.search)
+    console.log(data)
     return (
       <MainPage
         menu={this.menu}
         logged_in={this.state.logged_in}
       />
+    )
+  }
+
+  redirected = (props) => {
+    var data = queryString.parse(props.location.search)
+    localStorage.setItem('sessionid',data['sessionid'])
+    localStorage.setItem('XCSRF-TOKEN',data['XCSRF-TOKEN'])
+    return (
+      <Redirect to="/" />
     )
   }
 
@@ -416,6 +430,7 @@ class App extends Component {
       <Router>
         <Switch>
           <Route exact path="/" render={this.mainPage} />
+          <Route exact path="/redirect" render={this.redirected} />
           <Route exact path="/survey" render={this.surveyPage} />
           <Route exact path="/surveythanks" render={this.surveyThanksPage} />
           <Route exact path="/admin" render={this.adminPage} />

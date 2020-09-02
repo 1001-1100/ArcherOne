@@ -23,6 +23,8 @@
     "html2canvas": "^1.0.0-rc.5",
     "intro.js": "^2.9.3",
     "intro.js-react": "^0.2.0",
+    "qs": "^6.9.4",
+    "query-string": "^6.13.1",
     "react": "^16.6.3",
     "react-avatar": "^3.9.7",
     "react-bootstrap": "^1.0.0-beta.17",

@@ -235,100 +235,101 @@ class Login extends Component {
     render() {
       const { classes } = this.props;
       return (
-        <div style={sectionStyle}>
+        <Redirect to="http://archerone-backend.herokuapp.com/accounts/google/login/"></Redirect>
+        // <div style={sectionStyle}>
                 
-                  <div className={"backBtn"}>
-                  <a className="backBtn" href="/">
-                    <ArrowBackIosIcon fontSize="large"className={classes.backBtn} viewBox="0 0 1 24"/> <span className="backBtn">Back</span>
-                      {/* <svg class="bi bi-backspace" width="3em" height="3em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                          <path fill-rule="evenodd" d="M8.603 4h7.08a1 1 0 011 1v10a1 1 0 01-1 1h-7.08a1 1 0 01-.76-.35L3 10l4.844-5.65A1 1 0 018.603 4zm7.08-1a2 2 0 012 2v10a2 2 0 01-2 2h-7.08a2 2 0 01-1.519-.698L2.241 10.65a1 1 0 010-1.302L7.084 3.7A2 2 0 018.603 3h7.08z" clip-rule="evenodd"></path>
-                          <path fill-rule="evenodd" d="M7.83 7.146a.5.5 0 000 .708l5 5a.5.5 0 00.707-.708l-5-5a.5.5 0 00-.708 0z" clip-rule="evenodd"></path>
-                          <path fill-rule="evenodd" d="M13.537 7.146a.5.5 0 010 .708l-5 5a.5.5 0 01-.708-.708l5-5a.5.5 0 01.707 0z" clip-rule="evenodd"></path>
-                      </svg> */}
-                      </a>
-                    </div>
+        //           <div className={"backBtn"}>
+        //           <a className="backBtn" href="/">
+        //             <ArrowBackIosIcon fontSize="large"className={classes.backBtn} viewBox="0 0 1 24"/> <span className="backBtn">Back</span>
+        //               {/* <svg class="bi bi-backspace" width="3em" height="3em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        //                   <path fill-rule="evenodd" d="M8.603 4h7.08a1 1 0 011 1v10a1 1 0 01-1 1h-7.08a1 1 0 01-.76-.35L3 10l4.844-5.65A1 1 0 018.603 4zm7.08-1a2 2 0 012 2v10a2 2 0 01-2 2h-7.08a2 2 0 01-1.519-.698L2.241 10.65a1 1 0 010-1.302L7.084 3.7A2 2 0 018.603 3h7.08z" clip-rule="evenodd"></path>
+        //                   <path fill-rule="evenodd" d="M7.83 7.146a.5.5 0 000 .708l5 5a.5.5 0 00.707-.708l-5-5a.5.5 0 00-.708 0z" clip-rule="evenodd"></path>
+        //                   <path fill-rule="evenodd" d="M13.537 7.146a.5.5 0 010 .708l-5 5a.5.5 0 01-.708-.708l5-5a.5.5 0 01.707 0z" clip-rule="evenodd"></path>
+        //               </svg> */}
+        //               </a>
+        //             </div>
                 
 
-                <div style={{textAlign: 'center'}}>
-                    <Row>
-                      <Col />
-                      <Col lg="8">
-                        <h1 style={{color: "white"}}>
-                            <img
-                            alt=""
-                            src="/logo.svg"
-                            width="40"
-                            height="40"
-                            className="d-inline-block align-top"/> 
-                        AnimoSched</h1>
-                        <Jumbotron style={{padding: 32, backgroundColor: "white", marginLeft: "15%", marginRight: "15%", boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
-                          <h3>
-                            Log in to your account!
-                          </h3>
-                            <div id="signup-form">
-                              <form onSubmit={this.handleSubmit.bind(this)}>
-                                  {/* Email */}
-                                  <br/>
-                                  <TextField style={{width: 350}} error={this.state.errors["email"]} helperText={this.state.helperEmail} id="outlined-basic" label="DLSU Email" variant="outlined" name="email" placeholder="john_delacruz@dlsu.edu.ph" value={this.state.fields["email"]} onChange={this.handleChange.bind(this, "email")}/>
-                                  {/* <input name="email" placeholder="john_delacruz@dlsu.edu.ph" onChange={this.handleChange.bind(this, "email")} value={this.state.fields["email"]}></input> */}
-                                  {/* <span className="error">{this.state.errors["email"]}</span> */}
+        //         <div style={{textAlign: 'center'}}>
+        //             <Row>
+        //               <Col />
+        //               <Col lg="8">
+        //                 <h1 style={{color: "white"}}>
+        //                     <img
+        //                     alt=""
+        //                     src="/logo.svg"
+        //                     width="40"
+        //                     height="40"
+        //                     className="d-inline-block align-top"/> 
+        //                 AnimoSched</h1>
+        //                 <Jumbotron style={{padding: 32, backgroundColor: "white", marginLeft: "15%", marginRight: "15%", boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
+        //                   <h3>
+        //                     Log in to your account!
+        //                   </h3>
+        //                     <div id="signup-form">
+        //                       <form onSubmit={this.handleSubmit.bind(this)}>
+        //                           {/* Email */}
+        //                           <br/>
+        //                           <TextField style={{width: 350}} error={this.state.errors["email"]} helperText={this.state.helperEmail} id="outlined-basic" label="DLSU Email" variant="outlined" name="email" placeholder="john_delacruz@dlsu.edu.ph" value={this.state.fields["email"]} onChange={this.handleChange.bind(this, "email")}/>
+        //                           {/* <input name="email" placeholder="john_delacruz@dlsu.edu.ph" onChange={this.handleChange.bind(this, "email")} value={this.state.fields["email"]}></input> */}
+        //                           {/* <span className="error">{this.state.errors["email"]}</span> */}
 
-                                  <br/>
-                                  <br/>
+        //                           <br/>
+        //                           <br/>
 
-                                  {/* Password */}
-                                  <br/>
-                                  <TextField style={{width: 350}} error={this.state.errors["pass"]} helperText={this.state.helperPassword} type="password" id="outlined-basic" label="Password" variant="outlined" name="pass" placeholder="●●●●●●●●" value={this.state.fields["pass"]} onChange={this.handleChange.bind(this, "pass")}/>
-                                  {/* <input type="password" name="pass" placeholder="●●●●●●●●" onChange={this.handleChange.bind(this, "pass")} value={this.state.fields["pass"]}></input> */}
-                                  {/* <span className="error">{this.state.errors["pass"]}</span> */}
+        //                           {/* Password */}
+        //                           <br/>
+        //                           <TextField style={{width: 350}} error={this.state.errors["pass"]} helperText={this.state.helperPassword} type="password" id="outlined-basic" label="Password" variant="outlined" name="pass" placeholder="●●●●●●●●" value={this.state.fields["pass"]} onChange={this.handleChange.bind(this, "pass")}/>
+        //                           {/* <input type="password" name="pass" placeholder="●●●●●●●●" onChange={this.handleChange.bind(this, "pass")} value={this.state.fields["pass"]}></input> */}
+        //                           {/* <span className="error">{this.state.errors["pass"]}</span> */}
 
-                                  <br/>
-                                  <br/>
+        //                           <br/>
+        //                           <br/>
 
-                                  {this.renderRedirect()}
+        //                           {this.renderRedirect()}
                               
-                                  <input type="submit" style={{height: 0, width: 0, padding: 0, border: 0}} />
-                                  <Row horizontal = 'center' style={{justifyContent: "center"}}>
-                                  <div className={classes.root}>
-                                    <div className={classes.wrapper}> 
-                                      <Button
-                                        variant="contained"
-                                        color="primary"
-                                        className={classes.buttonLogin}
-                                        disabled={this.state.loading}
-                                        onClick={this.handleSubmit}
-                                        style={{}}
-                                      >
-                                        Login
-                                      </Button>
-                                      {this.state.loading && <CircularProgress size={24} className={classes.buttonProgress}/>}
-                                    </div>
-                                  </div>
-                                  </Row>
+        //                           <input type="submit" style={{height: 0, width: 0, padding: 0, border: 0}} />
+        //                           <Row horizontal = 'center' style={{justifyContent: "center"}}>
+        //                           <div className={classes.root}>
+        //                             <div className={classes.wrapper}> 
+        //                               <Button
+        //                                 variant="contained"
+        //                                 color="primary"
+        //                                 className={classes.buttonLogin}
+        //                                 disabled={this.state.loading}
+        //                                 onClick={this.handleSubmit}
+        //                                 style={{}}
+        //                               >
+        //                                 Login
+        //                               </Button>
+        //                               {this.state.loading && <CircularProgress size={24} className={classes.buttonProgress}/>}
+        //                             </div>
+        //                           </div>
+        //                           </Row>
 
                                   
-                              </form>
-                              <Snackbar open={this.state.snackBar} autoHideDuration={4000} onClose={this.handleCloseSnackBar}>
-                                <Alert onClose={this.handleCloseSnackBar} severity="error">
-                                  {this.state.snackBarText}
-                                </Alert>
-                              </Snackbar>
-                              <br/>
+        //                       </form>
+        //                       <Snackbar open={this.state.snackBar} autoHideDuration={4000} onClose={this.handleCloseSnackBar}>
+        //                         <Alert onClose={this.handleCloseSnackBar} severity="error">
+        //                           {this.state.snackBarText}
+        //                         </Alert>
+        //                       </Snackbar>
+        //                       <br/>
                               
-                              <p><a href="/password_reset">Forgot your password?</a></p>
+        //                       <p><a href="/password_reset">Forgot your password?</a></p>
 
-                              {/* <div id="signup-message"> */}
-                                  <p>Not a member? <a href="/register">Sign up!</a></p>
-                              {/* </div> */}
+        //                       {/* <div id="signup-message"> */}
+        //                           <p>Not a member? <a href="/register">Sign up!</a></p>
+        //                       {/* </div> */}
 
-                          </div>
+        //                   </div>
 
-                        </Jumbotron>
-                      </Col>
-                      <Col />
-                    </Row>
-                </div>
-        </div>        
+        //                 </Jumbotron>
+        //               </Col>
+        //               <Col />
+        //             </Row>
+        //         </div>
+        // </div>        
       );
     }
   }

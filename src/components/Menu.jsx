@@ -86,7 +86,7 @@ class Menu extends React.Component{
         const loggedOut = () => {
             return(
                 <React.Fragment>
-                    <Nav.Link href="/login">Login</Nav.Link>
+                    <Nav.Link href="http://archerone-backend.herokuapp.com/accounts/google/login/">Login</Nav.Link>
                     <Nav.Link href="/register">Sign Up</Nav.Link>
                 </React.Fragment>
             );
