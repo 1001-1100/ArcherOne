@@ -255,6 +255,7 @@ class Login extends Component {
 
     }
     responseGoogle = (e) => {
+      console.log(e)
       if(!this.state.loading){
         this.setState({loading: true});
         this.setState({success: false});

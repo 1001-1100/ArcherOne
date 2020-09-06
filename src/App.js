@@ -182,8 +182,8 @@ class App extends Component {
         _callback(null);
     })
     .catch(error => {
-        console.log(error.response)
-        _callback(error.response);
+        console.log(error)
+        _callback(error);
     });
   }
 
