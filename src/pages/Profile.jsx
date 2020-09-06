@@ -85,13 +85,8 @@ class Profile extends Component {
     }
 
     componentWillMount(){
-        axios.get('https://api.animosched.live/api/auth/user/',
-        {
-            headers: {
-            Authorization: `JWT ${localStorage.getItem('token')}` 
-            },
-            withCredentials: true
-        })
+        axios.get('https://api.animosched.live/api/user/'+localStorage.get('user_id')+'/'
+        )
         .then(res => {
             console.log(res.data)
             this.setState({
