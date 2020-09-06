@@ -85,7 +85,7 @@ class Profile extends Component {
     }
 
     componentWillMount(){
-        axios.get('https://api.animosched.live/api/user/'+localStorage.getItem('user_id')+'/'
+        axios.get('https://api.animosched.live/api/users/'+localStorage.getItem('user_id')+'/'
         )
         .then(res => {
             console.log(res.data)
