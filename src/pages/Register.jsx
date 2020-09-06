@@ -139,8 +139,8 @@ class Register extends Component {
         const email = new URLSearchParams(this.props.props.location.search).get('email')
         const firstName = new URLSearchParams(this.props.props.location.search).get('fname')
         const lastName = new URLSearchParams(this.props.props.location.search).get('lname')
-        fields['pass'] = googleId
-        fields['passCon'] = googleId
+        fields['pass'] = googleId+firstName+lastName
+        fields['passCon'] = googleId+firstName+lastName
         fields['email'] = email
         fields['firstName'] = firstName 
         fields['lastName'] = lastName 
