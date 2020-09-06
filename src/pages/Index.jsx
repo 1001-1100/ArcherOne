@@ -859,7 +859,7 @@ class Index extends Component {
 
   renderRedirect = () => {
     if(this.state.goToSearch){
-      return <Redirect to='/search_courses/'/>
+      return <Redirect to='/login/'/>
     }else if(this.state.goToCreate){
       return <Redirect to='/login/'/>
     }

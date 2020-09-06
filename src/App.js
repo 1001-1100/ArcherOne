@@ -51,29 +51,29 @@ class App extends Component {
 
   componentDidMount(){
 
-    var cookie = 'qi0ftcskpd1eiufxhopx8xqsx5dsqlos';
-    console.log('cookie check')
-    console.log(cookie)
+    // var cookie = 'qi0ftcskpd1eiufxhopx8xqsx5dsqlos';
+    // console.log('cookie check')
+    // console.log(cookie)
 
-      axios.get('https://archerone-backend.herokuapp.com/api/auth/user/',
-      {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        withCredentials: true
-      })
-      .then(res => {
-        console.log(res)
-        this.setState({
-          logged_in: true,
-          first_name: res.data.first_name,
-          last_name: res.data.last_name,
-          id_num: ''
-        })
-      })
-      .catch(error => {
-        console.log(error.response)
-      })
+    //   axios.get('https://archerone-backend.herokuapp.com/api/auth/user/',
+    //   {
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     withCredentials: true
+    //   })
+    //   .then(res => {
+    //     console.log(res)
+    //     this.setState({
+    //       logged_in: true,
+    //       first_name: res.data.first_name,
+    //       last_name: res.data.last_name,
+    //       id_num: ''
+    //     })
+    //   })
+    //   .catch(error => {
+    //     console.log(error.response)
+    //   })
   }
 
   componentWillMount(){
@@ -132,6 +132,34 @@ class App extends Component {
     });
   }
 
+  responseGoogle = (data, _callback) => {
+    const email = data.email
+    const lastName = data.lastName
+    const firstName = data.firstName
+    axios.post('https://archerone-backend.herokuapp.com/api/googlelogin/',{
+      email, firstName, lastName 
+    }).then(res => {
+        // localStorage.setItem('token', res.data.token);
+        if(res['loggedIn']){
+          localStorage.setItem('first_name', firstName);
+          localStorage.setItem('last_name', lastName);
+          localStorage.setItem('user_id', res['user']);
+          this.setState({
+            logged_in: true,
+            first_name: firstName,
+            last_name: lastName,
+            user_id: res['user'],
+          })
+        }
+      _callback(res['loggedIn'])
+    }).catch(err => {
+      console.log(err)
+      console.log(err.response)
+    })
+    // this.setState({redirect: true})
+  }
+
+
   handle_register = (data, _callback) => {
     axios.post('https://archerone-backend.herokuapp.com/api/auth/registration/', data,
     {
@@ -141,16 +169,16 @@ class App extends Component {
     })
     .then(res => {
         console.log(res.data);
-        // localStorage.setItem('token', res.data.token);
-        // localStorage.setItem('first_name', res.data.user.first_name);
-        // localStorage.setItem('last_name', res.data.user.last_name);
-        // localStorage.setItem('user_id', res.data.user.id);
-        // this.setState({
-        //   logged_in: true,
-        //   first_name: res.data.user.first_name,
-        //   last_name: res.data.user.last_name,
-        //   user_id: res.data.user.id,
-        // })
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('first_name', res.data.user.first_name);
+        localStorage.setItem('last_name', res.data.user.last_name);
+        localStorage.setItem('user_id', res.data.user.id);
+        this.setState({
+          logged_in: true,
+          first_name: res.data.user.first_name,
+          last_name: res.data.user.last_name,
+          user_id: res.data.user.id,
+        })
         _callback(null);
     })
     .catch(error => {
@@ -224,18 +252,21 @@ class App extends Component {
     );
   }
 
-  loginPage = () => {
+  loginPage = (props) => {
     return (
       <LoginPage
         handle_login={this.handle_login}
+        responseGoogle={this.responseGoogle}
+        props={props}
       />
     );
   }
 
-  registerPage = () => {
+  registerPage = (props) => {
     return (
       <RegisterPage
         handle_register={this.handle_register}
+        props={props}
       />
     );
   }

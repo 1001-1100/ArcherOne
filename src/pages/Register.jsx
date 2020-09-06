@@ -133,6 +133,21 @@ class Register extends Component {
 
     }
     componentWillMount(){
+        const fields = this.state.fields
+        const filled = new URLSearchParams(this.props.props.location.search).get('filled')
+        const googleId = new URLSearchParams(this.props.props.location.search).get('googleId')
+        const email = new URLSearchParams(this.props.props.location.search).get('email')
+        const firstName = new URLSearchParams(this.props.props.location.search).get('fname')
+        const lastName = new URLSearchParams(this.props.props.location.search).get('lname')
+        fields['pass'] = googleId
+        fields['passCon'] = googleId
+        fields['email'] = email
+        fields['firstName'] = firstName 
+        fields['lastName'] = lastName 
+        if(filled != undefined || filled != null){
+          this.setState({filled})
+        }
+        this.setState({fields})
         axios.get('https://archerone-backend.herokuapp.com/api/colleges/')
         .then(res => {
           var newArray = [];
@@ -337,9 +352,9 @@ class Register extends Component {
             console.log(data);
             this.props.handle_register(data, (res) => {
                 if(res == null){
+                    this.setState({redirect: true})
                     this.setState({success: true});
                     this.setState({loading: false});
-                    this.setState({snackBarSuccess: true})
                 }else{
                   this.setState({success: false});
                   this.setState({loading: false});
@@ -424,7 +439,7 @@ class Register extends Component {
                         {/* College */}
                         <div className="collegeField">
                             {/* Email Address */}
-                            <TextField error={this.state.errorEmail} helperText={this.state.helperEmail} id="outlined-basic" label="DLSU Email" variant="outlined" name="email" placeholder="john_delacruz@dlsu.edu.ph" value={this.state.fields["email"]} onChange={this.handleChange.bind(this, "email")} style={{marginRight: 50, width: 345}}/>
+                            <TextField error={this.state.errorEmail} disabled={this.state.filled} helperText={this.state.helperEmail} id="outlined-basic" label="DLSU Email" variant="outlined" name="email" placeholder="john_delacruz@dlsu.edu.ph" value={this.state.fields["email"]} onChange={this.handleChange.bind(this, "email")} style={{marginRight: 50, width: 345}}/>
                             {/* <input name="email" placeholder="john_delacruz@dlsu.edu.ph" onChange={this.handleChange.bind(this, "email")} value={this.state.fields["email"]}/> */}
                             {/* <span className="error" style={{marginRight: "15%"}}>{this.state.errors["email"]}</span>*/}
 
@@ -464,14 +479,14 @@ class Register extends Component {
                           </div>
                         </Row>
                         {/* Password */}
-                        <TextField error={this.state.errorPassword} helperText={this.state.helperPassword} type="password"  id="outlined-basic" label="Password" variant="outlined" name="pass" placeholder="●●●●●●●●" value={this.state.fields["pass"]} onChange={this.handleChange.bind(this, "pass")} style={{marginRight: 50, width: 345}}/>
+                        <TextField disabled={this.state.filled} error={this.state.errorPassword} helperText={this.state.helperPassword} type="password"  id="outlined-basic" label="Password" variant="outlined" name="pass" placeholder="●●●●●●●●" value={this.state.fields["pass"]} onChange={this.handleChange.bind(this, "pass")} style={{marginRight: 50, width: 345}}/>
                         {/* <input type="password" name="pass" placeholder="●●●●●●●●" onChange={this.handleChange.bind(this, "pass")} value={this.state.fields["pass"]}/> */}
                         {/* <span className="error" style={{marginRight: "15%"}}>{this.state.errors["pass"]}</span>*}
                      
 
                         {/* Confirm Password */}
                        
-                        <TextField error={this.state.errorConPassword} helperText={this.state.helperConPassword} type="password"  id="outlined-basic" label="Confirm Password" variant="outlined" name="passCon" placeholder="●●●●●●●●" value={this.state.fields["pasCon"]} onChange={this.handleChange.bind(this, "passCon")} style={{width: 345}}/>
+                        <TextField disabled={this.state.filled} error={this.state.errorConPassword} helperText={this.state.helperConPassword} type="password"  id="outlined-basic" label="Confirm Password" variant="outlined" name="passCon" placeholder="●●●●●●●●" value={this.state.fields["passCon"]} onChange={this.handleChange.bind(this, "passCon")} style={{width: 345}}/>
                         {/* <input type="password" name="passCon" placeholder="●●●●●●●●" onChange={this.handleChange.bind(this, "passCon")} value={this.state.fields["passCon"]}/> */}
                         {/* <span className="error">{this.state.errors["passCon"]}</span>*/}
                         <br/>
