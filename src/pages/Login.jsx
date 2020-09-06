@@ -273,8 +273,8 @@ class Login extends Component {
           lastName,
           firstName,
       }
-      console.log(e)
       this.props.responseGoogle(data, (res) => {
+        console.log(res)
         if(res == true){
           this.setRedirect();
         }else{

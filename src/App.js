@@ -38,7 +38,7 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      logged_in: localStorage.getItem('token') ? true : false,
+      logged_in: localStorage.getItem('user_id') ? true : false,
       first_name: localStorage.getItem('first_name'),
       last_name: localStorage.getItem('last_name'),
       user_id: localStorage.getItem('user_id'),
@@ -77,7 +77,7 @@ class App extends Component {
   }
 
   componentWillMount(){
-    var checkDate = '09/02/20-1'
+    var checkDate = '09/07/20-1'
     var integrityCheck = localStorage.getItem('integrity_check')
     if(integrityCheck != checkDate){
       this.wipe_logout()
@@ -140,18 +140,18 @@ class App extends Component {
       email, firstName, lastName 
     }).then(res => {
         // localStorage.setItem('token', res.data.token);
-        if(res['loggedIn']){
+        if(res.data.loggedIn){
           localStorage.setItem('first_name', firstName);
           localStorage.setItem('last_name', lastName);
-          localStorage.setItem('user_id', res['user']);
+          localStorage.setItem('user_id', res.data.user);
           this.setState({
             logged_in: true,
             first_name: firstName,
             last_name: lastName,
-            user_id: res['user'],
+            user_id: res.data.user,
           })
         }
-      _callback(res['loggedIn'])
+      _callback(res.data.loggedIn)
     }).catch(err => {
       console.log(err)
       console.log(err.response)
@@ -240,6 +240,7 @@ class App extends Component {
     localStorage.removeItem('first_name');
     localStorage.removeItem('last_name');
     localStorage.removeItem('id_num');
+    localStorage.removeItem('user_id');
     localStorage.removeItem('hints');
     this.setState({
       logged_in: false,
