@@ -731,7 +731,7 @@ class Survey extends Component {
                 method: this.state.method
             }
             console.log(JSON.stringify(results).length)
-            axios.post('https://archerone-backend.herokuapp.com/api/surveys/',{
+            axios.post('https://api.animosched.live/api/surveys/',{
                 data: JSON.stringify(results)
             })
             .then(res => {

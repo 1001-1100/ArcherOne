@@ -55,7 +55,7 @@ class App extends Component {
     // console.log('cookie check')
     // console.log(cookie)
 
-    //   axios.get('https://archerone-backend.herokuapp.com/api/auth/user/',
+    //   axios.get('https://api.animosched.live/api/auth/user/',
     //   {
     //     headers: {
     //       'Content-Type': 'application/json'
@@ -85,7 +85,7 @@ class App extends Component {
     }
 
     // if(this.state.logged_in){
-    //   axios.get('https://archerone-backend.herokuapp.com/api/auth/user/',
+    //   axios.get('https://api.animosched.live/api/auth/user/',
     //   {
     //     headers: {
     //       Authorization: `JWT ${localStorage.getItem('token')}` 
@@ -107,7 +107,7 @@ class App extends Component {
   }
 
   handle_login = (data, _callback) => {
-    axios.post('https://archerone-backend.herokuapp.com/api/auth/login/', data,
+    axios.post('https://api.animosched.live/api/auth/login/', data,
     {
         headers: {
             'Content-Type': 'application/json'
@@ -136,7 +136,7 @@ class App extends Component {
     const email = data.email
     const lastName = data.lastName
     const firstName = data.firstName
-    axios.post('https://archerone-backend.herokuapp.com/api/googlelogin/',{
+    axios.post('https://api.animosched.live/api/googlelogin/',{
       email, firstName, lastName 
     }).then(res => {
         // localStorage.setItem('token', res.data.token);
@@ -161,7 +161,7 @@ class App extends Component {
 
 
   handle_register = (data, _callback) => {
-    axios.post('https://archerone-backend.herokuapp.com/api/auth/registration/', data,
+    axios.post('https://api.animosched.live/api/auth/registration/', data,
     {
         headers: {
             'Content-Type': 'application/json'
@@ -188,7 +188,7 @@ class App extends Component {
   }
 
   handle_resetPassword = (data, _callback) => {
-    axios.post('https://archerone-backend.herokuapp.com/api/auth/password/reset/', data,
+    axios.post('https://api.animosched.live/api/auth/password/reset/', data,
     {
         headers: {
             'Content-Type': 'application/json'
@@ -206,7 +206,7 @@ class App extends Component {
   }
 
   handle_resetPasswordConfirm = (data, _callback) => {
-    axios.post('https://archerone-backend.herokuapp.com/api/auth/password/reset/confirm/', data,
+    axios.post('https://api.animosched.live/api/auth/password/reset/confirm/', data,
     {
         headers: {
             'Content-Type': 'application/json'

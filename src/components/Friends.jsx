@@ -85,7 +85,7 @@ class Friends extends React.Component{
 
     getInfo(){
         this.refreshFriends();
-        axios.get('https://archerone-backend.herokuapp.com/api/friendrequestlist/'+localStorage.getItem('user_id')+'/')
+        axios.get('https://api.animosched.live/api/friendrequestlist/'+localStorage.getItem('user_id')+'/')
         .then(res => {
             this.setState({requests: []})
             this.setState({newRequests: 0})
@@ -100,7 +100,7 @@ class Friends extends React.Component{
             })
             this.setState({newRequests})
             this.setState({dataReceived: true})
-            // axios.get('https://archerone-backend.herokuapp.com/api/users/'+localStorage.getItem('user_id')+'/')
+            // axios.get('https://api.animosched.live/api/users/'+localStorage.getItem('user_id')+'/')
             // .then(res => {
             //     const friends = res.data.friends;
 
@@ -111,20 +111,20 @@ class Friends extends React.Component{
 
     refreshFriends(){
         console.log('friends refreshing')
-        axios.get('https://archerone-backend.herokuapp.com/api/sentrequestlist/'+localStorage.getItem('user_id')+'/')
+        axios.get('https://api.animosched.live/api/sentrequestlist/'+localStorage.getItem('user_id')+'/')
         .then(res => {
             const sentRequests = [];
             res.data.map(sent => {
                 sentRequests.push(sent.to_user)
             })
-            axios.get('https://archerone-backend.herokuapp.com/api/nonfriendlist/'+localStorage.getItem('user_id')+'/')
+            axios.get('https://api.animosched.live/api/nonfriendlist/'+localStorage.getItem('user_id')+'/')
             .then(res => {
                 const database = [];
                 res.data.map(nonfriend => {
                     database.push(this.createDatabase(nonfriend.first_name, nonfriend.last_name, sentRequests.includes(nonfriend.id), nonfriend.id));
                 })
                 this.setState({database})
-                axios.get('https://archerone-backend.herokuapp.com/api/friendlist/'+localStorage.getItem('user_id')+'/')
+                axios.get('https://api.animosched.live/api/friendlist/'+localStorage.getItem('user_id')+'/')
                 .then(res => {
                     const friends = [];
                     res.data.map(friend => {
@@ -147,20 +147,20 @@ class Friends extends React.Component{
     }
 
     componentDidMount(){
-        axios.get('https://archerone-backend.herokuapp.com/api/sentrequestlist/'+localStorage.getItem('user_id')+'/')
+        axios.get('https://api.animosched.live/api/sentrequestlist/'+localStorage.getItem('user_id')+'/')
         .then(res => {
             const sentRequests = [];
             res.data.map(sent => {
                 sentRequests.push(sent.to_user)
             })
-            axios.get('https://archerone-backend.herokuapp.com/api/nonfriendlist/'+localStorage.getItem('user_id')+'/')
+            axios.get('https://api.animosched.live/api/nonfriendlist/'+localStorage.getItem('user_id')+'/')
             .then(res => {
                 const database = this.state.database;
                 res.data.map(nonfriend => {
                     database.push(this.createDatabase(nonfriend.first_name, nonfriend.last_name, sentRequests.includes(nonfriend.id), nonfriend.id));
                 })
                 this.setState({database})
-                axios.get('https://archerone-backend.herokuapp.com/api/friendlist/'+localStorage.getItem('user_id')+'/')
+                axios.get('https://api.animosched.live/api/friendlist/'+localStorage.getItem('user_id')+'/')
                 .then(res => {
                     const friends = this.state.friends;
                     res.data.map(friend => {
@@ -191,7 +191,7 @@ class Friends extends React.Component{
         this.setState({newRequests: 0})
         const requests = []
         this.state.requests.map(request => {
-            axios.patch('https://archerone-backend.herokuapp.com/api/friendrequests/'+request.id+'/',{
+            axios.patch('https://api.animosched.live/api/friendrequests/'+request.id+'/',{
                 seen: true
             })
             request.seenStatus = true;
@@ -203,18 +203,18 @@ class Friends extends React.Component{
 
     handleAcceptClick = (e, index, id, from_user) => {
         this.setState({polling: false})
-        axios.get('https://archerone-backend.herokuapp.com/api/users/'+localStorage.getItem('user_id')+'/')
+        axios.get('https://api.animosched.live/api/users/'+localStorage.getItem('user_id')+'/')
         .then(res => {
             const friends = res.data.friends;
             friends.push(from_user)
-            axios.patch('https://archerone-backend.herokuapp.com/api/users/'+localStorage.getItem('user_id')+'/',{
+            axios.patch('https://api.animosched.live/api/users/'+localStorage.getItem('user_id')+'/',{
                 friends: friends
             })
-            axios.patch('https://archerone-backend.herokuapp.com/api/friendrequests/'+id+'/',{
+            axios.patch('https://api.animosched.live/api/friendrequests/'+id+'/',{
                 seen: true,
                 accepted: true
             })
-            // axios.post('https://archerone-backend.herokuapp.com/api/notifications/',{
+            // axios.post('https://api.animosched.live/api/notifications/',{
             //     content: localStorage.getItem('first_name') + ' accepted your friend request!',
             //     seen: false,
             //     to_user: from_user
@@ -229,7 +229,7 @@ class Friends extends React.Component{
 
     handleDeleteClick = (e, index, id) => {
         this.setState({polling: false})
-        axios.delete('https://archerone-backend.herokuapp.com/api/friendrequests/'+id+'/')
+        axios.delete('https://api.animosched.live/api/friendrequests/'+id+'/')
         const requests = [];
         this.state.requests.map((request, index2) => {
             if(index != index2){
@@ -242,7 +242,7 @@ class Friends extends React.Component{
 
     handleSendClick = (e, index, id) => {
         this.setState({polling: false})
-        axios.post('https://archerone-backend.herokuapp.com/api/friendrequests/',{
+        axios.post('https://api.animosched.live/api/friendrequests/',{
             from_user: localStorage.getItem('user_id'),
             seen: false,
             accepted: false,

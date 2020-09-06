@@ -85,7 +85,7 @@ class Profile extends Component {
     }
 
     componentWillMount(){
-        axios.get('https://archerone-backend.herokuapp.com/api/auth/user/',
+        axios.get('https://api.animosched.live/api/auth/user/',
         {
             headers: {
             Authorization: `JWT ${localStorage.getItem('token')}` 
@@ -102,10 +102,10 @@ class Profile extends Component {
             })
             const college = res.data.college;
             const degree = res.data.degree;
-            axios.get('https://archerone-backend.herokuapp.com/api/colleges/'+college+'/')
+            axios.get('https://api.animosched.live/api/colleges/'+college+'/')
             .then(res => {
               this.setState({college: res.data.college_name})
-              axios.get('https://archerone-backend.herokuapp.com/api/degrees/'+degree+'/')
+              axios.get('https://api.animosched.live/api/degrees/'+degree+'/')
               .then(res => {
                 this.setState({degree: res.data.degree_name});
                 this.setState({dataReceived: true})
@@ -139,7 +139,7 @@ class Profile extends Component {
         let fieldsBool = this.state.fieldsBool;
          fieldsBool[iconBool] = false;
         if(iconBool == 'firstNameBool'){
-            axios.patch('https://archerone-backend.herokuapp.com/api/users/'+localStorage.getItem('user_id')+'/',{
+            axios.patch('https://api.animosched.live/api/users/'+localStorage.getItem('user_id')+'/',{
                 'first_name': text
             }).then(res => {
                 localStorage.setItem('first_name',text)
@@ -148,7 +148,7 @@ class Profile extends Component {
                 console.log(err.response)
             })
         }else if(iconBool == 'lastNameBool'){
-            axios.patch('https://archerone-backend.herokuapp.com/api/users/'+localStorage.getItem('user_id')+'/',{
+            axios.patch('https://api.animosched.live/api/users/'+localStorage.getItem('user_id')+'/',{
                 'last_name': text
             }).then(res => {
                 localStorage.setItem('last_name',text)
@@ -157,28 +157,28 @@ class Profile extends Component {
                 console.log(err.response)
             })
         }else if(iconBool == 'idNoBool'){
-            axios.patch('https://archerone-backend.herokuapp.com/api/users/'+localStorage.getItem('user_id')+'/',{
+            axios.patch('https://api.animosched.live/api/users/'+localStorage.getItem('user_id')+'/',{
                 'id_num': text
             })
             .catch(err => {
                 console.log(err.response)
             })
         }else if(iconBool == 'collegeBool'){
-            axios.patch('https://archerone-backend.herokuapp.com/api/users/'+localStorage.getItem('user_id')+'/',{
+            axios.patch('https://api.animosched.live/api/users/'+localStorage.getItem('user_id')+'/',{
                 'college': text
             })
             .catch(err => {
                 console.log(err.response)
             })
         }else if(iconBool == 'degreeBool'){
-            axios.patch('https://archerone-backend.herokuapp.com/api/users/'+localStorage.getItem('user_id')+'/',{
+            axios.patch('https://api.animosched.live/api/users/'+localStorage.getItem('user_id')+'/',{
                 'degree': text
             })
             .catch(err => {
                 console.log(err.response)
             })
         }else if(iconBool == 'emailBool'){
-            axios.patch('https://archerone-backend.herokuapp.com/api/users/'+localStorage.getItem('user_id')+'/',{
+            axios.patch('https://api.animosched.live/api/users/'+localStorage.getItem('user_id')+'/',{
                 'email': text
             })
             .catch(err => {

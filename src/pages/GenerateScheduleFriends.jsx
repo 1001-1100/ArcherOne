@@ -192,7 +192,7 @@ class GenerateSchedule extends Component {
     componentDidMount(){
         const id = localStorage.getItem('user_id');
         console.log(this.props)
-        axios.get('https://archerone-backend.herokuapp.com/api/getsharecode/'+this.props.params['id']+'/')
+        axios.get('https://api.animosched.live/api/getsharecode/'+this.props.params['id']+'/')
         .then(res => {
             console.log(res)
             // this.setState({owner: res.data[0].owner}) 
@@ -401,16 +401,16 @@ class GenerateSchedule extends Component {
             this.state.currentContent.props.offerings.map(offering => {
                 courseOfferings.push(offering.id)
             })
-            axios.post('https://archerone-backend.herokuapp.com/api/schedules/',{
+            axios.post('https://api.animosched.live/api/schedules/',{
                 title: this.state.currentContent.props.titleName,
                 courseOfferings: courseOfferings,
                 user: user_id
             }).then(res => {
-                // axios.get('https://archerone-backend.herokuapp.com/api/users/'+user_id+'/')
+                // axios.get('https://api.animosched.live/api/users/'+user_id+'/')
                 // .then(res => {
                 //     const schedules = res.data.schedules;
                 //     schedules.push(sched_id);
-                //     axios.patch('https://archerone-backend.herokuapp.com/api/users/'+user_id+'/',{
+                //     axios.patch('https://api.animosched.live/api/users/'+user_id+'/',{
                 //         schedules: schedules
                 //     }).then(res => {
                 //         console.log(res)
@@ -624,7 +624,7 @@ class GenerateSchedule extends Component {
                 intro: 'Decide on a schedule variation with your friends!',
             },
             ];
-        const linkShare = "https://animosched.herokuapp.com/coordinate_schedule/"+this.state.shareCode+"/"
+        const linkShare = "https://animosched.live/coordinate_schedule/"+this.state.shareCode+"/"
         return (
             <div>
 

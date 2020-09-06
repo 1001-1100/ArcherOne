@@ -186,13 +186,13 @@ class GenerateSchedule extends Component {
         if(val.course_code.trim() != ''){
             const offeringList = [];
             const courses = [];
-            axios.get('https://archerone-backend.herokuapp.com/api/searchcourse/'+val.course_code.trim()+'/')
+            axios.get('https://api.animosched.live/api/searchcourse/'+val.course_code.trim()+'/')
             .then(res => {
                 res.data.map(course => {
                     courses.push(course.id)
                 })
                 console.log(courses)
-                axios.post('https://archerone-backend.herokuapp.com/api/courseofferingslist/',{
+                axios.post('https://api.animosched.live/api/courseofferingslist/',{
                     courses,
                     applyPreference: false,
                     user_id: localStorage.getItem('user_id')
@@ -257,13 +257,13 @@ class GenerateSchedule extends Component {
         if(val.course_code.trim() != ''){
             const offeringList = [];
             const courses = [];
-            axios.get('https://archerone-backend.herokuapp.com/api/searchcourse/'+val.course_code.trim()+'/')
+            axios.get('https://api.animosched.live/api/searchcourse/'+val.course_code.trim()+'/')
             .then(res => {
                 res.data.map(course => {
                     courses.push(course.id)
                 })
                 console.log(courses)
-                axios.post('https://archerone-backend.herokuapp.com/api/courseofferingslist/',{
+                axios.post('https://api.animosched.live/api/courseofferingslist/',{
                     courses,
                     applyPreference: false,
                     user_id: localStorage.getItem('user_id')
@@ -328,13 +328,13 @@ class GenerateSchedule extends Component {
         if(val.course_code.trim() != ''){
             const offeringList = [];
             const courses = [];
-            axios.get('https://archerone-backend.herokuapp.com/api/searchcourse/'+val.course_code.trim()+'/')
+            axios.get('https://api.animosched.live/api/searchcourse/'+val.course_code.trim()+'/')
             .then(res => {
                 res.data.map(course => {
                     courses.push(course.id)
                 })
                 console.log(courses)
-                axios.post('https://archerone-backend.herokuapp.com/api/courseofferingslist/',{
+                axios.post('https://api.animosched.live/api/courseofferingslist/',{
                     courses,
                     applyPreference: false,
                     user_id: localStorage.getItem('user_id')
@@ -410,7 +410,7 @@ class GenerateSchedule extends Component {
             this.setState({AutoCompleteValue})
             this.setState({currentCourse: AutoCompleteValue});
         }
-        axios.get('https://archerone-backend.herokuapp.com/api/courses/')
+        axios.get('https://api.animosched.live/api/courses/')
         .then(res => {
             res.data.map(course => {
                 var courses = this.state.courseList;
@@ -418,7 +418,7 @@ class GenerateSchedule extends Component {
                 courses.push(addCourse)
                 this.setState({courseList: courses})
             })
-            axios.get('https://archerone-backend.herokuapp.com/api/courseprioritylist/'+id+'/')
+            axios.get('https://api.animosched.live/api/courseprioritylist/'+id+'/')
             .then(res => {
                 console.log(res.data)
                 var total = res.data.length;
@@ -476,7 +476,7 @@ class GenerateSchedule extends Component {
                 console.log(this.state.loading || this.state.highCourses.length + this.state.lowCourses.length <= 0);
             });
         })
-        axios.get('https://archerone-backend.herokuapp.com/api/undesirableclasslist/'+id+'/').then(res => {
+        axios.get('https://api.animosched.live/api/undesirableclasslist/'+id+'/').then(res => {
             res.data.map(c => {
                 const undesirableClass = this.state.undesirableClass
                 undesirableClass[c.undesirable_classes] = false
@@ -525,7 +525,7 @@ class GenerateSchedule extends Component {
     //     }
     // }
     handleCourseDelete = (addCourse) => {
-        axios.delete('https://archerone-backend.herokuapp.com/api/courseprioritylist/'+addCourse.id+'/')
+        axios.delete('https://api.animosched.live/api/courseprioritylist/'+addCourse.id+'/')
         .then(res => {
             console.log("deleted "+addCourse.id)
             const newCourseList = [];
@@ -580,7 +580,7 @@ class GenerateSchedule extends Component {
                         priority: true,
                         user: id
                     }
-                    axios.post('https://archerone-backend.herokuapp.com/api/coursepriority/', data,
+                    axios.post('https://api.animosched.live/api/coursepriority/', data,
                     {
                         headers: {
                             'Content-Type': 'application/json'
@@ -702,7 +702,7 @@ class GenerateSchedule extends Component {
 
         this.setState({courseOfferings:courseOfferings}, () => {
             console.log(courseOfferings)
-            axios.post('https://archerone-backend.herokuapp.com/api/generateschedule/',
+            axios.post('https://api.animosched.live/api/generateschedule/',
             {
                 highCourses: this.state.highCourses, 
                 lowCourses: this.state.lowCourses,
@@ -859,16 +859,16 @@ class GenerateSchedule extends Component {
             this.state.currentContent.props.offerings.map(offering => {
                 courseOfferings.push(offering.id)
             })
-            axios.post('https://archerone-backend.herokuapp.com/api/schedules/',{
+            axios.post('https://api.animosched.live/api/schedules/',{
                 title: this.state.currentContent.props.titleName,
                 courseOfferings: courseOfferings,
                 user: user_id
             }).then(res => {
-                // axios.get('https://archerone-backend.herokuapp.com/api/users/'+user_id+'/')
+                // axios.get('https://api.animosched.live/api/users/'+user_id+'/')
                 // .then(res => {
                 //     const schedules = res.data.schedules;
                 //     schedules.push(sched_id);
-                //     axios.patch('https://archerone-backend.herokuapp.com/api/users/'+user_id+'/',{
+                //     axios.patch('https://api.animosched.live/api/users/'+user_id+'/',{
                 //         schedules: schedules
                 //     }).then(res => {
                 //         console.log(res)
@@ -972,10 +972,10 @@ class GenerateSchedule extends Component {
             }
         }
         console.log(classnumber)
-        axios.post('https://archerone-backend.herokuapp.com/api/removeundesirableclass/',{
+        axios.post('https://api.animosched.live/api/removeundesirableclass/',{
             user_id: localStorage.getItem('user_id')
         }).then(res => {
-            axios.post('https://archerone-backend.herokuapp.com/api/addundesirableclass/',{
+            axios.post('https://api.animosched.live/api/addundesirableclass/',{
                 classnumber: classnumber,
                 user_id: localStorage.getItem('user_id')
             }).then(res => {

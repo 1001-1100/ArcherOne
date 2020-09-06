@@ -137,7 +137,7 @@ class CompareSchedule extends Component {
 
     componentDidMount(){
       if(!this.state.dataReceived){
-        axios.get('https://archerone-backend.herokuapp.com/api/schedulelist/'+localStorage.getItem('user_id')+'/')
+        axios.get('https://api.animosched.live/api/schedulelist/'+localStorage.getItem('user_id')+'/')
         .then(res => {
             const schedules = []
             res.data.map(newSchedule =>{
@@ -219,7 +219,7 @@ class CompareSchedule extends Component {
             })
             console.log(schedules)
             this.setState({schedulesUser: schedules});
-            axios.get('https://archerone-backend.herokuapp.com/api/schedulelist/'+this.props.params.id+'/')
+            axios.get('https://api.animosched.live/api/schedulelist/'+this.props.params.id+'/')
             .then(res => {
                 const schedules = []
                 res.data.map(newSchedule =>{
@@ -307,7 +307,7 @@ class CompareSchedule extends Component {
             }).catch(error => {
                 console.log(error)
             })
-            axios.get('https://archerone-backend.herokuapp.com/api/users/'+this.props.params.id+'/')
+            axios.get('https://api.animosched.live/api/users/'+this.props.params.id+'/')
             .then(res => {
                 this.setState({friendName: res.data.first_name})
             }).catch(error => {
@@ -321,7 +321,7 @@ class CompareSchedule extends Component {
 
       const friends = []
       friends.push(this.props.params.id)
-      axios.post('https://archerone-backend.herokuapp.com/api/generateschedulefriends/',{
+      axios.post('https://api.animosched.live/api/generateschedulefriends/',{
         user_id: localStorage.getItem('user_id'),
         filterFull: true,
         friends: friends

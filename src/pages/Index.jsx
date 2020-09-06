@@ -396,7 +396,7 @@ class Index extends Component {
     function rgbToHex(r, g, b) {
       return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
     }
-    axios.get('https://archerone-backend.herokuapp.com/api/randompalette/'
+    axios.get('https://api.animosched.live/api/randompalette/'
     ).then(res => {
       const chosenPalette = []
       console.log(res.data)
@@ -408,7 +408,7 @@ class Index extends Component {
   }
 
   retrieveSchedInfo = () => {
-    axios.get('https://archerone-backend.herokuapp.com/api/schedulelist/'+localStorage.getItem('user_id')+'/')
+    axios.get('https://api.animosched.live/api/schedulelist/'+localStorage.getItem('user_id')+'/')
     .then(res => {
         const schedules = []
         res.data.map(newSchedule =>{
@@ -537,7 +537,7 @@ class Index extends Component {
     var newArray = [];
     const currentContent = this.state.currentContent;
     // var index = newArray.findIndex(this.state.currentContent);
-    axios.patch('https://archerone-backend.herokuapp.com/api/schedules/'+currentContent.props.id+'/',{
+    axios.patch('https://api.animosched.live/api/schedules/'+currentContent.props.id+'/',{
       title: text
     }).then(res => {
       const newContent = <SchedViewHome key={currentContent.props.id} id={currentContent.props.id} scheduleContent={currentContent.props.scheduleContent} tableContent={currentContent.props.tableContent} earliest={currentContent.props.earliest} latest={currentContent.props.latest} titleName={text} updateSchedTitle={this.updateSchedTitle} allowEdit={this.state.allowEdit} palette={currentContent.props.palette}/>
@@ -563,7 +563,7 @@ class Index extends Component {
   var currentPage = this.state.currentPage;
   var index = currentPage;
 
-  axios.delete('https://archerone-backend.herokuapp.com/api/schedules/'+this.state.currentContent.props.id+'/').then(res => {
+  axios.delete('https://api.animosched.live/api/schedules/'+this.state.currentContent.props.id+'/').then(res => {
     window.location.reload()
   }).catch(err => {
     console.log(err.response)
@@ -786,7 +786,7 @@ class Index extends Component {
     console.log(courses)
 
     let snackBarVariables = [...this.state.snackBarVariables];
-    axios.post('https://archerone-backend.herokuapp.com/api/editschedule/',{
+    axios.post('https://api.animosched.live/api/editschedule/',{
       classes:classnumbers,
       newclasses:newclassnumbers,
       courses,
@@ -820,7 +820,7 @@ class Index extends Component {
   
   handleEditSave=()=>{
     const sched_id = this.state.currentContent.props.id
-    axios.post('https://archerone-backend.herokuapp.com/api/saveeditschedule/',{
+    axios.post('https://api.animosched.live/api/saveeditschedule/',{
       classnumbers:this.state.allNumbers,
       sched_id,
     }).then(res => {

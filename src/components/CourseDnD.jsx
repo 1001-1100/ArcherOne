@@ -85,13 +85,13 @@ triggerUpdate=(e)=>{
   if(e.removedIndex == null){
     if(e.addedIndex != null){
       if(this.state.idTag == "1"){
-        axios.put('https://archerone-backend.herokuapp.com/api/coursepriority/'+e.payload.id+'/',{
+        axios.put('https://api.animosched.live/api/coursepriority/'+e.payload.id+'/',{
           courses:e.payload.course_id, priority:true, user:localStorage.getItem('user_id')
         }).catch(e => {
           console.log(e.response)
         })
       }else if(this.state.idTag == "2"){
-        axios.put('https://archerone-backend.herokuapp.com/api/coursepriority/'+e.payload.id+'/',{
+        axios.put('https://api.animosched.live/api/coursepriority/'+e.payload.id+'/',{
           courses:e.payload.course_id, priority:false, user:localStorage.getItem('user_id')
         }).catch(e => {
           console.log(e.response)
