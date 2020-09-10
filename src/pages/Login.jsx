@@ -353,14 +353,14 @@ class Login extends Component {
                                         variant="contained"
                                         color="primary"
                                         className={classes.buttonLogin}
-                                        disabled={this.state.loading}
+                                        // disabled={this.state.loading}
                                         onClick={this.handleSubmit}
                                         style={{}}
                                       >
                                         Login
                                       </Button>
 
-                                      {this.state.loading && <CircularProgress size={24} className={classes.buttonProgress}/>}
+                                      {/* {this.state.loading && <CircularProgress size={24} className={classes.buttonProgress}/>} */}
                                     </div>
                                   </div>
                                   </Row>
