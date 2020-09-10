@@ -356,7 +356,7 @@ class FriendPage extends Component {
         this.setState({friend: requests[i]})
         this.setState({generateList: [requests[i].id]})
         
-        axios.get('https://api.animosched.live/api/schedulelist/'+requests[i].id+'/')
+        axios.get('https://animosched-backend-backup/api/schedulelist/'+requests[i].id+'/')
         .then(res => {
             const schedules = []
             res.data.map(newSchedule =>{
@@ -435,7 +435,7 @@ class FriendPage extends Component {
                     offerings: newSchedule.courseOfferings
                 });
             })
-            axios.get('https://api.animosched.live/api/preferencelist/'+requests[i].id+'/')
+            axios.get('https://animosched-backend-backup/api/preferencelist/'+requests[i].id+'/')
             .then(res => {
                 const profList = []
                 const sectionList = []
@@ -502,7 +502,7 @@ class FriendPage extends Component {
     }
     
     componentDidMount(){
-        axios.get('https://api.animosched.live/api/friendlist/'+localStorage.getItem('user_id')+'/')
+        axios.get('https://animosched-backend-backup/api/friendlist/'+localStorage.getItem('user_id')+'/')
         .then(res => {
             const requests = []
             const friendList = []
@@ -591,7 +591,7 @@ class FriendPage extends Component {
                 friendList.push(friend)
             }
         })
-        axios.patch('https://api.animosched.live/api/users/'+localStorage.getItem('user_id')+'/',{
+        axios.patch('https://animosched-backend-backup/api/users/'+localStorage.getItem('user_id')+'/',{
             friends: friendList 
         }).catch(err => {
             console.log(err.response)
@@ -637,18 +637,18 @@ class FriendPage extends Component {
         this.state.currentContent.props.offerings.map(o => {
             courseOfferings.push(o.id)
         })
-        axios.post('https://api.animosched.live/api/schedules/',{
+        axios.post('https://animosched-backend-backup/api/schedules/',{
             title: this.state.currentContent.props.titleName + ' ('+ this.state.firstName+')',
             courseOfferings: courseOfferings,
             user: localStorage.getItem('user_id') 
         }).then(res => {
             console.log(res.data)
             this.setState({copyBar: true});
-            // axios.get('https://api.animosched.live/api/users/'+user_id+'/')
+            // axios.get('https://animosched-backend-backup/api/users/'+user_id+'/')
             // .then(res => {
             //     const schedules = res.data.schedules;
             //     schedules.push(sched_id);
-            //     axios.patch('https://api.animosched.live/api/users/'+user_id+'/',{
+            //     axios.patch('https://animosched-backend-backup/api/users/'+user_id+'/',{
             //         schedules: schedules
             //     }).then(res => {
             //         console.log(res)
@@ -700,7 +700,7 @@ class FriendPage extends Component {
 
     handleCoordinate=()=>{
         this.setState({coordinating: false})
-        axios.post('https://api.animosched.live/api/generateschedulefriends/',
+        axios.post('https://animosched-backend-backup/api/generateschedulefriends/',
         {
             friends: this.state.generateList,
             user_id: localStorage.getItem('user_id'),

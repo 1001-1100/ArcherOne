@@ -148,7 +148,7 @@ class Register extends Component {
           this.setState({filled})
         }
         this.setState({fields})
-        axios.get('https://api.animosched.live/api/colleges/')
+        axios.get('https://animosched-backend-backup/api/colleges/')
         .then(res => {
           var newArray = [];
           res.data.map(college=>{
@@ -156,7 +156,7 @@ class Register extends Component {
           })
           this.setState({colleges: newArray})
         })
-        axios.get('https://api.animosched.live/api/degrees/')
+        axios.get('https://animosched-backend-backup/api/degrees/')
         .then(res => {
           var newArray = [];
           res.data.map(degree=>{

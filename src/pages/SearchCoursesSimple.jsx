@@ -105,7 +105,7 @@ class SearchCourses extends Component {
     }
 
     componentDidMount(){
-        // axios.get('https://api.animosched.live/api/courses/')
+        // axios.get('https://animosched-backend-backup/api/courses/')
         // .then(res => {
         //     res.data.map(course => {
         //         var courses = this.state.courseList;
@@ -191,7 +191,7 @@ class SearchCourses extends Component {
         selectedCourses.push(course.id)
       })
      
-      axios.post('https://api.animosched.live/api/courseofferingslist/',{
+      axios.post('https://animosched-backend-backup/api/courseofferingslist/',{
         courses: selectedCourses,
         applyPreference: this.state.applyPreference,
         user_id: localStorage.getItem('user_id')
