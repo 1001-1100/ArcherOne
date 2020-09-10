@@ -153,7 +153,7 @@ class Login extends Component {
 
     // test = () =>{
     //     console.log(this.state.token)
-    //     axios.get('https://animosched-backend-backup/api/auth/user/',
+    //     axios.get('https://animosched-backend-backup.herokuapp.com/api/auth/user/',
     //     {
     //         headers: {
     //             'X-CSRF-TOKEN': this.state.token,

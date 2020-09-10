@@ -192,7 +192,7 @@ class GenerateSchedule extends Component {
     componentDidMount(){
         const id = localStorage.getItem('user_id');
         console.log(this.props)
-        axios.get('https://animosched-backend-backup/api/getsharecode/'+this.props.params['id']+'/')
+        axios.get('https://animosched-backend-backup.herokuapp.com/api/getsharecode/'+this.props.params['id']+'/')
         .then(res => {
             console.log(res)
             // this.setState({owner: res.data[0].owner}) 
@@ -401,16 +401,16 @@ class GenerateSchedule extends Component {
             this.state.currentContent.props.offerings.map(offering => {
                 courseOfferings.push(offering.id)
             })
-            axios.post('https://animosched-backend-backup/api/schedules/',{
+            axios.post('https://animosched-backend-backup.herokuapp.com/api/schedules/',{
                 title: this.state.currentContent.props.titleName,
                 courseOfferings: courseOfferings,
                 user: user_id
             }).then(res => {
-                // axios.get('https://animosched-backend-backup/api/users/'+user_id+'/')
+                // axios.get('https://animosched-backend-backup.herokuapp.com/api/users/'+user_id+'/')
                 // .then(res => {
                 //     const schedules = res.data.schedules;
                 //     schedules.push(sched_id);
-                //     axios.patch('https://animosched-backend-backup/api/users/'+user_id+'/',{
+                //     axios.patch('https://animosched-backend-backup.herokuapp.com/api/users/'+user_id+'/',{
                 //         schedules: schedules
                 //     }).then(res => {
                 //         console.log(res)

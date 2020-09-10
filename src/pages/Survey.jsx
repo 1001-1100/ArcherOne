@@ -731,7 +731,7 @@ class Survey extends Component {
                 method: this.state.method
             }
             console.log(JSON.stringify(results).length)
-            axios.post('https://animosched-backend-backup/api/surveys/',{
+            axios.post('https://animosched-backend-backup.herokuapp.com/api/surveys/',{
                 data: JSON.stringify(results)
             })
             .then(res => {

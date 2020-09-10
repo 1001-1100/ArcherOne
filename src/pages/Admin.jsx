@@ -36,9 +36,9 @@ class Admin extends Component {
         this.setState({dataReceived: false})
         const rows = []
         const enlists = []
-        axios.get('https://animosched-backend-backup/api/carts/').then(res => {
+        axios.get('https://animosched-backend-backup.herokuapp.com/api/carts/').then(res => {
             res.data.map(cart => {
-                axios.get('https://animosched-backend-backup/api/getclass/'+cart.classnumber).then(res => {
+                axios.get('https://animosched-backend-backup.herokuapp.com/api/getclass/'+cart.classnumber).then(res => {
                     var data = res.data[0][0]
                     if(data != undefined){
                         rows.push(this.createData(data.course, data.section, data.classnumber, cart.idnum, cart.name, data.current_enrolled, data.max_enrolled))
@@ -47,7 +47,7 @@ class Admin extends Component {
                 })
             })
         })
-        axios.get('https://animosched-backend-backup/api/enlists/').then(res => {
+        axios.get('https://animosched-backend-backup.herokuapp.com/api/enlists/').then(res => {
             console.log(res.data)
             res.data.map(enlist => {
                 enlists.push(this.createEnlistData(enlist.id, enlist.idnum, enlist.allowed))
@@ -58,19 +58,19 @@ class Admin extends Component {
     }
 
     handleSimul = () => {
-        axios.get('https://animosched-backend-backup/api/enlist/').then(res => {
+        axios.get('https://animosched-backend-backup.herokuapp.com/api/enlist/').then(res => {
             window.location.reload()
         })
     }
 
     handleEmptyAll = () => {
-        axios.get('https://animosched-backend-backup/api/empty/').then(res => {
+        axios.get('https://animosched-backend-backup.herokuapp.com/api/empty/').then(res => {
             window.location.reload()
         })
     }
 
     handleFull = (classnumber) => {
-        axios.post('https://animosched-backend-backup/api/modifyoffering/', {
+        axios.post('https://animosched-backend-backup.herokuapp.com/api/modifyoffering/', {
             classnumber,
             action: 'full'
         }).then(res => {
@@ -79,7 +79,7 @@ class Admin extends Component {
     }
 
     handleEmpty = (classnumber) => {
-        axios.post('https://animosched-backend-backup/api/modifyoffering/', {
+        axios.post('https://animosched-backend-backup.herokuapp.com/api/modifyoffering/', {
             classnumber,
             action: 'empty'
         }).then(res => {
@@ -88,7 +88,7 @@ class Admin extends Component {
     }
 
     handleAllow = (id) => {
-        axios.post('https://animosched-backend-backup/api/enlists/', {
+        axios.post('https://animosched-backend-backup.herokuapp.com/api/enlists/', {
             idnum: id,
             allowed: true
         }).then(res => {
@@ -101,7 +101,7 @@ class Admin extends Component {
     }
 
     handleAddEnlist = () => {
-        axios.post('https://animosched-backend-backup/api/enlists/', {
+        axios.post('https://animosched-backend-backup.herokuapp.com/api/enlists/', {
             idnum: this.state.addIdnum,
             allowed: true
         }).then(res => {
@@ -109,7 +109,7 @@ class Admin extends Component {
         })
     }
     handleDeleteEnlist = (id) => {
-        axios.delete('https://animosched-backend-backup/api/enlists/'+id).then(res => {
+        axios.delete('https://animosched-backend-backup.herokuapp.com/api/enlists/'+id).then(res => {
             window.location.reload()
         })
     }

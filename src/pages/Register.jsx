@@ -148,7 +148,7 @@ class Register extends Component {
           this.setState({filled})
         }
         this.setState({fields})
-        axios.get('https://animosched-backend-backup/api/colleges/')
+        axios.get('https://animosched-backend-backup.herokuapp.com/api/colleges/')
         .then(res => {
           var newArray = [];
           res.data.map(college=>{
@@ -156,7 +156,7 @@ class Register extends Component {
           })
           this.setState({colleges: newArray})
         })
-        axios.get('https://animosched-backend-backup/api/degrees/')
+        axios.get('https://animosched-backend-backup.herokuapp.com/api/degrees/')
         .then(res => {
           var newArray = [];
           res.data.map(degree=>{

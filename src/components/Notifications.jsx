@@ -72,7 +72,7 @@ class Notifications extends React.Component{
     }
 
     getInfo(){
-        axios.get('https://animosched-backend-backup/api/notificationlist/'+localStorage.getItem('user_id')+'/')
+        axios.get('https://animosched-backend-backup.herokuapp.com/api/notificationlist/'+localStorage.getItem('user_id')+'/')
         .then(res => {
             this.setState({database: []})
             this.setState({newNotifs: 0})
@@ -139,7 +139,7 @@ class Notifications extends React.Component{
         this.setState({newNotifs: 0})
         // const database = []
         this.state.database.map(notif => {
-            axios.patch('https://animosched-backend-backup/api/notifications/'+notif.id+'/',{
+            axios.patch('https://animosched-backend-backup.herokuapp.com/api/notifications/'+notif.id+'/',{
                 seen: true
             })
             // notif.seen = true;

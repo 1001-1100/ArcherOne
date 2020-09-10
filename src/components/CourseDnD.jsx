@@ -85,13 +85,13 @@ triggerUpdate=(e)=>{
   if(e.removedIndex == null){
     if(e.addedIndex != null){
       if(this.state.idTag == "1"){
-        axios.put('https://animosched-backend-backup/api/coursepriority/'+e.payload.id+'/',{
+        axios.put('https://animosched-backend-backup.herokuapp.com/api/coursepriority/'+e.payload.id+'/',{
           courses:e.payload.course_id, priority:true, user:localStorage.getItem('user_id')
         }).catch(e => {
           console.log(e.response)
         })
       }else if(this.state.idTag == "2"){
-        axios.put('https://animosched-backend-backup/api/coursepriority/'+e.payload.id+'/',{
+        axios.put('https://animosched-backend-backup.herokuapp.com/api/coursepriority/'+e.payload.id+'/',{
           courses:e.payload.course_id, priority:false, user:localStorage.getItem('user_id')
         }).catch(e => {
           console.log(e.response)

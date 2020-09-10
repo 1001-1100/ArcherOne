@@ -85,7 +85,7 @@ class Profile extends Component {
     }
 
     componentWillMount(){
-        axios.get('https://animosched-backend-backup/api/users/'+localStorage.getItem('user_id')+'/'
+        axios.get('https://animosched-backend-backup.herokuapp.com/api/users/'+localStorage.getItem('user_id')+'/'
         )
         .then(res => {
             console.log(res.data)
@@ -97,10 +97,10 @@ class Profile extends Component {
             })
             const college = res.data.college;
             const degree = res.data.degree;
-            axios.get('https://animosched-backend-backup/api/colleges/'+college+'/')
+            axios.get('https://animosched-backend-backup.herokuapp.com/api/colleges/'+college+'/')
             .then(res => {
               this.setState({college: res.data.college_name})
-              axios.get('https://animosched-backend-backup/api/degrees/'+degree+'/')
+              axios.get('https://animosched-backend-backup.herokuapp.com/api/degrees/'+degree+'/')
               .then(res => {
                 this.setState({degree: res.data.degree_name});
                 this.setState({dataReceived: true})
@@ -134,7 +134,7 @@ class Profile extends Component {
         let fieldsBool = this.state.fieldsBool;
          fieldsBool[iconBool] = false;
         if(iconBool == 'firstNameBool'){
-            axios.patch('https://animosched-backend-backup/api/users/'+localStorage.getItem('user_id')+'/',{
+            axios.patch('https://animosched-backend-backup.herokuapp.com/api/users/'+localStorage.getItem('user_id')+'/',{
                 'first_name': text
             }).then(res => {
                 localStorage.setItem('first_name',text)
@@ -143,7 +143,7 @@ class Profile extends Component {
                 console.log(err.response)
             })
         }else if(iconBool == 'lastNameBool'){
-            axios.patch('https://animosched-backend-backup/api/users/'+localStorage.getItem('user_id')+'/',{
+            axios.patch('https://animosched-backend-backup.herokuapp.com/api/users/'+localStorage.getItem('user_id')+'/',{
                 'last_name': text
             }).then(res => {
                 localStorage.setItem('last_name',text)
@@ -152,28 +152,28 @@ class Profile extends Component {
                 console.log(err.response)
             })
         }else if(iconBool == 'idNoBool'){
-            axios.patch('https://animosched-backend-backup/api/users/'+localStorage.getItem('user_id')+'/',{
+            axios.patch('https://animosched-backend-backup.herokuapp.com/api/users/'+localStorage.getItem('user_id')+'/',{
                 'id_num': text
             })
             .catch(err => {
                 console.log(err.response)
             })
         }else if(iconBool == 'collegeBool'){
-            axios.patch('https://animosched-backend-backup/api/users/'+localStorage.getItem('user_id')+'/',{
+            axios.patch('https://animosched-backend-backup.herokuapp.com/api/users/'+localStorage.getItem('user_id')+'/',{
                 'college': text
             })
             .catch(err => {
                 console.log(err.response)
             })
         }else if(iconBool == 'degreeBool'){
-            axios.patch('https://animosched-backend-backup/api/users/'+localStorage.getItem('user_id')+'/',{
+            axios.patch('https://animosched-backend-backup.herokuapp.com/api/users/'+localStorage.getItem('user_id')+'/',{
                 'degree': text
             })
             .catch(err => {
                 console.log(err.response)
             })
         }else if(iconBool == 'emailBool'){
-            axios.patch('https://animosched-backend-backup/api/users/'+localStorage.getItem('user_id')+'/',{
+            axios.patch('https://animosched-backend-backup.herokuapp.com/api/users/'+localStorage.getItem('user_id')+'/',{
                 'email': text
             })
             .catch(err => {

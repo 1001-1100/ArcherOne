@@ -50,7 +50,7 @@ class ComboBox extends React.Component{
     handleSearchInput = (e, val) =>{
       if(val.trim() != ''){
         this.setState({loading: true, courseList: []}, () => {
-          axios.get('https://animosched-backend-backup/api/searchcourse/'+val+'/')
+          axios.get('https://animosched-backend-backup.herokuapp.com/api/searchcourse/'+val+'/')
           .then(res => {
             res.data.map(course => {
                 var courses = this.state.courseList;
@@ -74,12 +74,12 @@ class ComboBox extends React.Component{
             this.setState({loading: true})
             const offeringList = [];
             const courses = [];
-            axios.get('https://animosched-backend-backup/api/searchcourse/'+val+'/')
+            axios.get('https://animosched-backend-backup.herokuapp.com/api/searchcourse/'+val+'/')
             .then(res => {
                 res.data.map(course => {
                     courses.push(course.id)
                 })
-                axios.post('https://animosched-backend-backup/api/courseofferingslist/',{
+                axios.post('https://animosched-backend-backup.herokuapp.com/api/courseofferingslist/',{
                     courses,
                     applyPreference: false,
                     user_id: localStorage.getItem('user_id')

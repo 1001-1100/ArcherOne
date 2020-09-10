@@ -306,7 +306,7 @@ class Preferences extends Component {
     
     componentDidMount(){
         const id = localStorage.getItem('user_id');
-        axios.get('https://animosched-backend-backup/api/faculty/')
+        axios.get('https://animosched-backend-backup.herokuapp.com/api/faculty/')
         .then(res => {
             res.data.map(faculty => {
                 var prof = {'id': faculty.id, 'profName': faculty.full_name} 
@@ -317,7 +317,7 @@ class Preferences extends Component {
                 })
             })
         });
-        // axios.get('https://animosched-backend-backup/api/sections/')
+        // axios.get('https://animosched-backend-backup.herokuapp.com/api/sections/')
         // .then(res => {
         //     res.data.map(section => {
         //         if(section.section_code.length == 1){
@@ -332,7 +332,7 @@ class Preferences extends Component {
         //         })
         //     })
         // });
-            axios.get('https://animosched-backend-backup/api/preferencelist/'+id+'/')
+            axios.get('https://animosched-backend-backup.herokuapp.com/api/preferencelist/'+id+'/')
             .then(res => {
                 console.log(res.data)
                 res.data.map(preference =>{
@@ -507,12 +507,12 @@ class Preferences extends Component {
     handleSave = () => {
         this.setState({dataSaved: true})
         const id = localStorage.getItem('user_id');
-        axios.delete('https://animosched-backend-backup/api/preferencelist/'+id+'/')
+        axios.delete('https://animosched-backend-backup.herokuapp.com/api/preferencelist/'+id+'/')
         .then(res => {
             console.log(this.state.daysList)
             this.state.daysList.map(day =>{
                 if(day.checked){
-                    axios.post('https://animosched-backend-backup/api/preferences/', {preferred_days: day.id, user: id},
+                    axios.post('https://animosched-backend-backup.herokuapp.com/api/preferences/', {preferred_days: day.id, user: id},
                     {
                         headers: {
                             'Content-Type': 'application/json'
@@ -525,7 +525,7 @@ class Preferences extends Component {
             console.log(this.state.buildingList)
             this.state.buildingList.map(bldg =>{
                 if(bldg.checked){
-                    axios.post('https://animosched-backend-backup/api/preferences/', {preferred_buildings: bldg.id, user: id},
+                    axios.post('https://animosched-backend-backup.herokuapp.com/api/preferences/', {preferred_buildings: bldg.id, user: id},
                     {
                         headers: {
                             'Content-Type': 'application/json'
@@ -537,7 +537,7 @@ class Preferences extends Component {
             });
             this.state.selectedProfs.map(prof =>{
                 console.log(prof)
-                axios.post('https://animosched-backend-backup/api/preferences/', {preferred_faculty: prof.id, user: id},
+                axios.post('https://animosched-backend-backup.herokuapp.com/api/preferences/', {preferred_faculty: prof.id, user: id},
                 {
                     headers: {
                         'Content-Type': 'application/json'
@@ -548,7 +548,7 @@ class Preferences extends Component {
             });
             this.state.selectedSections.map(section =>{
                 console.log(section)
-                axios.post('https://animosched-backend-backup/api/preferences/', {preferred_sections: section.section_code, user: id},
+                axios.post('https://animosched-backend-backup.herokuapp.com/api/preferences/', {preferred_sections: section.section_code, user: id},
                 {
                     headers: {
                         'Content-Type': 'application/json'
@@ -565,7 +565,7 @@ class Preferences extends Component {
                 max_courses: this.state.max_courses,
                 user: id
             }
-            axios.post('https://animosched-backend-backup/api/preferences/', data,
+            axios.post('https://animosched-backend-backup.herokuapp.com/api/preferences/', data,
             {
                 headers: {
                     'Content-Type': 'application/json'

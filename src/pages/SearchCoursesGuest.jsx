@@ -105,7 +105,7 @@ class SearchCourses extends Component {
     }
 
     componentDidMount(){
-        // axios.get('https://animosched-backend-backup/api/courses/')
+        // axios.get('https://animosched-backend-backup.herokuapp.com/api/courses/')
         // .then(res => {
         //     res.data.map(course => {
         //         var courses = this.state.courseList;
@@ -191,7 +191,7 @@ class SearchCourses extends Component {
         selectedCourses.push(course.id)
       })
      
-      axios.post('https://animosched-backend-backup/api/courseofferingslist/',{
+      axios.post('https://animosched-backend-backup.herokuapp.com/api/courseofferingslist/',{
         courses: selectedCourses,
         applyPreference: this.state.applyPreference,
         user_id: localStorage.getItem('user_id')
