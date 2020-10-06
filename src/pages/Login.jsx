@@ -327,22 +327,6 @@ class Login extends Component {
                                     </div>
                                   </div>
                                   </Row>
-                                  <Row horizontal = 'center' style={{justifyContent: "center"}}>
-                                  <div className={classes.root}>
-                                    <div className={classes.wrapper}> 
-                                      <GoogleLogin
-                                        clientId="321059137844-8kkli1aem3ico2irn2slkoaj87o19t1q.apps.googleusercontent.com"
-                                        buttonText="Sign In"
-                                        disabled={this.state.loading}
-                                        onSuccess={this.responseGoogle}
-                                        onFailure={this.responseGoogle}
-                                        // cookiePolicy={'single_host_origin'}
-                                      />
-                                      {this.state.loading && <CircularProgress size={24} className={classes.buttonProgress}/>}
-                                    </div>
-                                  </div>
-                                  </Row>
-
                                   
                               </form>
                               <Snackbar open={this.state.snackBar} autoHideDuration={4000} onClose={this.handleCloseSnackBar}>
