@@ -470,9 +470,9 @@ class App extends Component {
         <Switch>
           <Route exact path="/" render={this.mainPage} />
           <Route exact path="/redirect" render={this.redirected} />
-          <Route exact path="/survey" render={this.surveyPage} />
-          <Route exact path="/surveythanks" render={this.surveyThanksPage} />
-          <Route exact path="/admin" render={this.adminPage} />
+          {/* <Route exact path="/survey" render={this.surveyPage} /> */}
+          {/* <Route exact path="/surveythanks" render={this.surveyThanksPage} /> */}
+          {/* <Route exact path="/admin" render={this.adminPage} /> */}
           {!this.state.logged_in &&
           <Route exact path="/login" component={this.loginPage}/>
           }
@@ -483,7 +483,7 @@ class App extends Component {
           <Route exact path="/search_courses_simple" component={this.searchCoursesSimplePage}/>
           }
           <Route exact path="/search_courses" component={this.searchCoursesPage} />
-          <Route exact path="/register" component={this.registerPage} />
+          {/* <Route exact path="/register" component={this.registerPage} /> */}
           <Route exact path="/email_verified" component={this.emailVerificationCompletePage} />
           <Route exact path="/password_reset" component={this.resetPasswordPage} />
           <Route exact path="/password_reset_done" component={this.resetPasswordDonePage} />
@@ -492,9 +492,9 @@ class App extends Component {
           {this.state.logged_in && 
           <Route exact path="/profile" component={this.profilePage} />
           }
-          {this.state.logged_in && 
+          {/* {this.state.logged_in && 
           <Route exact path="/flowchart" component={this.flowchartPage} />
-          }
+          } */}
           {this.state.logged_in && 
           <Route exact path="/generateSchedule" component={this.generateSchedulePage} />
           }

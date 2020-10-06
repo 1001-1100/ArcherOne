@@ -48,11 +48,12 @@ class Menu extends React.Component{
             return(
                 <React.Fragment>
                     <Nav /*activeKey={"/preferences"}*/>
-                    <Nav.Link active={this.state.currentPage == 'flowchart'} href="/flowchart">View Flowchart</Nav.Link>
+                    {/* <Nav.Link active={this.state.currentPage == 'flowchart'} href="/flowchart">View Flowchart</Nav.Link> */}
                     <Nav.Link active={this.state.currentPage == 'search_courses'} href="/search_courses" >Search Courses</Nav.Link>
                     <Nav.Link active={this.state.currentPage == 'preferences'} href="/preferences">Preferences</Nav.Link>
                     <Nav.Link active={this.state.currentPage == 'generateSchedule'} href="/generateSchedule">Generate Schedule</Nav.Link>
                     <Nav.Link active={this.state.currentPage == 'savedSchedules'} href="/">Saved Schedules</Nav.Link>
+                    <Nav.Link href="https://forms.gle/7iavSgzsa2EnJEd78">Leave Feedback</Nav.Link>
                     <Divider orientation="vertical" light={true} flexItem />
                     <Nav.Link active={this.state.currentPage == 'profile'} href="/profile">
                         {/* <svg class="bi bi-circle-fill" id='profileLink' width="32" height="32" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

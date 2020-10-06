@@ -251,43 +251,6 @@ class Login extends Component {
       this.setState({snackBar: false});
     }
 
-    googleResponse = (e) => {
-
-    }
-    responseGoogle = (e) => {
-      console.log(e)
-      if(!this.state.loading){
-        this.setState({loading: true});
-        this.setState({success: false});
-      }else{
-        this.setState({success: true});
-          this.setState({loading: false});
-      } 
-
-      const email = e.profileObj.email
-      const lastName = e.profileObj.familyName
-      const firstName = e.profileObj.givenName
-      const googleId = e.profileObj.googleId
-      const data = {
-          email,
-          lastName,
-          firstName,
-      }
-      this.props.responseGoogle(data, (res) => {
-        console.log(res)
-        if(res == true){
-          this.setRedirect();
-        }else{
-          this.setState({googleId,email, fname: firstName, lname: lastName}, () => {
-            this.setRedirectRegister();
-          })
-          // this.setState({snackBar: true})
-          // this.setState({loading: false})
-        }
-      });
-
-      // this.setState({redirect: true})
-    }
     render() {
       const { classes } = this.props;
       return (
@@ -388,12 +351,6 @@ class Login extends Component {
                                 </Alert>
                               </Snackbar>
                               <br/>
-                              
-                              <p><a href="/password_reset">Forgot your password?</a></p>
-
-                              {/* <div id="signup-message"> */}
-                                  <p>Not a member? <a href="/register">Sign up!</a></p>
-                              {/* </div> */}
 
                           </div>
 
