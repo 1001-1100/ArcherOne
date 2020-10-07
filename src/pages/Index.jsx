@@ -298,7 +298,7 @@ class Index extends Component {
 //        this.scheduleRef = React.createRef();
       }
       if(localStorage.getItem('palette') == undefined){
-        localStorage.setItem('palette', JSON.stringify(['#9BCFB8', '#7FB174', '#689C97', '#072A24', '#D1DDDB', '#85B8CB', '#1D6A96', '#283B42','#FFB53C', '#EEB3A3', '#F3355C', '#FAA98B', '#E6AECF', '#AEE0DD', '#01ACBD','#FED770', ' #F29F8F', '#FB7552', '#076A67','#324856', '#4A746A', '#D18237', '#D66C44', '#FFA289', '#6A92CC', '#706FAB', '#50293C']))
+        localStorage.setItem('palette', JSON.stringify(['#9BCFB8', '#7FB174', '#689C97', '#072A24', '#D1DDDB']))
       }
       if(localStorage.getItem('steps') == undefined){
         localStorage.setItem('steps',true)

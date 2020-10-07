@@ -77,7 +77,7 @@ class App extends Component {
   }
 
   componentWillMount(){
-    var checkDate = '09/07/20-1'
+    var checkDate = '10/07/20-1'
     var integrityCheck = localStorage.getItem('integrity_check')
     if(integrityCheck != checkDate){
       this.wipe_logout()
